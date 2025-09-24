@@ -1,0 +1,17 @@
+public class Supervisor extends Persona{
+  private String profesion;
+  private Cuadrilla cuad;
+
+  public Supervisor(Rut rut, String nombre, String email, String direccion, String profesion){
+    super(rut, nombre, email, direccion); //Llama al constructor de Persona
+    this.profesion = profesion;
+  }
+  
+  public String getProfesion(){return profesion;}
+  public void setProfesion(String profesion){this.profesion = profesion;}
+  public void setCuadrilla(Cuadrilla cuad){this.cuad  = cuad;}
+  public Cuadrilla getCuadrilla(){return cuad;}
+}
+
+
+

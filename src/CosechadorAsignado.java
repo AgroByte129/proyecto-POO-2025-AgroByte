@@ -59,14 +59,6 @@ public class CosechadorAsignado {
         if (fecha == null) return null;
         return java.sql.Date.valueOf(fecha);
     }
-
-    @Override
-    public boolean equals(Object o){
-        if(this == o) return true
-        if(o != null || getClass() != o.getClass())) return false;
-        CosechadorAsignado cosAs = (CosechadorAsignado) o;
-
-    }
 }
 
 

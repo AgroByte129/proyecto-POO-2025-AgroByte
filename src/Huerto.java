@@ -1,2 +1,36 @@
+import java.util.ArrayList;
+
 public class Huerto {
+    private String nombre;
+    private float superficie;
+    private String ubicacion;
+    private Propietario propietario;
+    ArrayList<Cuartel> cuarteles = new ArrayList<>();
+
+    public Huerto(String nombre, float superficie, String ubicacion, Propietario propietario) {
+        this.nombre = nombre;
+        this.superficie = superficie;
+        this.ubicacion = ubicacion;
+        this.propietario = propietario;
+    }
+    public String getNombre() {return nombre;}
+    public float getSuperficie() {return superficie;}
+    public void setSuperficie(float superficie) {this.superficie = superficie;}
+    public String getUbicacion() {return ubicacion;}
+    public void setUbicacion(String ubicacion) {this.ubicacion = ubicacion;}
+    public Propietario getPropietario() {return propietario;}
+    public void setPropietario(Propietario propietario) {this.propietario = propietario;}
+    public boolean addCuartel(int id, float sup, Cultivo cult){
+        for (Cuartel c: cuarteles){
+            if (c.getId() == id){return false;}
+        }
+        Cuartel cuartel = new Cuartel(id, sup, cult, this);
+        return cuarteles.add(cuartel);
+    }
+    public Cuartel getCuartel(int id){
+        for (Cuartel c: cuarteles){
+            if (c.getId() == id){return c;}
+        }
+        return null;
+    }
 }

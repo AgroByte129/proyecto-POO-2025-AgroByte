@@ -9,7 +9,7 @@ public class Cuartel {
     private Huerto huerto;
     private ArrayList<PlanCosecha> planes;
 
-    public Cuartel(int id, float sup, float cultivoSup, Cultivo cultivo, Huerto huerto) {
+    public Cuartel(int id, float sup, Cultivo cult, Huerto huerto) {
         this.id = id;
         this.superficie = sup;
         this.cultivo = cultivo;
@@ -21,7 +21,6 @@ public class Cuartel {
     public int getId() {return id;}
     public float getSuperficie() {return superficie;}
     public void setSuperficie(float superficie) {this.superficie = superficie;}
-    //
     public float getRendimientoEsperado(){
         return cultivo.getRendimiento();
     }

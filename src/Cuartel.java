@@ -1,2 +1,32 @@
+import java.util.ArrayList;
+
 public class Cuartel {
-}
+    private int id;
+    private float superficie;
+    private EstadoFenologico estado;
+
+    private Cultivo cultivo;
+    private Huerto huerto;
+    private ArrayList<PlanCosecha> planes;
+
+    public Cuartel(int id, float sup, float cultivoSup, Cultivo cultivo, Huerto huerto) {
+        this.id = id;
+        this.superficie = sup;
+        this.cultivo = cultivo;
+        this.huerto = huerto;
+        this.estado = EstadoFenologico.REPOSO_INVERNAL;
+        this.planes = new ArrayList<>();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public float getSuperficie() {
+        return superficie;
+    }
+
+    public void setSuperficie(float superficie) {
+        this.superficie = superficie;
+    }
+

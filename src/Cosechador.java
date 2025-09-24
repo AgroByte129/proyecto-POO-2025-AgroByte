@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Cosechador extends Persona{
-  private Date fechaNacimiento
+  private Date fechaNacimiento;
   private List<CosechadorAsignado> cosAsignados = new ArrayList<>();
 
   public Cosechador(Rut rut, String nom, String email, String dir, Date fNac){
@@ -13,10 +13,8 @@ public class Cosechador extends Persona{
   
   public Date getFechaNacimiento(){return fechaNacimiento;}
   public void setFechaNacimiento(Date fNac){fechaNacimiento = fNac;}
-  public void addCuadrilla(CosehadorAsignado cosAs){
-    if(cosAs != null && !cosAsignados.contains(cosAS)){
-      cosAsignados.add(cosAS);
-    }
+  public void addCuadrilla(CosechadorAsignado cosAs){
+      cosAsignados.add(cosAs);
   }
   public Cuadrilla[] getCuadrillas(){
     Cuadrilla[] cuadrillas = new Cuadrilla[cosAsignados.size()];

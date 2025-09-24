@@ -18,15 +18,16 @@ public class Cuartel {
         this.planes = new ArrayList<>();
     }
 
-    public int getId() {
-        return id;
+    public int getId() {return id;}
+    public float getSuperficie() {return superficie;}
+    public void setSuperficie(float superficie) {this.superficie = superficie;}
+    //
+    public float getRendimientoEsperado(){
+        return cultivo.getRendimiento();
     }
-
-    public float getSuperficie() {
-        return superficie;
-    }
-
-    public void setSuperficie(float superficie) {
-        this.superficie = superficie;
-    }
+    public EstadoFenologico getEstado() {return estado;}
+    public Cultivo getCultivo() {return cultivo;}
+    public Huerto getHuerto() {return huerto;}
+    public PlanCosecha[] getPlanes() {return planes.toArray(new PlanCosecha[0]);}
+}
 

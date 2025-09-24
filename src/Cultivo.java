@@ -22,7 +22,7 @@ public class Cultivo {
     public float getRendimiento() {return rendimiento;}
     public void setRendimiento(float rendimiento) {
         this.rendimiento = rendimiento;
-    }//tralalero tralala
+    }
     public void addCuarteles(Cuartel cuartel) {cuarteles.add(cuartel);}
     public Cuartel[] getCuarteles() {return cuarteles.toArray(new Cuartel[0]);}
 }

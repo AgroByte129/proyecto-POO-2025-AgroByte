@@ -33,4 +33,7 @@ public class Huerto {
         }
         return null;
     }
+    public Cuartel[] getCuarteles(){
+        return cuarteles.toArray(new Cuartel[0]);
+    }
 }

@@ -4,7 +4,8 @@ import java.util.ArrayList;
 public class Cuadrilla {
     private int id;
     private String nombre;
-    private static int maximoCosechadores;
+    private int maximoCosechadores;
+
     private Supervisor supervisor;
     private PlanCosecha planCosecha;
     private ArrayList<CosechadorAsignado> asignaciones;
@@ -14,8 +15,12 @@ public class Cuadrilla {
         this.nombre = nom;
         this.supervisor = sup;
         this.planCosecha = plan;
-        this.maximoCosechadores = 0; 
-        if (sup != null) {sup.setCuadrilla(this);}
+        this.maximoCosechadores = 0;
+        this.asignaciones = new ArrayList<>();
+
+        if (sup != null) {
+            sup.setCuadrilla(this);
+        }
     }
 
     public int getId() { return id; }
@@ -35,7 +40,7 @@ public class Cuadrilla {
         }
         CosechadorAsignado nueva = new CosechadorAsignado(fIni, fFin, meta, this, cos);
         asignaciones.add(nueva);
-        cos.addCuadrilla(nueva); 
+        cos.addCuadrilla(nueva);
         return true;
     }
 
@@ -47,12 +52,6 @@ public class Cuadrilla {
         return arr;
     }
 
-    public int getMaximoCosechadores() {
-        return maximoCosechadores;
-    }
-
-    public void setMaximoCosechadores(int max) {
-        this.maximoCosechadores = max;
-    }
+    public int getMaximoCosechadores() { return maximoCosechadores; }
+    public void setMaximoCosechadores(int max) { this.maximoCosechadores = max; }
 }
-

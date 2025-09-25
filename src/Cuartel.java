@@ -9,7 +9,7 @@ public class Cuartel {
     private Huerto huerto;
     private ArrayList<PlanCosecha> planes;
 
-    public Cuartel(int id, float sup, Cultivo cult, Huerto huerto) {
+    public Cuartel(int id, float sup, Cultivo cultivo, Huerto huerto) {
         this.id = id;
         this.superficie = sup;
         this.cultivo = cultivo;
@@ -18,15 +18,27 @@ public class Cuartel {
         this.planes = new ArrayList<>();
     }
 
-    public int getId() {return id;}
-    public float getSuperficie() {return superficie;}
-    public void setSuperficie(float superficie) {this.superficie = superficie;}
-    public float getRendimientoEsperado(){
-        return cultivo.getRendimiento();
-    }
-    public EstadoFenologico getEstado() {return estado;}
-    public Cultivo getCultivo() {return cultivo;}
-    public Huerto getHuerto() {return huerto;}
-    public PlanCosecha[] getPlanes() {return planes.toArray(new PlanCosecha[0]);}
-}
+    public int getId() { return id; }
+    public float getSuperficie() { return superficie; }
+    public void setSuperficie(float superficie) { this.superficie = superficie; }
 
+    public float getRendimientoEsperado() {
+        return cultivo != null ? cultivo.getRendimiento() : 0;
+    }
+
+    public EstadoFenologico getEstado() { return estado; }
+    public void setEstado(EstadoFenologico estado) { this.estado = estado; }
+
+    public Cultivo getCultivo() { return cultivo; }
+    public Huerto getHuerto() { return huerto; }
+
+    public void addPlanCosecha(PlanCosecha plan) {
+        if (!planes.contains(plan)) {
+            planes.add(plan);
+        }
+    }
+
+    public PlanCosecha[] getPlanesCosecha() {
+        return planes.toArray(new PlanCosecha[0]);
+    }
+}

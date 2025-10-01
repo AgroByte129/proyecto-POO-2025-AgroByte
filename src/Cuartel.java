@@ -28,9 +28,5 @@ public class Cuartel {
     public Cultivo getCultivo() {return cultivo;}
     public Huerto getHuerto() {return huerto;}
     public PlanCosecha[] getPlanes() {return planes.toArray(new PlanCosecha[0]);}
-
-    public void addPlanCosecha(PlanCosecha planCosecha) {
-
-    }
 }
 

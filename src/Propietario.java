@@ -14,11 +14,7 @@ public class Propietario extends Persona{
     public void getdireccionComercia(String direccion){direccionCom = direccion;}
     public boolean addHuerto(Huerto huerto){return huertos.add(huerto);} //El ArrayList en Huerto se deberá llamar "huertos"
     public Huerto[] getHuertos(){
-        Huerto[] huerto = new Huerto[huertos.size()];
-        for(int i = 0; i < huertos.size(); i++){
-            huerto[i] = huertos.get(i);
-        }
-        return huerto;
+        return huertos.toArray(new Huerto[0]);
     }
 }
 

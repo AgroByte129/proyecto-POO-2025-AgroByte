@@ -20,20 +20,27 @@ public class Huerto {
     public void setUbicacion(String ubicacion) {this.ubicacion = ubicacion;}
     public Propietario getPropietario() {return propietario;}
     public void setPropietario(Propietario propietario) {this.propietario = propietario;}
-    public boolean addCuartel(int id, float sup, Cultivo cult){
-        for (Cuartel c: cuarteles){
-            if (c.getId() == id){return false;}
+
+    public boolean addCuartel(int id, float sup, Cultivo cult) {
+        for (Cuartel c : cuarteles) {
+            if (c.getId() == id) {
+                return false;
+            }
         }
         Cuartel cuartel = new Cuartel(id, sup, cult, this);
         return cuarteles.add(cuartel);
     }
-    public Cuartel getCuartel(int id){
-        for (Cuartel c: cuarteles){
-            if (c.getId() == id){return c;}
+
+    public Cuartel getCuartel(int id) {
+        for (Cuartel c : cuarteles) {
+            if (c.getId() == id) {
+                return c;
+            }
         }
         return null;
     }
-    public Cuartel[] getCuarteles(){
+
+    public Cuartel[] getCuarteles() {
         return cuarteles.toArray(new Cuartel[0]);
     }
 }

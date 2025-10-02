@@ -6,7 +6,9 @@ public class ControlProduccion {
     ArrayList<Huerto> huertos = new ArrayList<>();
     ArrayList<Cultivo> cultivos = new ArrayList<>();
 
-    public ControlProduccion(){}
+    public ControlProduccion(){
+
+    }
 
     public boolean createPropietario(Rut rut, String nombre, String email, String dirParticular, String dirComercial){
         for(int i = 0; i < personas.size(); i++){

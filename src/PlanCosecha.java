@@ -1,4 +1,4 @@
-import java.util.Date;
+import java.util.Date; //cambiar a LocalDate
 import java.util.ArrayList;
 
 public class PlanCosecha {

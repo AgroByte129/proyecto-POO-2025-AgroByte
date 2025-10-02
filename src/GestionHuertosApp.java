@@ -4,6 +4,7 @@ import java.time.format.DateTimeFormatter;
 
 public class GestionHuertosApp {
     private Scanner sc = new Scanner(System.in).useDelimiter("[\\t\\n]+");
+    private ControlProduccion cP = new ControlProduccion();
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static void main(String[] args){
@@ -74,6 +75,7 @@ public class GestionHuertosApp {
         byte rol = sc.nextByte();
         System.out.print("Rut: ");
         String rut = sc.next();
+        Rut r = new Rut(rut);
         System.out.print("Nombre: ");
         String nom = sc.next();
         System.out.print("Email: ");
@@ -86,17 +88,21 @@ public class GestionHuertosApp {
 
         switch(rol){
             case 1 -> {
-                if(createPropietario()){
+                System.out.print("Dirección comercial: ");
+                String dirComercial = sc.next();
+                if(cP.createPropietario(r, nom, email, dir, dirComercial)){
                     System.out.println("\nPropietario creado exitosamente");
                 }else System.out.println("No se ha podido crear el propietario");
             }
             case 2 -> {
-                if(createPropietario()){
+                System.out.print("Profesión: ");
+                String profesion = sc.next();
+                if(cP.createSupervisor(r, nom, email, dir, profesion)){
                     System.out.println("\nSupervisor creado exitosamente");
                 }else System.out.println("No se ha podido crear el Supervisor");
             }
             case 3 -> {
-                if(createPropietario()){
+                if(cP.createCosechador(r, nom, email, dir, fechaNac)){
                     System.out.println("\nCosechaddor creado exitosamente");
                 }else System.out.println("No se ha podido crear el Cosechador");
             }

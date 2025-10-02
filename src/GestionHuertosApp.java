@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,7 +39,8 @@ public class GestionHuertosApp {
                     creaPersona();
                 }
                 case 2 -> {
-                    System.out.println("-> Crear Cultivo");
+                    System.out.println("-> Creando un cultivo...");
+                    creaCultivo();
                 }
                 case 3 -> {
                     System.out.println("-> Crear Huerto");
@@ -74,8 +76,8 @@ public class GestionHuertosApp {
         System.out.print("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador: ");
         byte rol = sc.nextByte();
         System.out.print("Rut: ");
-        String rut = sc.next();
-        Rut r = new Rut(rut);
+        String r = sc.next();
+        Rut rut = new Rut(r);
         System.out.print("Nombre: ");
         String nom = sc.next();
         System.out.print("Email: ");
@@ -90,22 +92,37 @@ public class GestionHuertosApp {
             case 1 -> {
                 System.out.print("Dirección comercial: ");
                 String dirComercial = sc.next();
-                if(cP.createPropietario(r, nom, email, dir, dirComercial)){
+                if(cP.createPropietario(rut, nom, email, dir, dirComercial)){
                     System.out.println("\nPropietario creado exitosamente");
                 }else System.out.println("No se ha podido crear el propietario");
             }
             case 2 -> {
                 System.out.print("Profesión: ");
                 String profesion = sc.next();
-                if(cP.createSupervisor(r, nom, email, dir, profesion)){
+                if(cP.createSupervisor(rut, nom, email, dir, profesion)){
                     System.out.println("\nSupervisor creado exitosamente");
                 }else System.out.println("No se ha podido crear el Supervisor");
             }
             case 3 -> {
-                if(cP.createCosechador(r, nom, email, dir, fechaNac)){
+                if(cP.createCosechador(rut, nom, email, dir, fechaNac)){
                     System.out.println("\nCosechaddor creado exitosamente");
                 }else System.out.println("No se ha podido crear el Cosechador");
             }
         }
+    }
+
+    private void creaCultivo(){
+        System.out.print("Identificación: ");
+        int id = sc.nextInt();
+        System.out.print("Especie: ");
+        String especie = sc.next();
+        System.out.print("Variedad: ");
+        String variedad = sc.next();
+        System.out.print("Rendimiento: ");
+        float rendimiento = sc.nextFloat();
+
+        if(cP.createCultivo(id, especie, variedad, rendimiento)){
+            System.out.println("\nCultivo creado exitosamente...");
+        } else System.out.println("\nNo se pudo crear el cultivo...");
     }
 }

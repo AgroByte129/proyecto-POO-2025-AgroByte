@@ -5,10 +5,9 @@ public class ControlProduccion {
     ArrayList<Persona> personas = new ArrayList<>();
     ArrayList<Huerto> huertos = new ArrayList<>();
     ArrayList<Cultivo> cultivos = new ArrayList<>();
+    ArrayList<PlanCosecha> planes = new ArrayList<>();
 
-    public ControlProduccion(){
-
-    }
+    public ControlProduccion(){}
 
     public boolean createPropietario(Rut rut, String nombre, String email, String dirParticular, String dirComercial){
         for(int i = 0; i < personas.size(); i++){
@@ -38,5 +37,12 @@ public class ControlProduccion {
         }
         Cosechador c = new Cosechador(rut, nom, email, direccion, fNac);
         return personas.add(c);
+    }
+
+    public boolean createCultivo(int id, String especie, String variedad, float rendimiento){
+        for(Cultivo c:  cultivos){
+            if(c.getId() == id){return false;}
+        }
+        return cultivos.add(new Cultivo(id, especie, variedad, rendimiento));
     }
 }

@@ -26,11 +26,6 @@ public class Cosechador extends Persona{
 }
 
 
-  }
-}
-
-
-
 
 
 

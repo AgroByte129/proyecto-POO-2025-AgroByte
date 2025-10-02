@@ -2,10 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Propietario extends Persona{ //extends persona es la herencia
-  private String direccionConmercial;
+  private String direccionComercial;
   private List<Huerto> huertos = new ArrayList<>();
 
-  public Propietario(String nom,String direccionConmercial) {}
+  public Propietario(String nom,String direccionComercial) {}
 
   public String getDireccionComercial(){return direccionComercial;}
   public void getdireccionComercia(String direccion){direccionComercial = direccion;}

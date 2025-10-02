@@ -1,4 +1,4 @@
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Cuadrilla {
@@ -29,12 +29,12 @@ public class Cuadrilla {
     public Supervisor getSupervisor() { return supervisor; }
     public PlanCosecha getPlanCosecha() { return planCosecha; }
 
-    public boolean addCosechador(Date fIni, Date fFin, double meta, Cosechador cos) {
+    public boolean addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos) {
         if (maximoCosechadores > 0 && asignaciones.size() >= maximoCosechadores) {
             return false;
         }
         for (CosechadorAsignado ca : asignaciones) {
-            if (ca.getCosechador().getRut().equals(cos.getRut())) {
+            if (ca.getCosechador().getRut().getNumero().equals(cos.getRut().getNumero())) {
                 return false;
             }
         }

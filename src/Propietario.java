@@ -1,25 +1,24 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Propietario extends Persona{ //extends persona es la herencia
-  private String direccionConmercial;
-  private List<Huerto> huertos = new ArrayList<>();
+public class Propietario extends Persona{
+    private String direccionCom;
+    private List<Huerto> huertos = new ArrayList<>();
 
-  public Propietario(String nom,String direccionConmercial) {
-
-  }
-
-  public String getDireccionComercial(){return direccionComercial;}
-  public void getdireccionComercia(String direccion){direccionComercial = direccion;}
-  public boolean addHuerto(Huerto huerto){return huertos.add(huerto);} //El ArrayList en Huerto se deberá llamar "huertos"
-  public Huerto[] getHuertos(){
-    Huerto[] huerto = new Huerto[huertos.size()];
-    for(int i = 0; i < huertos.size(); i++){
-      huerto[i] = huertos.get(i);
+    public Propietario(Rut rut, String nom, String email, String dir, String direccionCom) {
+        super(rut, nom, email,  dir);
+        this.direccionCom = direccionCom;
     }
-    return huerto;
-  }
+
+    public String getDireccionComercial(){return direccionCom;}
+    public void getdireccionComercia(String direccion){direccionCom = direccion;}
+    public boolean addHuerto(Huerto huerto){return huertos.add(huerto);} //El ArrayList en Huerto se deberá llamar "huertos"
+    public Huerto[] getHuertos(){
+        return huertos.toArray(new Huerto[0]);
+    }
 }
+
+
 
 
 

@@ -30,7 +30,6 @@ public class Cuartel {
     public PlanCosecha[] getPlanes() {return planes.toArray(new PlanCosecha[0]);}
 
     public void addPlanCosecha(PlanCosecha planCosecha) {
-
     }
 }
 

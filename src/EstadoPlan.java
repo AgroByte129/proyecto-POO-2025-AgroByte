@@ -1,3 +1,6 @@
 public enum EstadoPlan {
-    PLANIFICADO
+    PLANIFICADO,
+    EJECUTANDO,
+    CERRADO,
+    CANCELADO
 }

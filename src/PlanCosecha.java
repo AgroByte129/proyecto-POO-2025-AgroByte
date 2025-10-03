@@ -1,19 +1,19 @@
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class PlanCosecha {
     private int id;
     private String nombre;
-    private Date inicio;
-    private Date finEstimado;
-    private Date finReal;
+    private LocalDate inicio;
+    private LocalDate finEstimado;
+    private LocalDate finReal;
     private double metaKilos;
     private double precioBaseKilo;
     private EstadoPlan estado;
     private Cuartel cuartel;
     private ArrayList<Cuadrilla> cuadrillas;
 
-    public PlanCosecha(int id, String nom, Date ini, Date finEst, double meta, double precio, Cuartel cuartel){
+    public PlanCosecha(int id, String nom, LocalDate ini, LocalDate finEst, double meta, double precio, Cuartel cuartel){
         this.id = id;
         this.nombre = nom;
         this.inicio = ini;
@@ -39,13 +39,13 @@ public class PlanCosecha {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    public Date getInicio() {
+    public LocalDate getInicio() {
         return inicio;
     }
-    public Date getFinEstimado() {
+    public LocalDate getFinEstimado() {
         return finEstimado;
     }
-    public Date getFinReal() {
+    public LocalDate getFinReal() {
         return finReal;
     }
     public double getMetaKilos() {
@@ -88,7 +88,7 @@ public class PlanCosecha {
     public ArrayList<Cuadrilla> getCuadrillas() {
         return cuadrillas;
     }
-    public boolean addCosechadorToCuadrilla(int idCuad, Date fIni, Date fFin, double meta, Cosechador cos){
+    public boolean addCosechadorToCuadrilla(int idCuad, LocalDate fIni, LocalDate fFin, double meta, Cosechador cos){
         Cuadrilla c = findCuadrillaById(idCuad);
         if (c == null) {
             return false;

@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,7 +11,6 @@ public class GestionHuertosApp {
         GestionHuertosApp app = new GestionHuertosApp();
         app.menu();
     }
-
     private void menu(){
         byte opcion;
 
@@ -44,6 +42,7 @@ public class GestionHuertosApp {
                 }
                 case 3 -> {
                     System.out.println("-> Crear Huerto");
+                    creaHuerto();
                 }
                 case 4 -> {
                     System.out.println("-> Crear Plan de Cosecha");
@@ -71,7 +70,6 @@ public class GestionHuertosApp {
 
         } while (opcion != 10);
     }
-
     private void creaPersona(){
         System.out.print("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador: ");
         byte rol = sc.nextByte();
@@ -110,7 +108,6 @@ public class GestionHuertosApp {
             }
         }
     }
-
     private void creaCultivo(){
         System.out.print("Identificación: ");
         int id = sc.nextInt();
@@ -124,5 +121,20 @@ public class GestionHuertosApp {
         if(cP.createCultivo(id, especie, variedad, rendimiento)){
             System.out.println("\nCultivo creado exitosamente...");
         } else System.out.println("\nNo se pudo crear el cultivo...");
+    }
+    private void creaHuerto(){
+        System.out.print("Nombre: ");
+        String nom = sc.next();
+        System.out.print("Superficie: ");
+        float sup = sc.nextFloat();
+        System.out.print("Ubicación: ");
+        String ubi = sc.next();
+        System.out.print("Rut Propietario: ");
+        Rut rut = new Rut(sc.next());
+
+        if(cP.createHuerto(nom, sup, ubi, rut)){
+            System.out.println("Huerto creado exitosamente...");
+        } else System.out.println("No se ha podido crear el huerto...");
+
     }
 }

@@ -62,4 +62,21 @@ public class ControlProduccion {
         }//si lo pilla, agrega al huerto de la persona el huerto recien creado y además
         return false;//Añade el huerto a la coleccion de control producción
     }
+
+    public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo){
+        for(Huerto h: huertos){//utiliza el equals de String
+            if(h.getNombre().equals(nombreHuerto)){
+                for(Cultivo cu: cultivos){
+                    if(cu.getId() == idCultivo){
+                        for(Cuartel c: cu.getCuarteles()){//busca duplicados en el cultivo
+                            if(c.getId() == idCuartel){return false;}
+                        }//addCuartel ya hace la verificacion de duplicados en huerto
+                        return h.addCuartel(idCuartel, superficie, cu);
+                    }
+                }
+                return false;
+            }
+        }
+        return false;
+    }
 }

@@ -133,8 +133,22 @@ public class GestionHuertosApp {
         Rut rut = new Rut(sc.next());
 
         if(cP.createHuerto(nom, sup, ubi, rut)){
-            System.out.println("Huerto creado exitosamente...");
-        } else System.out.println("No se ha podido crear el huerto...");
+            System.out.println("Huerto creado exitosamente...\n");
+            System.out.println("Agregando cuarteles al huerto...");
+            System.out.print("Nro de cuarteles: ");
+            int nroCuarteles = sc.nextInt();
 
+            for(int i = 0; i < nroCuarteles; i++){
+                System.out.print("Id cuartel: ");
+                int idCuartel = sc.nextInt();
+                System.out.print("Superficie cuartel: ");
+                float superficie = sc.nextFloat();
+                System.out.print("Id cultivo del cuartel: ");
+                int idCultivo = sc.nextInt();
+                if(cP.addCuartelToHuerto(nom, idCuartel, superficie, idCultivo)){
+                    System.out.println("Cuartel agregado exitosamente al huerto\n");
+                } else System.out.println("No se pudo agregar el cuartel...\n");
+            }
+        } else System.out.println("No se ha podido crear el huerto...");
     }
 }

@@ -12,10 +12,11 @@ public class Cuartel {
     public Cuartel(int id, float sup, Cultivo cult, Huerto huerto) {
         this.id = id;
         this.superficie = sup;
-        this.cultivo = cultivo;
+        this.cultivo = cult;
         this.huerto = huerto;
         this.estado = EstadoFenologico.REPOSO_INVERNAL;
         this.planes = new ArrayList<>();
+        cult.addCuartel(this);//no hace nada con el boolean que recibe
     }
 
     public int getId() {return id;}

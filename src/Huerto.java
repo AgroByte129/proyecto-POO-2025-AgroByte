@@ -5,7 +5,7 @@ public class Huerto {
     private float superficie;
     private String ubicacion;
     private Propietario propietario;
-    ArrayList<Cuartel> cuarteles = new ArrayList<>();
+    private ArrayList<Cuartel> cuarteles = new ArrayList<>();
 
     public Huerto(String nombre, float superficie, String ubicacion, Propietario propietario) {
         this.nombre = nombre;

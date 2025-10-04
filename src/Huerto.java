@@ -12,6 +12,10 @@ public class Huerto {
         this.superficie = superficie;
         this.ubicacion = ubicacion;
         this.propietario = propietario;
+
+        if (this.propietario != null) {
+            this.propietario.addHuerto(this);
+        }
     }
     public String getNombre() {return nombre;}
     public float getSuperficie() {return superficie;}
@@ -27,7 +31,13 @@ public class Huerto {
                 return false;
             }
         }
+
         Cuartel cuartel = new Cuartel(id, sup, cult, this);
+
+        if (cult != null) {
+            cult.addCuarteles(cuartel);
+        }
+
         return cuarteles.add(cuartel);
     }
 

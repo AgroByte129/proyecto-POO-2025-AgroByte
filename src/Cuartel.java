@@ -12,7 +12,7 @@ public class Cuartel {
     public Cuartel(int id, float sup, Cultivo cult, Huerto huerto) {
         this.id = id;
         this.superficie = sup;
-        this.cultivo = cultivo;
+        this.cultivo = cult;
         this.huerto = huerto;
         this.estado = EstadoFenologico.REPOSO_INVERNAL;
         this.planes = new ArrayList<>();
@@ -30,6 +30,9 @@ public class Cuartel {
     public PlanCosecha[] getPlanes() {return planes.toArray(new PlanCosecha[0]);}
 
     public void addPlanCosecha(PlanCosecha planCosecha) {
+        if (!planes.contains(planCosecha)) {
+            planes.add(planCosecha);
+        }
     }
 }
 

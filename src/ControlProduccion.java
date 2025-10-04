@@ -31,7 +31,7 @@ public class ControlProduccion {
 
     public boolean createCosechador(Rut rut, String nom, String email, String direccion, LocalDate fNac){
         for(int i = 0; i < personas.size(); i++){
-            if(personas.get(i).getRut().equals(rut)){ //no c como uasr otro metodo para comparar sin equals :'v
+            if(personas.get(i).getRut().equals(rut)){ //no c como usar otro metodo para comparar sin equals :'v
                 return false;
             }
         }

@@ -18,5 +18,16 @@ public class Rut {
         Rut rut = (Rut) o;
         return numero.equals(rut.numero);
     }
+
+    @Override
+    public int hashCode() {
+        return numero.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return numero;
+    }
+
 }
 

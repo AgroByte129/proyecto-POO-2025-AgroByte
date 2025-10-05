@@ -35,7 +35,7 @@ public class Huerto {
         Cuartel cuartel = new Cuartel(id, sup, cult, this);
 
         if (cult != null) {
-            cult.addCuarteles(cuartel);
+            cult.addCuartel(cuartel);
         }
 
         return cuarteles.add(cuartel);

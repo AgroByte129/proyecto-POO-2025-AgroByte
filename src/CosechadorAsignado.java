@@ -32,7 +32,7 @@ public class CosechadorAsignado {
     }
     public Cosechador getCosechador() {
         return cosechador;
-    }
+    } //
 }
 
 

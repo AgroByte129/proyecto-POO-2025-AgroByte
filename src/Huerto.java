@@ -27,17 +27,10 @@ public class Huerto {
 
     public boolean addCuartel(int id, float sup, Cultivo cult) {
         for (Cuartel c : cuarteles) {
-            if (c.getId() == id) {
-                return false;
-            }
+            if (c.getId() == id) {return false;}
         }
 
         Cuartel cuartel = new Cuartel(id, sup, cult, this);
-
-        if (cult != null) {
-            cult.addCuartel(cuartel);
-        }
-
         return cuarteles.add(cuartel);
     }
 

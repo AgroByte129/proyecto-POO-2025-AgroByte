@@ -21,18 +21,10 @@ public class CosechadorAsignado {
     public void setDesde(LocalDate desde) {this.desde = desde;}
     public LocalDate getHasta() {return hasta;}
     public void setHasta(LocalDate hasta) {this.hasta = hasta;}
-    public double getMetaKilos() {
-        return metaKilos;
-    }
-    public void setMetaKilos(double metaKilos) {
-        this.metaKilos = metaKilos;
-    }
-    public Cuadrilla getCuadrilla() {
-        return cuadrilla;
-    }
-    public Cosechador getCosechador() {
-        return cosechador;
-    } //
+    public double getMetaKilos() {return metaKilos;}
+    public void setMetaKilos(double metaKilos) {this.metaKilos = metaKilos;}
+    public Cuadrilla getCuadrilla() {return cuadrilla;}
+    public Cosechador getCosechador() {return cosechador;}
 }
 
 

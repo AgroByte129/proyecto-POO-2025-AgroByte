@@ -16,7 +16,7 @@ public class Cuartel {
         this.huerto = huerto;
         this.estado = EstadoFenologico.REPOSO_INVERNAL;
         this.planes = new ArrayList<>();
-        cult.addCuartel(this);//no hace nada con el boolean que recibe
+        cult.addCuartel(this);
     }
 
     public int getId() {return id;}

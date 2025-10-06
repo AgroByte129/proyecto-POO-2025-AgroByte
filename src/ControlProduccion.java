@@ -48,7 +48,7 @@ public class ControlProduccion {
 
     public boolean createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario){
         for(Huerto h: huertos){
-            if(h.getNombre().equals(nombre)){
+            if(h.getNombre().equalsIgnoreCase(nombre)){
                 return false;
             }
         }//Este codigo verifica que no exista otro huerto con el mismo nombre
@@ -56,7 +56,6 @@ public class ControlProduccion {
             if(p.getRut().equals(rutPropietario) && p instanceof Propietario prop){
                 Huerto h = new Huerto(nombre, superficie, ubicacion, prop);
                 huertos.add(h);
-                prop.addHuerto(h);
                 return true;
             }//Este otro trozo verifica que exista el rut y sea propietario la persona
         }//si lo pilla, agrega al huerto de la persona el huerto recien creado y además
@@ -65,12 +64,9 @@ public class ControlProduccion {
 
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo){
         for(Huerto h: huertos){//utiliza el equals de String
-            if(h.getNombre().equals(nombreHuerto)){
+            if(h.getNombre().equalsIgnoreCase(nombreHuerto)){
                 for(Cultivo cu: cultivos){
                     if(cu.getId() == idCultivo){
-                        for(Cuartel c: cu.getCuarteles()){//busca duplicados en el cultivo
-                            if(c.getId() == idCuartel){return false;}
-                        }//addCuartel ya hace la verificacion de duplicados en huerto
                         return h.addCuartel(idCuartel, superficie, cu);
                     }
                 }
@@ -79,4 +75,6 @@ public class ControlProduccion {
         }
         return false;
     }
+
+
 }

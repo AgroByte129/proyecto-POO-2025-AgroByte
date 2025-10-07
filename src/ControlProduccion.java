@@ -76,5 +76,41 @@ public class ControlProduccion {
         return false;
     }
 
+    public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fIni, LocalDate fFin, double metaKilos, Rut rut) {
+        PlanCosecha plan = buscaPlan(idPlan);
+        Persona persona = buscaPersona(rut);
 
+        if (plan == null || !(persona instanceof Cosechador cosechador)) {
+            return false;
+        }
+
+        for (Cuadrilla c : plan.getCuadrillas()) {
+            if (c.getId() == idCuadrilla) {
+                if (!plan.getInicio().isBefore(fIni) && !fechaFinPlan(plan).isAfter(fFin)) {
+                    return plan.addCosechadorToCuadrilla(idCuadrilla, fIni, fFin, metaKilos, cosechador);
+                }
+                return false; // fuera de rango de fechas
+            }
+        }
+
+        return false; // cuadrilla no encontrada
+    }
+
+    private PlanCosecha buscaPlan(int idPlan) {
+        for (PlanCosecha p : planes) {
+            if (p.getId() == idPlan) return p;
+        }
+        return null;
+    }
+    private Persona buscaPersona(Rut rut){
+        for(Persona p: personas){
+            if(p.getRut().equals(rut)){
+                return p;
+            }
+        }
+        return null;
+    }
+    private LocalDate fechaFinPlan(PlanCosecha p){
+        return (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
+    }
 }

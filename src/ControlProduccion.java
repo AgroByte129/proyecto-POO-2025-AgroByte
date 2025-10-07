@@ -10,70 +10,37 @@ public class ControlProduccion {
     public ControlProduccion(){}
 
     public boolean createPropietario(Rut rut, String nombre, String email, String dirParticular, String dirComercial){
-        for(int i = 0; i < personas.size(); i++){
-            if(personas.get(i).getRut().equals(rut)){
-                return false;
-            }
-        }
-        Propietario p = new Propietario(rut, nombre, email, dirParticular, dirComercial);
-        return personas.add(p);
+        return buscaPersona(rut) == null && personas.add(new Propietario(rut, nombre, email, dirParticular, dirComercial));
     }
 
     public boolean createSupervisor(Rut rut, String nombre, String email, String direccion, String profesion){
-        for(int i = 0; i < personas.size(); i++){
-            if(personas.get(i).getRut().equals(rut)){
-                return false;
-            }
-        }
-        Supervisor p = new Supervisor(rut, nombre, email, direccion, profesion);
-        return personas.add(p);
+        return buscaPersona(rut) == null && personas.add(new Supervisor(rut, nombre, email, direccion, profesion));
     }
 
     public boolean createCosechador(Rut rut, String nom, String email, String direccion, LocalDate fNac){
-        for(int i = 0; i < personas.size(); i++){
-            if(personas.get(i).getRut().equals(rut)){ //no c como usar otro metodo para comparar sin equals :'v
-                return false;
-            }
-        }
-        Cosechador c = new Cosechador(rut, nom, email, direccion, fNac);
-        return personas.add(c);
+        return buscaPersona(rut) == null && personas.add(new Cosechador(rut, nom, email, direccion, fNac));
     }
 
     public boolean createCultivo(int id, String especie, String variedad, float rendimiento){
-        for(Cultivo c:  cultivos){
-            if(c.getId() == id){return false;}
-        }
-        return cultivos.add(new Cultivo(id, especie, variedad, rendimiento));
+        return buscaCultivo(id) == null && cultivos.add(new Cultivo(id, especie, variedad, rendimiento));
     }
 
     public boolean createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario){
-        for(Huerto h: huertos){
-            if(h.getNombre().equalsIgnoreCase(nombre)){
-                return false;
-            }
-        }//Este codigo verifica que no exista otro huerto con el mismo nombre
-        for(Persona p: personas){
-            if(p.getRut().equals(rutPropietario) && p instanceof Propietario prop){
-                Huerto h = new Huerto(nombre, superficie, ubicacion, prop);
-                huertos.add(h);
-                return true;
-            }//Este otro trozo verifica que exista el rut y sea propietario la persona
-        }//si lo pilla, agrega al huerto de la persona el huerto recien creado y además
-        return false;//Añade el huerto a la coleccion de control producción
+        Huerto huerto = buscaHuerto(nombre);
+        Persona persona = buscaPersona(rutPropietario);
+
+        if(huerto != null || !(persona instanceof Propietario propietario)) {return false;}
+
+        return huertos.add(new Huerto(nombre, superficie, ubicacion, propietario));
     }
 
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo){
-        for(Huerto h: huertos){//utiliza el equals de String
-            if(h.getNombre().equalsIgnoreCase(nombreHuerto)){
-                for(Cultivo cu: cultivos){
-                    if(cu.getId() == idCultivo){
-                        return h.addCuartel(idCuartel, superficie, cu);
-                    }
-                }
-                return false;
-            }
-        }
-        return false;
+        Huerto huerto = buscaHuerto(nombreHuerto);
+        Cultivo cultivo = buscaCultivo(idCultivo);
+
+        if(huerto == null || cultivo == null) {return false;}
+        //addCuartel ya hace verificación de duplicados en Huerto
+        return huerto.addCuartel(idCuartel, superficie, cultivo);
     }
 
     public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fIni, LocalDate fFin, double metaKilos, Rut rut) {

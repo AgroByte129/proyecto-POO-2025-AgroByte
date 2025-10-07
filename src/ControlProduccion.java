@@ -90,4 +90,7 @@ public class ControlProduccion {
     private LocalDate fechaFinPlan(PlanCosecha p){
         return (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
     }
+
+    public boolean createPlanCosecha(int idPlan, String nomPlan, LocalDate fIni, LocalDate fFin, double meta, double precio, String nomHuerto, int idCuartel) {
+    }
 }

@@ -48,7 +48,8 @@ public class GestionHuertosApp {
                     System.out.println("-> Crear Plan de Cosecha");
                 }
                 case 5 -> {
-                    System.out.println("-> Asignar Cosechadores a Plan");
+                    System.out.println("-> Asignando cosechadores a un plan de cosecha...");
+                    asignaCosechadoresAPlan();
                 }
                 case 6 -> {
                     System.out.println("-> Listar Cultivos");
@@ -83,8 +84,7 @@ public class GestionHuertosApp {
         System.out.print("Dirección: ");
         String dir = sc.next();
         System.out.print("Fecha de nacimiento (dd/mm/aaaa): ");
-        String fecha = sc.next();
-        LocalDate fechaNac = LocalDate.parse(fecha, FORMATO);
+        LocalDate fechaNac = fechaFormateada(sc.next());
 
         switch(rol){
             case 1 -> {
@@ -150,5 +150,21 @@ public class GestionHuertosApp {
                 } else System.out.println("No se pudo agregar el cuartel...\n");
             }
         } else System.out.println("No se ha podido crear el huerto...");
+    }
+    private void asignaCosechadoresAPlan(){
+        System.out.print("Id del plan: ");
+        int idPlan = sc.nextInt();
+        System.out.print("Id cuadrilla");
+        int idCuadrilla = sc.nextInt();
+        System.out.print("Nro. cosechadores a asignar: ");
+        int nroCos = sc.nextInt();
+
+        if(addCosechadorToCuadrilla()){
+
+        }
+    }
+
+    private LocalDate fechaFormateada(String fecha){
+        return LocalDate.parse(fecha, FORMATO);
     }
 }

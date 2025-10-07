@@ -53,7 +53,7 @@ public class ControlProduccion {
 
         for (Cuadrilla c : plan.getCuadrillas()) {
             if (c.getId() == idCuadrilla) {
-                if (!plan.getInicio().isBefore(fIni) && !fechaFinPlan(plan).isAfter(fFin)) {
+                if (fechaEnRangoPlan(plan, fIni, fFin)) {
                     return plan.addCosechadorToCuadrilla(idCuadrilla, fIni, fFin, metaKilos, cosechador);
                 }
                 return false; // fuera de rango de fechas
@@ -87,7 +87,8 @@ public class ControlProduccion {
         }
         return null;
     }
-    private LocalDate fechaFinPlan(PlanCosecha p){
-        return (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
+    private boolean fechaEnRangoPlan(PlanCosecha p, LocalDate fIni, LocalDate fFin){
+        LocalDate fechaFinPlan = (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
+        return !p.getInicio().isBefore(fIni) && !fechaFinPlan.isAfter(fFin);
     }
 }

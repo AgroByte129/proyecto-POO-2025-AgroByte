@@ -98,15 +98,25 @@ public class ControlProduccion {
 
     private PlanCosecha buscaPlan(int idPlan) {
         for (PlanCosecha p : planes) {
-            if (p.getId() == idPlan) return p;
+            if (p.getId() == idPlan) {return p;}
         }
         return null;
     }
     private Persona buscaPersona(Rut rut){
         for(Persona p: personas){
-            if(p.getRut().equals(rut)){
-                return p;
-            }
+            if(p.getRut().equals(rut)) {return p;}
+        }
+        return null;
+    }
+    private Huerto buscaHuerto(String nombre){
+        for(Huerto h: huertos){
+            if(h.getNombre().equalsIgnoreCase(nombre)) {return h;}
+        }
+        return null;
+    }
+    private Cultivo buscaCultivo(int id){
+        for(Cultivo c: cultivos){
+            if(c.getId() == id){return c;}
         }
         return null;
     }

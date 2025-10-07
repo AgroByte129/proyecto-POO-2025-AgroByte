@@ -159,8 +159,19 @@ public class GestionHuertosApp {
         System.out.print("Nro. cosechadores a asignar: ");
         int nroCos = sc.nextInt();
 
-        if(addCosechadorToCuadrilla()){
+        for(int i = 0; i < nroCos; i++){
+            System.out.print("\nFecha de inicio asignacion (dd/mm/aaaa): ");
+            LocalDate fIni = fechaFormateada(sc.next());
+            System.out.print("Fecha de término asignacion (dd/mm/aaaa): ");
+            LocalDate fFin = fechaFormateada(sc.next());
+            System.out.print("Meta (Kilos): ");
+            double metaKilos = sc.nextDouble();
+            System.out.print("Rut cosechador: ");
+            Rut rut = new Rut(sc.next());
 
+            if(cP.addCosechadorToCuadrilla(idPlan, idCuadrilla, fIni, fFin, metaKilos, rut)){
+                System.out.println("Cosechador asignado exitosamente a una cuadrilla del plan de cosecha");
+            } else System.out.println("No se ha podido agregar el cosechador a la cuadrilla...");
         }
     }
 

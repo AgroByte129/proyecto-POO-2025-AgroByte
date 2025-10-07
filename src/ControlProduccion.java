@@ -40,40 +40,25 @@ public class ControlProduccion {
     }
 
     public boolean createCultivo(int id, String especie, String variedad, float rendimiento){
-        for(Cultivo c:  cultivos){
-            if(c.getId() == id){return false;}
-        }
-        return cultivos.add(new Cultivo(id, especie, variedad, rendimiento));
+        return buscaCultivo(id) == null && cultivos.add(new Cultivo(id, especie, variedad, rendimiento));
     }
 
     public boolean createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario){
-        for(Huerto h: huertos){
-            if(h.getNombre().equalsIgnoreCase(nombre)){
-                return false;
-            }
-        }//Este codigo verifica que no exista otro huerto con el mismo nombre
-        for(Persona p: personas){
-            if(p.getRut().equals(rutPropietario) && p instanceof Propietario prop){
-                Huerto h = new Huerto(nombre, superficie, ubicacion, prop);
-                huertos.add(h);
-                return true;
-            }//Este otro trozo verifica que exista el rut y sea propietario la persona
-        }//si lo pilla, agrega al huerto de la persona el huerto recien creado y además
-        return false;//Añade el huerto a la coleccion de control producción
+        Huerto huerto = buscaHuerto(nombre);
+        Persona persona = buscaPersona(rutPropietario);
+
+        if(huerto != null || !(persona instanceof Propietario propietario)) {return false;}
+
+        return huertos.add(new Huerto(nombre, superficie, ubicacion, propietario));
     }
 
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo){
-        for(Huerto h: huertos){//utiliza el equals de String
-            if(h.getNombre().equalsIgnoreCase(nombreHuerto)){
-                for(Cultivo cu: cultivos){
-                    if(cu.getId() == idCultivo){
-                        return h.addCuartel(idCuartel, superficie, cu);
-                    }
-                }
-                return false;
-            }
-        }
-        return false;
+        Huerto huerto = buscaHuerto(nombreHuerto);
+        Cultivo cultivo = buscaCultivo(idCultivo);
+
+        if(huerto == null || cultivo == null) {return false;}
+        //addCuartel ya hace verificación de duplicados en Huerto
+        return huerto.addCuartel(idCuartel, superficie, cultivo);
     }
 
     public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fIni, LocalDate fFin, double metaKilos, Rut rut) {

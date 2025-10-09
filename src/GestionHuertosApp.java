@@ -151,6 +151,28 @@ public class GestionHuertosApp {
             }
         } else System.out.println("No se ha podido crear el huerto...");
     }
+    private void creaPlanCosecha(){
+        System.out.print("Id plan: ");
+        int idPlan = sc.nextInt();
+        System.out.print("Nombre plan: ");
+        String nomPlan = sc.next();
+        System.out.print("Fecha inicio (dd/mm/aaaa): ");
+        LocalDate fIni = fechaFormateada(sc.next());
+        System.out.print("Fecha fin estimada (dd/mm/aaaa): ");
+        LocalDate fFin = fechaFormateada(sc.next());
+        System.out.print("Meta kilos: ");
+        double meta = sc.nextDouble();
+        System.out.print("Precio base por kilo: ");
+        double precio = sc.nextDouble();
+        System.out.print("Nombre del huerto: ");
+        String nomHuerto = sc.next();
+        System.out.print("Id del cuartel: ");
+        int idCuartel = sc.nextInt();
+
+        if(cP.createPlanCosecha(idPlan, nomPlan, fIni, fFin, meta, precio, nomHuerto, idCuartel))
+            System.out.println("Plan de Cosecha creado exitosamente");
+        else System.out.println("No se pudo crear el Plan de Cosecha");
+    }
     private void asignaCosechadoresAPlan(){
         System.out.print("Id del plan: ");
         int idPlan = sc.nextInt();

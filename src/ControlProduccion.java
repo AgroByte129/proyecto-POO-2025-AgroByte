@@ -43,6 +43,10 @@ public class ControlProduccion {
         return huerto.addCuartel(idCuartel, superficie, cultivo);
     }
 
+    public boolean createPlanCosecha(int idPlan, String nomPlan, LocalDate fIni, LocalDate fFin, double meta, double precio, String nomHuerto, int idCuartel) {
+        return false; //pongo esto para que no se enoje el IDE xd
+    }
+
     public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fIni, LocalDate fFin, double metaKilos, Rut rut) {
         PlanCosecha plan = buscaPlan(idPlan);
         Persona persona = buscaPersona(rut);

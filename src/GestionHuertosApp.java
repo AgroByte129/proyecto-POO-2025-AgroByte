@@ -74,6 +74,8 @@ public class GestionHuertosApp {
 
         } while (opcion != 10);
     }
+
+    // **** Menu 1 ****
     private void creaPersona(){
         System.out.print("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador: ");
         byte rol = sc.nextByte();
@@ -111,6 +113,8 @@ public class GestionHuertosApp {
             }
         }
     }
+
+    // **** Menu 2 ****
     private void creaCultivo(){
         System.out.print("Identificación: ");
         int id = sc.nextInt();
@@ -125,6 +129,8 @@ public class GestionHuertosApp {
             System.out.println("\nCultivo creado exitosamente...");
         } else System.out.println("\nNo se pudo crear el cultivo...");
     }
+
+    // **** Menu 3 ****
     private void creaHuerto(){
         System.out.print("Nombre: ");
         String nom = sc.next();
@@ -154,6 +160,7 @@ public class GestionHuertosApp {
             }
         } else System.out.println("No se ha podido crear el huerto...");
     }
+    // **** Menu 4 ****
     private void creaPlanCosecha(){
         System.out.print("Id plan: ");
         int idPlan = sc.nextInt();
@@ -176,6 +183,8 @@ public class GestionHuertosApp {
             System.out.println("Plan de Cosecha creado exitosamente");
         else System.out.println("No se pudo crear el Plan de Cosecha");
     }
+
+        // **** Menu 5 ****
     private void asignaCosechadoresAPlan(){
         System.out.print("Id del plan: ");
         int idPlan = sc.nextInt();
@@ -199,6 +208,10 @@ public class GestionHuertosApp {
             } else System.out.println("No se ha podido agregar el cosechador a la cuadrilla...");
         }
     }
+    // ****Menu 6 ****cultivos
+    // **** Menu 7 **** huertos
+
+    // ***** Menu 8 ****
     private void listaPersonas(){
         String[] listPropietarios = cP.listPropietarios();
         String[] listSupervisores = cP.listSupervisores();
@@ -241,6 +254,7 @@ public class GestionHuertosApp {
         }
 
     }
+    // **** Menu 9 *****
     private void listaPlanesCosecha(){
         String[] listaP = cP.listPlanesCosecha();
 

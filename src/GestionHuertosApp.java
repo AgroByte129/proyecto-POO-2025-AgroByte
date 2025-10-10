@@ -46,6 +46,7 @@ public class GestionHuertosApp {
                 }
                 case 4 -> {
                     System.out.println("-> Crear Plan de Cosecha");
+                    creaPlanCosecha();
                 }
                 case 5 -> {
                     System.out.println("-> Asignando cosechadores a un plan de cosecha...");
@@ -63,6 +64,7 @@ public class GestionHuertosApp {
                 }
                 case 9 -> {
                     System.out.println("-> Listar Planes de Cosecha");
+                    listaPlanesCosecha();
                 }
                 case 10 -> {
                     System.out.println("-> Saliendo del sistema...");
@@ -197,7 +199,6 @@ public class GestionHuertosApp {
             } else System.out.println("No se ha podido agregar el cosechador a la cuadrilla...");
         }
     }
-
     private void listaPersonas(){
         String[] listPropietarios = cP.listPropietarios();
         String[] listSupervisores = cP.listSupervisores();
@@ -239,6 +240,26 @@ public class GestionHuertosApp {
             }
         }
 
+    }
+    private void listaPlanesCosecha(){
+        String[] listaP = cP.listPlanesCosecha();
+
+        System.out.println("\nLISTADO DE PLANES COSECHA" +
+                "\n-------------------------");
+
+        System.out.printf(
+                "%-6s %-15s %-15s %-15s %-10s %-17s %-12s %-12s %-20s %-15s%n",
+                "Id", "Nombre", "Fecha inicio", "Fecha término", "Meta (kg)",
+                "Precio base (kg)", "Estado", "Id cuartel", "Nombre huerto",
+                "Nro. cuadrillas"
+        );
+        if(listaP.length == 0){
+            System.out.println("No hay planes registrados...");
+        }else {
+            for(String l : listaP){
+                System.out.println(l);
+            }
+        }
     }
 
     private LocalDate fechaFormateada(String fecha){

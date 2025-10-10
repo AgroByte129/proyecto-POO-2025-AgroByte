@@ -85,8 +85,8 @@ public class PlanCosecha {
         cuadrillas.add(nueva);
         return true;
     }
-    public ArrayList<Cuadrilla> getCuadrillas() {
-        return cuadrillas;
+    public Cuadrilla[] getCuadrillas() {
+        return cuadrillas.toArray(new Cuadrilla[0]);
     }
     public boolean addCosechadorToCuadrilla(int idCuad, LocalDate fIni, LocalDate fFin, double meta, Cosechador cos){
         Cuadrilla c = findCuadrillaById(idCuad);

@@ -157,6 +157,23 @@ public class ControlProduccion {
         return lista.toArray(new String[0]);
     }
 
+    public String[] listPlanesCosecha(){
+        String[] planesCosecha = new String[planes.size()];
+
+        for(int i = 0; i < planes.size(); i++){
+            PlanCosecha p = planes.get(i);
+            LocalDate finPlan = (p.getFinReal() != null) ? p.getFinReal():p.getFinEstimado();
+            Cuartel c = p.getCuartel();
+            Huerto h = c.getHuerto();
+
+            planesCosecha[i] = String.format("%-6d, %-15s, %-15s, %-15s, %-10.1f, %-17.1f," +
+                    " %-12s, %-12d, %-20s, %-15d",p.getId(), p.getNombre(),
+                    p.getInicio(), finPlan, p.getMetaKilos(), p.getPrecioBaseKilo(),
+                    p.getEstado(), c.getId(), h.getNombre(), p.getCuadrillas().length);
+        }
+        return planesCosecha;
+    }
+
     private PlanCosecha buscaPlan(int idPlan) {
         for (PlanCosecha p : planes) {
             if (p.getId() == idPlan) {return p;}

@@ -5,7 +5,7 @@ public class Propietario extends Persona{ //extends persona es la herencia
   private String direccionConmercial;
   private List<Huerto> huertos = new ArrayList<>();
 
-  public Propietario(String nom,String direccionConmercial) {}
+  public Propietario(Rut rut, String nom, String direccionConmercial, String dirParticular, String dirComercial) {}
 
   public String getDireccionComercial(){return direccionComercial;}
   public void getdireccionComercia(String direccion){direccionComercial = direccion;}

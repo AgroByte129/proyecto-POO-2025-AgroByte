@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
@@ -6,7 +7,7 @@ public class Cosechador extends Persona{
   private Date fechaNacimiento;
   private List<CosechadorAsignado> cosAsignados = new ArrayList<>();
 
-  public Cosechador(Rut rut, String nom, String email, String dir, Date fNac){
+  public Cosechador(Rut rut, String nom, String email, String dir, LocalDate fNac){
     super(rut, nom, email, dir);
     fechaNacimiento = fNac;
   }

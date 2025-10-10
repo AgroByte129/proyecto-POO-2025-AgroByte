@@ -59,6 +59,7 @@ public class GestionHuertosApp {
                 }
                 case 8 -> {
                     System.out.println("-> Listar Personas");
+                    listaPersonas();
                 }
                 case 9 -> {
                     System.out.println("-> Listar Planes de Cosecha");
@@ -195,6 +196,49 @@ public class GestionHuertosApp {
                 System.out.println("Cosechador asignado exitosamente a una cuadrilla del plan de cosecha");
             } else System.out.println("No se ha podido agregar el cosechador a la cuadrilla...");
         }
+    }
+
+    private void listaPersonas(){
+        String[] listPropietarios = cP.listPropietarios();
+        String[] listSupervisores = cP.listSupervisores();
+        String[] listCosechadores = cP.listCosechadores();
+
+        System.out.println("LISTADO DE PROPIETARIOS" +
+                "\n-----------------------");
+        System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
+                "Rut", "Nombre", "Dirección", "email", "Dirección comercial", "Nro. huertos");
+        if(listPropietarios.length == 0){
+            System.out.println("No hay propietarios registrados...");
+        }else {
+            for(String lP : listPropietarios){
+                System.out.println(lP);
+            }
+        }
+
+        System.out.println("\nLISTADO DE SUPERVISORES" +
+                         "\n-----------------------");
+        System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
+                "Rut", "Nombre", "Dirección", "email", "Profesión", "Nombre cuadrilla");
+        if(listSupervisores.length == 0){
+            System.out.println("No hay supervisores registrados...");
+        }else{
+            for(String lS : listSupervisores){
+                System.out.println(lS);
+            }
+        }
+
+        System.out.println("\nLISTADO DE COSECHADORES" +
+                         "\n-----------------------");
+        System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
+                "Rut", "Nombre", "Dirección", "email", "Fecha nacimiento", "Nro. Cuadrillas");
+        if(listCosechadores.length == 0){
+            System.out.println("No hay cosechadores registrados...");
+        }else{
+            for(String lC : listCosechadores){
+                System.out.println(lC);
+            }
+        }
+
     }
 
     private LocalDate fechaFormateada(String fecha){

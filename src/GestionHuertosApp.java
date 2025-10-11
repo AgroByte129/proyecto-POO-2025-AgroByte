@@ -77,7 +77,7 @@ public class GestionHuertosApp {
 
     // **** Menu 1 ****
     private void creaPersona(){
-        System.out.print("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador: ");
+        System.out.print("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ");
         byte rol = sc.nextByte();
         System.out.print("Rut: ");
         String r = sc.next();

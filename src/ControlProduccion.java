@@ -105,6 +105,32 @@ public class ControlProduccion {
 
         return true;
     }
+    String[] listCultivos(){
+        if (cultivos.isEmpty()) return new String[]{"No hay cultivos registrados."};
+        String[] listado = new String[cultivos.size()+2];
+        listado[0] = "LISTADO DE CULTIVOS";
+        listado[1] = "--------------------";
+        for (int i=0;i<cultivos.size();i++){
+            Cultivo c = cultivos.get(i);
+            int nCuarteles = (c.getCuarteles()!=null) ? c.getCuarteles().length : 0;
+            listado[i+2] = String.format("%-4d %-10s %-12s %-12.2f %-5d",
+                    c.getId(), c.getEspecie(), c.getVariedad(), c.getRendimiento(), nCuarteles);
+        }
+        return listado;
+    }
+
+    String[] listHuertos(){
+        if (huertos.isEmpty()) return new String[]{"No hay huertos registrados."};
+        String[] arr = new String[huertos.size() + 2];
+        arr[0] = "NOMBRE         SUPERFICIE   UBICACION        PROPIETARIO";
+        arr[1] = "-----------------------------------------------------------";
+        for (int i = 0; i < huertos.size(); i++) {
+            Huerto h = huertos.get(i);
+            arr[i + 2] = String.format("%-14s %-12.2f %-15s %-10s",
+                    h.getNombre(), h.getSuperficie(), h.getUbicacion(), h.getPropietario().getNombre());
+        }
+        return arr;
+    }
 
 
     public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fIni, LocalDate fFin, double metaKilos, Rut rut) {

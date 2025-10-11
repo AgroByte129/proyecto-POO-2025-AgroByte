@@ -172,9 +172,26 @@ public class GestionHuertosApp {
         System.out.print("Id del cuartel: ");
         int idCuartel = sc.nextInt();
 
-        if(cP.createPlanCosecha(idPlan, nomPlan, fIni, fFin, meta, precio, nomHuerto, idCuartel))
-            System.out.println("Plan de Cosecha creado exitosamente");
-        else System.out.println("No se pudo crear el Plan de Cosecha");
+        if(cP.createPlanCosecha(idPlan, nomPlan, fIni, fFin, meta, precio, nomHuerto, idCuartel)) {
+            System.out.println("\nPlan de Cosecha creado exitosamente");
+            System.out.println("Agregando cuadrillas al plan de cosecha");
+            System.out.print("Nro. de cuadrillas: ");
+            int nroCuadrillas = sc.nextInt();
+
+            for(int i = 0; i < nroCuadrillas; i++){
+                System.out.print("\nId cuadrilla: ");
+                int idCuadrilla = sc.nextInt();
+                System.out.print("Nombre cuadrilla: ");
+                String nombreCuadrilla = sc.next();
+                System.out.print("Rut supervisor: ");
+                Rut rutSupervisor = new Rut(sc.next());
+
+                if(cP.addCuadrillaToPlan(idPlan, idCuadrilla, nombreCuadrilla, rutSupervisor)){
+                    System.out.println("Cuadrilla agregada exitosamente al plan de cosecha");
+                }else System.out.println("No se ha podido agregar la cuadrilla al plan...");
+            }
+
+        }else System.out.println("No se pudo crear el Plan de Cosecha");
     }
     private void asignaCosechadoresAPlan(){
         System.out.print("Id del plan: ");

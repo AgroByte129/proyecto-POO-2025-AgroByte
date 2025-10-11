@@ -68,44 +68,19 @@ public class ControlProduccion {
         }
 
         PlanCosecha plan = new PlanCosecha(idPlan, nomPlan, fIni, fFin, meta, precio, cuartel);
-        planes.add(plan);
-
-        System.out.println("\nPlan de cosecha creado exitosamente\n");
-        System.out.println("Agregando cuadrillas al plan de cosecha");
-        System.out.print("Nro. de cuadrillas: ");
-
-        java.util.Scanner tcld = new java.util.Scanner(System.in).useDelimiter("[\\t\\n]+");
-        int n = tcld.nextInt();
-
-        for (int i = 0; i < n; i++) {
-            System.out.print("\nId cuadrilla: ");
-            int idCuad = tcld.nextInt();
-            System.out.print("Nombre cuadrilla: ");
-            String nomCuad = tcld.next();
-            System.out.print("Rut supervisor: ");
-            Rut rutSup = new Rut(tcld.next());
-
-            Persona persona = buscaPersona(rutSup);
-            if (!(persona instanceof Supervisor sup)) {
-                System.out.println("No existe un supervisor con ese rut.");
-                continue;
-            }
-
-            if (sup.getCuadrilla() != null) {
-                System.out.println("El supervisor ya tiene asignada una cuadrilla.");
-                continue;
-            }
-
-            if (plan.addCuadrilla(idCuad, nomCuad, sup)) {
-                System.out.println("Cuadrilla agregada exitosamente al plan de cosecha");
-            } else {
-                System.out.println("No se pudo agregar la cuadrilla (ID duplicado o supervisor repetido).");
-            }
-        }
-
-        return true;
+        return planes.add(plan);
     }
 
+    public boolean addCuadrillaToPlan(int idPlan, int idCuad, String nomCuad, Rut rutSup){
+        PlanCosecha plan = buscaPlan(idPlan);
+        Persona persona = buscaPersona(rutSup);
+
+        if(plan == null){return false;}
+        if(!(persona instanceof Supervisor s)) {return false;}
+        if(s.getCuadrilla() != null) {return false;}
+
+        return plan.addCuadrilla(idCuad, nomCuad, s);
+    }
 
     public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fIni, LocalDate fFin, double metaKilos, Rut rut) {
         PlanCosecha plan = buscaPlan(idPlan);

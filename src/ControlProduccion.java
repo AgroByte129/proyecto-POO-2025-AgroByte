@@ -9,7 +9,6 @@ public class ControlProduccion {
     ArrayList<PlanCosecha> planes = new ArrayList<>();
 
     public ControlProduccion(){
-        generateTestData();
     }
 
     public boolean createPropietario(Rut rut, String nombre, String email, String dirParticular, String dirComercial){

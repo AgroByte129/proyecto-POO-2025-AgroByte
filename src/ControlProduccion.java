@@ -114,11 +114,12 @@ public class ControlProduccion {
         for (int i = 0; i < cultivos.size(); i++) {
             Cultivo c = cultivos.get(i);
             listaCultivos[i] = String.format(
-                    "%-6d %-15s %-15s %-10.1f",
+                    "%-6d %-15s %-15s %-10.1f %-15d",
                     c.getId(),
                     c.getEspecie(),
                     c.getVariedad(),
-                    c.getRendimiento()
+                    c.getRendimiento(),
+                    c.getCuarteles().length
             );
         }
 

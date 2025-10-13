@@ -155,7 +155,7 @@ public class ControlProduccion {
         }
         for(int i = 0; i <huertos.size() ; i++){
             Huerto h = huertos.get(i);
-            listaHuertos[i] = String.format("%-20s %-10.1f %-25s %-15s %-20s %-5d" ,
+            listaHuertos[i] = String.format("%-20s %-12.1f %-20s %-15s %-20s %-15d\n" ,
                     h.getNombre(),h.getSuperficie(),h.getUbicacion(),h.getPropietario().getRut(),
                     h.getPropietario().getNombre(),h.getCuarteles().length);
         }

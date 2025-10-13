@@ -104,6 +104,41 @@ public class ControlProduccion {
         return false; // cuadrilla no encontrada
     }
 
+    public String[] listCultivos() {
+        if (cultivos.isEmpty()) {
+            return new String[0];
+        }
+
+        String[] listaCultivos = new String[cultivos.size()];
+
+        for (int i = 0; i < cultivos.size(); i++) {
+            Cultivo c = cultivos.get(i);
+            listaCultivos[i] = String.format(
+                    "%-6d %-15s %-15s %-10.1f",
+                    c.getId(),
+                    c.getEspecie(),
+                    c.getVariedad(),
+                    c.getRendimiento()
+            );
+        }
+
+        return listaCultivos;
+    }
+
+    public String[] listHuertos(){
+        String[] listaHuertos = new String[huertos.size()];
+        if(huertos.isEmpty()){
+            return new String[0];
+        }
+        for(int i = 0; i <huertos.size() ; i++){
+            Huerto h = huertos.get(i);
+            listaHuertos[i] = String.format("%-20s %-12.1f %-20s %-15s %-20s %-15d\n" ,
+                    h.getNombre(),h.getSuperficie(),h.getUbicacion(),h.getPropietario().getRut(),
+                    h.getPropietario().getNombre(),h.getCuarteles().length);
+        }
+        return  listaHuertos;
+    }
+
     public String[] listPropietarios() {
         List<String> lista = new ArrayList<>();
         for (Persona persona : personas) {
@@ -149,19 +184,6 @@ public class ControlProduccion {
                     p.getEstado(), c.getId(), h.getNombre(), p.getCuadrillas().length);
         }
         return planesCosecha;
-    }
-    public String[] listHuertos(){
-        String[] listaHuertos = new String[huertos.size()];
-        if(huertos.isEmpty()){
-            return new String[0];
-        }
-        for(int i = 0; i <huertos.size() ; i++){
-            Huerto h = huertos.get(i);
-            listaHuertos[i] = String.format("%-20s %-12.1f %-20s %-15s %-20s %-15d\n" ,
-                    h.getNombre(),h.getSuperficie(),h.getUbicacion(),h.getPropietario().getRut(),
-                    h.getPropietario().getNombre(),h.getCuarteles().length);
-        }
-        return  listaHuertos;
     }
 
     private PlanCosecha buscaPlan(int idPlan) {

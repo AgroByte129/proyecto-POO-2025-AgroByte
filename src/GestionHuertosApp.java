@@ -227,18 +227,34 @@ public class GestionHuertosApp {
         }
     }
     // ****Menu 6 ****cultivos
+    private void listaCultivos() {
+        System.out.println("\nLISTADO DE CULTIVOS");
+        System.out.println("--------------------");
+        System.out.printf("%-6s %-15s %-15s %-12s %-15s%n",
+                "Id", "Especie", "Variedad", "Rendimiento", "Nro. cuarteles");
+
+        String[] listaCultivos = cP.listCultivos();
+
+        if (listaCultivos.length == 0) {
+            System.out.println("No existen cultivos registrados.");
+        } else {
+            for (String linea : listaCultivos) {
+                System.out.println(linea);
+            }
+        }
+    }
     // **** Menu 7 **** huertos
     private void listaHuertos(){
         String [] listaDeHuertos = cP.listHuertos();
         if(listaDeHuertos.length == 0){
             System.out.println("No existen huertos registrados");
         }else{
-            System.out.printf("LISTADO DE HUERTOS\n");
-            System.out.printf("------------------\n");
-            System.out.printf("%-20s %-12s %-20s %-15s %-20s %-15s\n",
+            System.out.println("\nLISTADO DE HUERTOS");
+            System.out.println("------------------");
+            System.out.printf("%-20s %-12s %-20s %-15s %-20s %-15s%n",
                     "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre propietario", "Nro. cuarteles");
-            for(int i = 0; i < listaDeHuertos.length; i++){
-                System.out.println(listaDeHuertos[i]);
+            for (String listaDeHuerto : listaDeHuertos) {
+                System.out.println(listaDeHuerto);
             }
         }
     }

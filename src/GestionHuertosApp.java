@@ -196,7 +196,7 @@ public class GestionHuertosApp {
     private void asignaCosechadoresAPlan(){
         System.out.print("Id del plan: ");
         int idPlan = sc.nextInt();
-        System.out.print("Id cuadrilla");
+        System.out.print("Id cuadrilla: ");
         int idCuadrilla = sc.nextInt();
         System.out.print("Nro. cosechadores a asignar: ");
         int nroCos = sc.nextInt();

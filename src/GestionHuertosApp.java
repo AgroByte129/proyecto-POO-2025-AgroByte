@@ -54,6 +54,7 @@ public class GestionHuertosApp {
                 }
                 case 6 -> {
                     System.out.println("-> Listar Cultivos");
+
                 }
                 case 7 -> {
                     System.out.println("-> Listar Huertos");

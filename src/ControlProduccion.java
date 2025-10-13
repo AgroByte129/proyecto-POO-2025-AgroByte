@@ -190,8 +190,9 @@ public class ControlProduccion {
         return null;
     }
     private boolean fechaEnRangoPlan(PlanCosecha p, LocalDate fIni, LocalDate fFin){
+
         LocalDate fechaFinPlan = (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
-        return !p.getInicio().isBefore(fIni) && !fechaFinPlan.isAfter(fFin);
+        return !fIni.isBefore(p.getInicio()) && !fFin.isAfter(fechaFinPlan);
     }
     private String getDatosPersona(Persona persona){
         if(persona instanceof Propietario p){

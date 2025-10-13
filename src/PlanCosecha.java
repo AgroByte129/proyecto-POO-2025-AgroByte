@@ -24,10 +24,7 @@ public class PlanCosecha {
         this.estado = EstadoPlan.PLANIFICADO;
         this.cuartel = cuartel;
         this.cuadrillas = new ArrayList<>();
-
-        if (this.cuartel != null) {
-            this.cuartel.addPlanCosecha(this);
-        }
+        this.cuartel.addPlanCosecha(this);
     }
 
     public int getId() {

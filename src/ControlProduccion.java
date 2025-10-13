@@ -9,6 +9,8 @@ public class ControlProduccion {
     ArrayList<PlanCosecha> planes = new ArrayList<>();
 
     public ControlProduccion(){
+        generateTestData();
+        Cuadrilla.setMaximoCosechadores(6);
     }
 
     public boolean createPropietario(Rut rut, String nombre, String email, String dirParticular, String dirComercial){

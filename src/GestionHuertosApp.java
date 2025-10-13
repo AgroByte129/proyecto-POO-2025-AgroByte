@@ -226,7 +226,24 @@ public class GestionHuertosApp {
             } else System.out.println("No se ha podido agregar el cosechador a la cuadrilla...");
         }
     }
-    // ****Menu 6 ****cultivos
+    // **** Menu 6 ****
+    private void listaCultivos() {
+        System.out.println("\nLISTADO DE CULTIVOS");
+        System.out.println("--------------------");
+        System.out.printf("%-6s %-15s %-15s %-12s %-15s%n",
+                "Id", "Especie", "Variedad", "Rendimiento", "Nro. cuarteles");
+
+        String[] listaCultivos = cP.listCultivos();
+
+        if (listaCultivos.length == 0) {
+            System.out.println("No existen cultivos registrados.");
+        } else {
+            for (String linea : listaCultivos) {
+                System.out.println(linea);
+            }
+        }
+    }
+
     // **** Menu 7 **** huertos
 
     // ***** Menu 8 ****

@@ -4,6 +4,7 @@ public class Rut {
     public Rut(String numero) {
         this.numero = numero;
     }
+
     public String getNumero() {
         return numero;
     }
@@ -16,7 +17,7 @@ public class Rut {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rut rut = (Rut) o;
-        return numero.equals(rut.numero);
+        return numero.equals(rut.numero);//equals de String
     }
 
     @Override
@@ -25,7 +26,7 @@ public class Rut {
     }
 
     @Override
-    public String toString() {
+    public String toString() {//invocado por listarPersona
         return numero;
     }
 

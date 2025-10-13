@@ -8,7 +8,9 @@ public class ControlProduccion {
     ArrayList<Cultivo> cultivos = new ArrayList<>();
     ArrayList<PlanCosecha> planes = new ArrayList<>();
 
-    public ControlProduccion(){}
+    public ControlProduccion(){
+        generateTestData();
+    }
 
     public boolean createPropietario(Rut rut, String nombre, String email, String dirParticular, String dirComercial){
         return buscaPersona(rut) == null && personas.add(new Propietario(rut, nombre, email, dirParticular, dirComercial));
@@ -68,70 +70,19 @@ public class ControlProduccion {
         }
 
         PlanCosecha plan = new PlanCosecha(idPlan, nomPlan, fIni, fFin, meta, precio, cuartel);
-        planes.add(plan);
-
-        System.out.println("\nPlan de cosecha creado exitosamente\n");
-        System.out.println("Agregando cuadrillas al plan de cosecha");
-        System.out.print("Nro. de cuadrillas: ");
-
-        java.util.Scanner tcld = new java.util.Scanner(System.in).useDelimiter("[\\t\\n]+");
-        int n = tcld.nextInt();
-
-        for (int i = 0; i < n; i++) {
-            System.out.print("\nId cuadrilla: ");
-            int idCuad = tcld.nextInt();
-            System.out.print("Nombre cuadrilla: ");
-            String nomCuad = tcld.next();
-            System.out.print("Rut supervisor: ");
-            Rut rutSup = new Rut(tcld.next());
-
-            Persona persona = buscaPersona(rutSup);
-            if (!(persona instanceof Supervisor sup)) {
-                System.out.println("No existe un supervisor con ese rut.");
-                continue;
-            }
-
-            if (sup.getCuadrilla() != null) {
-                System.out.println("El supervisor ya tiene asignada una cuadrilla.");
-                continue;
-            }
-
-            if (plan.addCuadrilla(idCuad, nomCuad, sup)) {
-                System.out.println("Cuadrilla agregada exitosamente al plan de cosecha");
-            } else {
-                System.out.println("No se pudo agregar la cuadrilla (ID duplicado o supervisor repetido).");
-            }
-        }
-
-        return true;
-    }
-    String[] listCultivos(){
-        if (cultivos.isEmpty()) return new String[]{"No hay cultivos registrados."};
-        String[] listado = new String[cultivos.size()+2];
-        listado[0] = "LISTADO DE CULTIVOS";
-        listado[1] = "--------------------";
-        for (int i=0;i<cultivos.size();i++){
-            Cultivo c = cultivos.get(i);
-            int nCuarteles = (c.getCuarteles()!=null) ? c.getCuarteles().length : 0;
-            listado[i+2] = String.format("%-4d %-10s %-12s %-12.2f %-5d",
-                    c.getId(), c.getEspecie(), c.getVariedad(), c.getRendimiento(), nCuarteles);
-        }
-        return listado;
+        return planes.add(plan);
     }
 
-    String[] listHuertos(){
-        if (huertos.isEmpty()) return new String[]{"No hay huertos registrados."};
-        String[] arr = new String[huertos.size() + 2];
-        arr[0] = "NOMBRE         SUPERFICIE   UBICACION        PROPIETARIO";
-        arr[1] = "-----------------------------------------------------------";
-        for (int i = 0; i < huertos.size(); i++) {
-            Huerto h = huertos.get(i);
-            arr[i + 2] = String.format("%-14s %-12.2f %-15s %-10s",
-                    h.getNombre(), h.getSuperficie(), h.getUbicacion(), h.getPropietario().getNombre());
-        }
-        return arr;
-    }
+    public boolean addCuadrillaToPlan(int idPlan, int idCuad, String nomCuad, Rut rutSup){
+        PlanCosecha plan = buscaPlan(idPlan);
+        Persona persona = buscaPersona(rutSup);
 
+        if(plan == null){return false;}
+        if(!(persona instanceof Supervisor s)) {return false;}
+        if(s.getCuadrilla() != null) {return false;}
+
+        return plan.addCuadrilla(idCuad, nomCuad, s);
+    }
 
     public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fIni, LocalDate fFin, double metaKilos, Rut rut) {
         PlanCosecha plan = buscaPlan(idPlan);
@@ -193,7 +144,7 @@ public class ControlProduccion {
             Huerto h = c.getHuerto();
 
             planesCosecha[i] = String.format("%-6d, %-15s, %-15s, %-15s, %-10.1f, %-17.1f," +
-                            " %-12s, %-12d, %-20s, %-15d",p.getId(), p.getNombre(),
+                    " %-12s, %-12d, %-20s, %-15d",p.getId(), p.getNombre(),
                     p.getInicio(), finPlan, p.getMetaKilos(), p.getPrecioBaseKilo(),
                     p.getEstado(), c.getId(), h.getNombre(), p.getCuadrillas().length);
         }
@@ -258,50 +209,98 @@ public class ControlProduccion {
     }
 
     private void generateTestData() {
-        // Crear personas
-        Rut rutProp = new Rut("12345678-9");
-        Rut rutSup = new Rut("23456789-0");
-        Rut rutCose1 = new Rut("34567890-1");
-        Rut rutCose2 = new Rut("45678901-2");
+        // ==== CREAR PERSONAS ====
+        Rut rutProp1 = new Rut("12345678-9");
+        Rut rutProp2 = new Rut("98765432-1");
+        Rut rutSup1 = new Rut("23456789-0");
+        Rut rutSup2 = new Rut("34567890-2");
+        Rut rutCose1 = new Rut("45678901-3");
+        Rut rutCose2 = new Rut("56789012-4");
+        Rut rutCose3 = new Rut("67890123-5");
+        Rut rutCose4 = new Rut("78901234-6");
 
-        createPropietario(rutProp, "Juan Pérez", "juan@email.com", "Av. Siempre Viva 123", "Camino Rural 456");
-        createSupervisor(rutSup, "Laura Soto", "laura@email.com", "Calle Norte 321", "Agrónoma");
+        createPropietario(rutProp1, "Juan Pérez", "juan@email.com", "Av. Siempre Viva 123", "Camino Rural 456");
+        createPropietario(rutProp2, "Ana Torres", "ana@email.com", "Calle Larga 101", "Camino Viejo 33");
+
+        createSupervisor(rutSup1, "Laura Soto", "laura@email.com", "Calle Norte 321", "Agrónoma");
+        createSupervisor(rutSup2, "Pedro Morales", "pedro@email.com", "Av. Sur 555", "Ingeniero Agrícola");
+
         createCosechador(rutCose1, "Carlos Díaz", "carlos@email.com", "Villa Sur 111", LocalDate.of(1990, 5, 12));
         createCosechador(rutCose2, "María Rojas", "maria@email.com", "Villa Sur 222", LocalDate.of(1995, 8, 23));
+        createCosechador(rutCose3, "Luis Ramírez", "luis@email.com", "Calle Central 999", LocalDate.of(1988, 2, 10));
+        createCosechador(rutCose4, "Paula Herrera", "paula@email.com", "Los Robles 45", LocalDate.of(2000, 11, 2));
 
-        // Crear cultivos
+        // ==== CREAR CULTIVOS ====
         createCultivo(1, "Manzana", "Fuji", 500.0f);
         createCultivo(2, "Pera", "Abate", 400.0f);
+        createCultivo(3, "Cereza", "Lapins", 350.0f);
+        createCultivo(4, "Durazno", "O'Henry", 300.0f);
 
-        // Crear huerto
-        createHuerto("El Manzanar", 10.5f, "Sector A", rutProp);
+        // ==== CREAR HUERTOS ====
+        createHuerto("El Manzanar", 10.5f, "Sector A", rutProp1);
+        createHuerto("La Frutera", 8.2f, "Sector B", rutProp2);
 
-        // Agregar cuarteles
-        addCuartelToHuerto("El Manzanar", 101, 3.0f, 1); // cuartel para el cultivo 1 (Manzana)
-        addCuartelToHuerto("El Manzanar", 102, 2.5f, 2); // cuartel para el cultivo 2 (Pera)
+        // ==== AGREGAR CUARTELES A LOS HUERTOS ====
+        addCuartelToHuerto("El Manzanar", 101, 3.0f, 1);
+        addCuartelToHuerto("El Manzanar", 102, 2.5f, 2);
+        addCuartelToHuerto("La Frutera", 201, 3.5f, 3);
+        addCuartelToHuerto("La Frutera", 202, 2.0f, 4);
 
-        // Buscar objetos ya creados
-        Huerto huerto = buscaHuerto("El Manzanar");
-        Cuartel[] cuarteles = huerto.getCuarteles(); // usamos el primer cuartel
-        Cuartel cuartel = cuarteles[0];
-        Supervisor supervisor = (Supervisor) buscaPersona(rutSup);
+        // ==== CREAR PLANES DE COSECHA ====
+        Huerto manzanar = buscaHuerto("El Manzanar");
+        Huerto frutera = buscaHuerto("La Frutera");
+        Cuartel cuartelM1 = manzanar.getCuartel(101);
+        Cuartel cuartelM2 = manzanar.getCuartel(102);
+        Cuartel cuartelF1 = frutera.getCuartel(201);
+        Cuartel cuartelF2 = frutera.getCuartel(202);
 
-        // Crear plan de cosecha
-        PlanCosecha plan = new PlanCosecha(
-                1,
-                "Plan de Cosecha Primavera",
-                LocalDate.of(2025, 10, 1),
-                LocalDate.of(2025, 10, 30),
-                1000.0,
-                150.0,
-                cuartel
+        PlanCosecha plan1 = new PlanCosecha(
+                1, "Cosecha Primavera",
+                LocalDate.of(2025, 10, 1), LocalDate.of(2025, 10, 30),
+                1000.0, 150.0, cuartelM1
         );
-        planes.add(plan);
-        // Agregar cuadrilla
-        plan.addCuadrilla(1, "Cuadrilla A", supervisor);
+        PlanCosecha plan2 = new PlanCosecha(
+                2, "Cosecha Verano",
+                LocalDate.of(2026, 1, 5), LocalDate.of(2026, 1, 25),
+                800.0, 180.0, cuartelM2
+        );
+        PlanCosecha plan3 = new PlanCosecha(
+                3, "Cosecha Cerezos",
+                LocalDate.of(2025, 11, 10), LocalDate.of(2025, 11, 30),
+                900.0, 200.0, cuartelF1
+        );
+        PlanCosecha plan4 = new PlanCosecha(
+                4, "Cosecha Duraznos",
+                LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 20),
+                600.0, 220.0, cuartelF2
+        );
 
-        // Asignar cosechadores a la cuadrilla dentro del rango
-        addCosechadorToCuadrilla(1, 1, LocalDate.of(2025, 10, 5), LocalDate.of(2025, 10, 20), 150.0, rutCose1);
-        addCosechadorToCuadrilla(1, 1, LocalDate.of(2025, 10, 10), LocalDate.of(2025, 10, 25), 130.0, rutCose2);
+        planes.add(plan1);
+        planes.add(plan2);
+        planes.add(plan3);
+        planes.add(plan4);
+
+        // ==== AGREGAR CUADRILLAS ====
+        Supervisor sup1 = (Supervisor) buscaPersona(rutSup1);
+        Supervisor sup2 = (Supervisor) buscaPersona(rutSup2);
+
+        plan1.addCuadrilla(1, "Cuadrilla A", sup1);
+        plan2.addCuadrilla(2, "Cuadrilla B", sup2);
+        plan3.addCuadrilla(3, "Cuadrilla C", sup1);
+        plan4.addCuadrilla(4, "Cuadrilla D", sup2);
+
+        // ==== ASIGNAR COSECHADORES A CUADRILLAS ====
+        addCosechadorToCuadrilla(1, 1, LocalDate.of(2025, 10, 5), LocalDate.of(2025, 10, 25), 150.0, rutCose1);
+        addCosechadorToCuadrilla(1, 1, LocalDate.of(2025, 10, 10), LocalDate.of(2025, 10, 28), 130.0, rutCose2);
+
+        addCosechadorToCuadrilla(2, 2, LocalDate.of(2026, 1, 6), LocalDate.of(2026, 1, 20), 120.0, rutCose3);
+        addCosechadorToCuadrilla(2, 2, LocalDate.of(2026, 1, 10), LocalDate.of(2026, 1, 23), 140.0, rutCose4);
+
+        addCosechadorToCuadrilla(3, 3, LocalDate.of(2025, 11, 12), LocalDate.of(2025, 11, 25), 160.0, rutCose2);
+        addCosechadorToCuadrilla(3, 3, LocalDate.of(2025, 11, 15), LocalDate.of(2025, 11, 28), 110.0, rutCose3);
+
+        addCosechadorToCuadrilla(4, 4, LocalDate.of(2026, 2, 3), LocalDate.of(2026, 2, 18), 100.0, rutCose1);
+        addCosechadorToCuadrilla(4, 4, LocalDate.of(2026, 2, 5), LocalDate.of(2026, 2, 17), 130.0, rutCose4);
     }
+
 }

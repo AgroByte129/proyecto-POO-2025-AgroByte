@@ -5,13 +5,17 @@ public class Huerto {
     private float superficie;
     private String ubicacion;
     private Propietario propietario;
-    ArrayList<Cuartel> cuarteles = new ArrayList<>();
+    private ArrayList<Cuartel> cuarteles = new ArrayList<>();
 
     public Huerto(String nombre, float superficie, String ubicacion, Propietario propietario) {
         this.nombre = nombre;
         this.superficie = superficie;
         this.ubicacion = ubicacion;
         this.propietario = propietario;
+
+        if (this.propietario != null) {
+            this.propietario.addHuerto(this);
+        }
     }
     public String getNombre() {return nombre;}
     public float getSuperficie() {return superficie;}
@@ -23,10 +27,9 @@ public class Huerto {
 
     public boolean addCuartel(int id, float sup, Cultivo cult) {
         for (Cuartel c : cuarteles) {
-            if (c.getId() == id) {
-                return false;
-            }
+            if (c.getId() == id) {return false;}
         }
+
         Cuartel cuartel = new Cuartel(id, sup, cult, this);
         return cuarteles.add(cuartel);
     }

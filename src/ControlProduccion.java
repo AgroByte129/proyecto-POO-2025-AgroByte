@@ -150,6 +150,19 @@ public class ControlProduccion {
         }
         return planesCosecha;
     }
+    public String[] listHuertos(){
+        String[] listaHuertos = new String[huertos.size()];
+        if(huertos.size() == 0){
+            return new String[0];
+        }
+        for(int i = 0; i <huertos.size() ; i++){
+            Huerto h = huertos.get(i);
+            listaHuertos[i] = String.format("%-20s %-12.1f %-20s %-15s %-20s %-15d\n" ,
+                    h.getNombre(),h.getSuperficie(),h.getUbicacion(),h.getPropietario().getRut(),
+                    h.getPropietario().getNombre(),h.getCuarteles().length);
+        }
+        return  listaHuertos;
+    }
 
     private PlanCosecha buscaPlan(int idPlan) {
         for (PlanCosecha p : planes) {

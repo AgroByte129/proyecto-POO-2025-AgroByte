@@ -57,6 +57,7 @@ public class GestionHuertosApp {
                 }
                 case 7 -> {
                     System.out.println("-> Listar Huertos");
+                    listaHuertos();
                 }
                 case 8 -> {
                     System.out.println("-> Listar Personas");
@@ -289,6 +290,20 @@ public class GestionHuertosApp {
         }else {
             for(String l : listaP){
                 System.out.println(l);
+            }
+        }
+    }
+    private void listaHuertos(){
+        String [] listaDeHuertos = cP.listHuertos();
+        if(listaDeHuertos.length == 0){
+            System.out.println("No existen huertos registrados");
+        }else{
+            System.out.printf("LISTADO DE HUERTOS\n");
+            System.out.printf("------------------\n");
+            System.out.printf("%-20s %-12s %-20s %-15s %-20s %-15s\n",
+                    "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre propietario", "Nro. cuarteles");
+            for(int i = 0; i < listaDeHuertos.length; i++){
+                System.out.println(listaDeHuertos[i]);
             }
         }
     }

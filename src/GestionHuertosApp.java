@@ -309,7 +309,7 @@ public class GestionHuertosApp {
                 "\n-------------------------");
 
         System.out.printf(
-                "%-6s %-15s %-15s %-15s %-10s %-17s %-12s %-12s %-20s %-15s%n",
+                "%-6s %-20s %-15s %-15s %-10s %-17s %-15s %-12s %-20s %-15s%n",
                 "Id", "Nombre", "Fecha inicio", "Fecha término", "Meta (kg)",
                 "Precio base (kg)", "Estado", "Id cuartel", "Nombre huerto",
                 "Nro. cuadrillas"

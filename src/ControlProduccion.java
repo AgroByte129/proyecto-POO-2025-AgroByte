@@ -115,7 +115,7 @@ public class ControlProduccion {
         for (int i = 0; i < cultivos.size(); i++) {
             Cultivo c = cultivos.get(i);
             listaCultivos[i] = String.format(
-                    "%-6d %-15s %-15s %-10.1f %-15d",
+                    "%-6d %-15s %-15s %-12.1f %-15d",
                     c.getId(),
                     c.getEspecie(),
                     c.getVariedad(),
@@ -180,8 +180,8 @@ public class ControlProduccion {
             Cuartel c = p.getCuartel();
             Huerto h = c.getHuerto();
 
-            planesCosecha[i] = String.format("%-6d, %-15s, %-15s, %-15s, %-10.1f, %-17.1f," +
-                    " %-12s, %-12d, %-20s, %-15d",p.getId(), p.getNombre(),
+            planesCosecha[i] = String.format("%-6d %-20s %-15s %-15s %-10.1f %-17.1f" +
+                    " %-15s %-12d %-20s %-15d",p.getId(), p.getNombre(),
                     p.getInicio(), finPlan, p.getMetaKilos(), p.getPrecioBaseKilo(),
                     p.getEstado(), c.getId(), h.getNombre(), p.getCuadrillas().length);
         }
@@ -218,7 +218,7 @@ public class ControlProduccion {
     }
     private String getDatosPersona(Persona persona){
         if(persona instanceof Propietario p){
-            return String.format("%-12s, %-15s, %-20s, %-25s, %-25s, %-15d",
+            return String.format("%-12s %-15s %-20s %-25s %-25s %-15d",
                     p.getRut(),
                     p.getNombre(),
                     p.getDireccion(),
@@ -226,7 +226,7 @@ public class ControlProduccion {
                     p.getDireccionComercial(),
                     p.getHuertos().length);
         } else if(persona instanceof Supervisor s){
-            return String.format("%-12s, %-15s, %-20s, %-25s, %-25s, %-15s",
+            return String.format("%-12s %-15s %-20s %-25s %-25s %-15s",
                     s.getRut(),
                     s.getNombre(),
                     s.getDireccion(),
@@ -234,7 +234,7 @@ public class ControlProduccion {
                     s.getProfesion(),
                     (s.getCuadrilla() == null ? "S/A" : s.getCuadrilla().getNombre()));
         } else if(persona instanceof Cosechador c){
-            return String.format("%-12s, %-15s, %-20s, %-25s, %-25s, %-15d",
+            return String.format("%-12s %-15s %-20s %-25s %-25s %-15d",
                     c.getRut(),
                     c.getNombre(),
                     c.getDireccion(),

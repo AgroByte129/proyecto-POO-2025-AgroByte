@@ -4,20 +4,18 @@ public class Persona {
     private String email;
     private String direccion;
 
-    public Persona(Rut rut, String nom, String email, String dir) {
+    public Persona(Rut rut, String nombre, String email, String direccion) {
         this.rut = rut;
-        nombre = nom;
+        this.nombre = nombre;
         this.email = email;
-        direccion = dir;
+        this.direccion = direccion;
     }
 
-    public Persona() {
-    }
-    public Rut getRut(){return rut;}
-  public String getNombre(){return nombre;}
-  public String getEmail(){return email;}
-  public void setEmail(String email){this.email = email;}
-  public String getDireccion(){return direccion;}
-  public void setDireccion(String direccion){this.direccion = direccion;}
+    public Rut getRut() {return rut;}
+    public String getNombre() {return nombre;}
+    public String getEmail() {return email;}
+    public void setEmail(String email) {this.email = email;}
+    public String getDireccion() {return direccion;}
+    public void setDireccion(String direccion) {this.direccion = direccion;}
 }
 

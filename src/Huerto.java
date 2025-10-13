@@ -26,8 +26,14 @@ public class Huerto {
     public void setPropietario(Propietario propietario) {this.propietario = propietario;}
 
     public boolean addCuartel(int id, float sup, Cultivo cult) {
-        if(getCuartel(id) != null){return false;}
+        if(getCuartel(id) != null){return false;}//busca si ya hay cuartel duplicado
+
         Cuartel cuartel = new Cuartel(id, sup, cult, this);
+
+        if(!cult.addCuartel(cuartel)){
+            return false;
+        }
+
         return cuarteles.add(cuartel);
     }
 

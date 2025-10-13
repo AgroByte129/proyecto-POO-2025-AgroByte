@@ -24,7 +24,7 @@ public class Cultivo {
         this.rendimiento = rendimiento;
     }
     public boolean addCuartel(Cuartel cuartel) {
-        for(Cuartel c : cuarteles) {
+        for(Cuartel c : cuarteles) {//puede tener duplicados?
             if(c.getId() == cuartel.getId()) {
                 return false;
             }

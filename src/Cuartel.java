@@ -17,7 +17,6 @@ public class Cuartel {
         this.huerto = huerto;
         this.estado = EstadoFenologico.REPOSO_INVERNAL;
         this.planes = new ArrayList<>();
-        cult.addCuartel(this);//Sospechoso problema
     }
 
     public int getId() {return id;}

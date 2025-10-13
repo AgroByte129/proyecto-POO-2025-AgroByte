@@ -38,8 +38,8 @@ public class ControlProduccion {
     }
 
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo){
-        Huerto huerto = buscaHuerto(nombreHuerto);
-        Cultivo cultivo = buscaCultivo(idCultivo);
+        Huerto huerto = buscaHuerto(nombreHuerto);//busca si existe el huerto
+        Cultivo cultivo = buscaCultivo(idCultivo);//busca si existe el cultivo
 
         if(huerto == null || cultivo == null) {return false;}
         //addCuartel ya hace verificación de duplicados en Huerto

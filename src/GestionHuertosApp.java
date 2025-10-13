@@ -228,7 +228,20 @@ public class GestionHuertosApp {
     }
     // ****Menu 6 ****cultivos
     // **** Menu 7 **** huertos
-
+    private void listaHuertos(){
+        String [] listaDeHuertos = cP.listHuertos();
+        if(listaDeHuertos.length == 0){
+            System.out.println("No existen huertos registrados");
+        }else{
+            System.out.printf("LISTADO DE HUERTOS\n");
+            System.out.printf("------------------\n");
+            System.out.printf("%-20s %-12s %-20s %-15s %-20s %-15s\n",
+                    "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre propietario", "Nro. cuarteles");
+            for(int i = 0; i < listaDeHuertos.length; i++){
+                System.out.println(listaDeHuertos[i]);
+            }
+        }
+    }
     // ***** Menu 8 ****
     private void listaPersonas(){
         String[] listPropietarios = cP.listPropietarios();
@@ -270,7 +283,6 @@ public class GestionHuertosApp {
                 System.out.println(lC);
             }
         }
-
     }
     // **** Menu 9 *****
     private void listaPlanesCosecha(){
@@ -293,20 +305,7 @@ public class GestionHuertosApp {
             }
         }
     }
-    private void listaHuertos(){
-        String [] listaDeHuertos = cP.listHuertos();
-        if(listaDeHuertos.length == 0){
-            System.out.println("No existen huertos registrados");
-        }else{
-            System.out.printf("LISTADO DE HUERTOS\n");
-            System.out.printf("------------------\n");
-            System.out.printf("%-20s %-12s %-20s %-15s %-20s %-15s\n",
-                    "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre propietario", "Nro. cuarteles");
-            for(int i = 0; i < listaDeHuertos.length; i++){
-                System.out.println(listaDeHuertos[i]);
-            }
-        }
-    }
+
 
     private LocalDate fechaFormateada(String fecha){
         return LocalDate.parse(fecha, FORMATO);

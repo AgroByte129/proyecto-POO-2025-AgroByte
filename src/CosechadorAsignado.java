@@ -15,6 +15,8 @@ public class CosechadorAsignado {
         this.metaKilos = meta;
         this.cuadrilla = cuad;
         this.cosechador = cos;
+        //establece la relación con cosechador y cuadrilla
+        cos.addCuadrilla(this);
     }
 
     public LocalDate getDesde() {return desde;}

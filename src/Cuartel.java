@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Cuartel {
     private int id;
@@ -7,7 +8,7 @@ public class Cuartel {
 
     private Cultivo cultivo;
     private Huerto huerto;
-    private ArrayList<PlanCosecha> planes;
+    private List<PlanCosecha> planes;
 
     public Cuartel(int id, float sup, Cultivo cult, Huerto huerto) {
         this.id = id;
@@ -16,7 +17,7 @@ public class Cuartel {
         this.huerto = huerto;
         this.estado = EstadoFenologico.REPOSO_INVERNAL;
         this.planes = new ArrayList<>();
-        cult.addCuartel(this);
+        cult.addCuartel(this);//Sospechoso problema
     }
 
     public int getId() {return id;}
@@ -26,14 +27,10 @@ public class Cuartel {
         return cultivo.getRendimiento();
     }
     public EstadoFenologico getEstado() {return estado;}
+    public void setEstado(EstadoFenologico estado){this.estado = estado;}
     public Cultivo getCultivo() {return cultivo;}
     public Huerto getHuerto() {return huerto;}
+    public void addPlanCosecha(PlanCosecha planCosecha) {planes.add(planCosecha);} //No realiza verificación, solo agrega
     public PlanCosecha[] getPlanes() {return planes.toArray(new PlanCosecha[0]);}
-
-    public void addPlanCosecha(PlanCosecha planCosecha) {
-        if (!planes.contains(planCosecha)) {
-            planes.add(planCosecha);
-        }
-    }
 }
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class Cuadrilla {
     private int id;
     private String nombre;
-    private int maximoCosechadores;
+    private static int maximoCosechadores;
 
     private Supervisor supervisor;
     private PlanCosecha planCosecha;
@@ -15,12 +15,8 @@ public class Cuadrilla {
         this.nombre = nom;
         this.supervisor = sup;
         this.planCosecha = plan;
-        this.maximoCosechadores = 0;
         this.asignaciones = new ArrayList<>();
-
-        if (sup != null) {
-            sup.setCuadrilla(this);
-        }
+        sup.setCuadrilla(this); //relación bicondicional
     }
 
     public int getId() { return id; }
@@ -30,20 +26,15 @@ public class Cuadrilla {
     public PlanCosecha getPlanCosecha() { return planCosecha; }
 
     public boolean addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos) {
-        if (maximoCosechadores > 0 && asignaciones.size() >= maximoCosechadores) {
+        if (asignaciones.size() >= maximoCosechadores) {
             return false;
         }
-        for (CosechadorAsignado ca : asignaciones) {
-            if (ca.getCosechador().getRut().equals(cos.getRut())) {
-                return false;
-            }
-        }
+        if(findCosechadorByRut(cos) != null) {return false;}
+        //CosechadorAsignado ya se encarga de enlazar la cuadrilla con el cosechador
         CosechadorAsignado nueva = new CosechadorAsignado(fIni, fFin, meta, this, cos);
         asignaciones.add(nueva);
-        cos.addCuadrilla(nueva);
         return true;
     }
-
     public Cosechador[] getCosechadores() {
         Cosechador[] arr = new Cosechador[asignaciones.size()];
         for (int i = 0; i < asignaciones.size(); i++) {
@@ -51,7 +42,15 @@ public class Cuadrilla {
         }
         return arr;
     }
+    public static int getMaximoCosechadores() { return maximoCosechadores; }
+    public static void setMaximoCosechadores(int max) { maximoCosechadores = max; }
 
-    public int getMaximoCosechadores() { return maximoCosechadores; }
-    public void setMaximoCosechadores(int max) { this.maximoCosechadores = max; }
+    private CosechadorAsignado findCosechadorByRut(Cosechador cos) {
+        for (CosechadorAsignado ca : asignaciones) {
+            if (ca.getCosechador().getRut().equals(cos.getRut())) {
+                return ca;
+            }
+        }
+        return null;
+    }
 }

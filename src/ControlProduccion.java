@@ -152,7 +152,7 @@ public class ControlProduccion {
     }
     public String[] listHuertos(){
         String[] listaHuertos = new String[huertos.size()];
-        if(huertos.size() == 0){
+        if(huertos.isEmpty()){
             return new String[0];
         }
         for(int i = 0; i <huertos.size() ; i++){
@@ -190,7 +190,7 @@ public class ControlProduccion {
     }
     private boolean fechaEnRangoPlan(PlanCosecha p, LocalDate fIni, LocalDate fFin){
         LocalDate fechaFinPlan = (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
-        return !p.getInicio().isBefore(fIni) && !fechaFinPlan.isAfter(fFin);
+        return !fIni.isBefore(p.getInicio()) && !fFin.isAfter(fechaFinPlan);
     }
     private String getDatosPersona(Persona persona){
         if(persona instanceof Propietario p){

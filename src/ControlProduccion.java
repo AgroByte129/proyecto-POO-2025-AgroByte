@@ -9,6 +9,7 @@ public class ControlProduccion {
     ArrayList<PlanCosecha> planes = new ArrayList<>();
 
     public ControlProduccion(){
+        Cuadrilla.setMaximoCosechadores(6); //no se especifíca cosechadores máximos, así que se colocan 6, 4 generados, 2 disponibles.
         generateTestData();
     }
 
@@ -149,6 +150,19 @@ public class ControlProduccion {
                     p.getEstado(), c.getId(), h.getNombre(), p.getCuadrillas().length);
         }
         return planesCosecha;
+    }
+    public String[] listHuertos(){
+        String[] listaHuertos = new String[huertos.size()];
+        if(huertos.isEmpty()){
+            return new String[0];
+        }
+        for(int i = 0; i <huertos.size() ; i++){
+            Huerto h = huertos.get(i);
+            listaHuertos[i] = String.format("%-20s %-12.1f %-20s %-15s %-20s %-15d\n" ,
+                    h.getNombre(),h.getSuperficie(),h.getUbicacion(),h.getPropietario().getRut(),
+                    h.getPropietario().getNombre(),h.getCuarteles().length);
+        }
+        return  listaHuertos;
     }
 
     private PlanCosecha buscaPlan(int idPlan) {
@@ -302,5 +316,4 @@ public class ControlProduccion {
         addCosechadorToCuadrilla(4, 4, LocalDate.of(2026, 2, 3), LocalDate.of(2026, 2, 18), 100.0, rutCose1);
         addCosechadorToCuadrilla(4, 4, LocalDate.of(2026, 2, 5), LocalDate.of(2026, 2, 17), 130.0, rutCose4);
     }
-
 }

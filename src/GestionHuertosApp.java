@@ -57,6 +57,7 @@ public class GestionHuertosApp {
                 }
                 case 7 -> {
                     System.out.println("-> Listar Huertos");
+                    listaHuertos();
                 }
                 case 8 -> {
                     System.out.println("-> Listar Personas");
@@ -74,8 +75,10 @@ public class GestionHuertosApp {
 
         } while (opcion != 10);
     }
+
+    // **** Menu 1 ****
     private void creaPersona(){
-        System.out.print("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador: ");
+        System.out.print("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ");
         byte rol = sc.nextByte();
         System.out.print("Rut: ");
         String r = sc.next();
@@ -111,6 +114,8 @@ public class GestionHuertosApp {
             }
         }
     }
+
+    // **** Menu 2 ****
     private void creaCultivo(){
         System.out.print("Identificación: ");
         int id = sc.nextInt();
@@ -125,6 +130,8 @@ public class GestionHuertosApp {
             System.out.println("\nCultivo creado exitosamente...");
         } else System.out.println("\nNo se pudo crear el cultivo...");
     }
+
+    // **** Menu 3 ****
     private void creaHuerto(){
         System.out.print("Nombre: ");
         String nom = sc.next();
@@ -154,6 +161,7 @@ public class GestionHuertosApp {
             }
         } else System.out.println("No se ha podido crear el huerto...");
     }
+    // **** Menu 4 ****
     private void creaPlanCosecha(){
         System.out.print("Id plan: ");
         int idPlan = sc.nextInt();
@@ -193,6 +201,8 @@ public class GestionHuertosApp {
 
         }else System.out.println("No se pudo crear el Plan de Cosecha");
     }
+
+        // **** Menu 5 ****
     private void asignaCosechadoresAPlan(){
         System.out.print("Id del plan: ");
         int idPlan = sc.nextInt();
@@ -216,6 +226,23 @@ public class GestionHuertosApp {
             } else System.out.println("No se ha podido agregar el cosechador a la cuadrilla...");
         }
     }
+    // ****Menu 6 ****cultivos
+    // **** Menu 7 **** huertos
+    private void listaHuertos(){
+        String [] listaDeHuertos = cP.listHuertos();
+        if(listaDeHuertos.length == 0){
+            System.out.println("No existen huertos registrados");
+        }else{
+            System.out.printf("LISTADO DE HUERTOS\n");
+            System.out.printf("------------------\n");
+            System.out.printf("%-20s %-12s %-20s %-15s %-20s %-15s\n",
+                    "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre propietario", "Nro. cuarteles");
+            for(int i = 0; i < listaDeHuertos.length; i++){
+                System.out.println(listaDeHuertos[i]);
+            }
+        }
+    }
+    // ***** Menu 8 ****
     private void listaPersonas(){
         String[] listPropietarios = cP.listPropietarios();
         String[] listSupervisores = cP.listSupervisores();
@@ -256,8 +283,8 @@ public class GestionHuertosApp {
                 System.out.println(lC);
             }
         }
-
     }
+    // **** Menu 9 *****
     private void listaPlanesCosecha(){
         String[] listaP = cP.listPlanesCosecha();
 
@@ -278,6 +305,7 @@ public class GestionHuertosApp {
             }
         }
     }
+
 
     private LocalDate fechaFormateada(String fecha){
         return LocalDate.parse(fecha, FORMATO);

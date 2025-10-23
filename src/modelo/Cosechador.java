@@ -1,5 +1,7 @@
 package modelo;
 
+import utilidades.Rut;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDate;

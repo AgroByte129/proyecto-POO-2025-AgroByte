@@ -1,5 +1,7 @@
 package modelo;
 
+import utilidades.Rut;
+
 public class Supervisor extends Persona{
   private String profesion;
   private Cuadrilla cuad;

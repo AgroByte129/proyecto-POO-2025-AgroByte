@@ -1,5 +1,7 @@
 package modelo;
 
+import utilidades.Rut;
+
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -83,7 +85,7 @@ public class GestionHuertosApp {
     private void creaPersona(){
         System.out.print("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ");
         byte rol = sc.nextByte();
-        System.out.print("modelo.Rut: ");
+        System.out.print("utilidades.Rut: ");
         String r = sc.next();
         Rut rut = new Rut(r);
         System.out.print("Nombre: ");
@@ -142,7 +144,7 @@ public class GestionHuertosApp {
         float sup = sc.nextFloat();
         System.out.print("Ubicación: ");
         String ubi = sc.next();
-        System.out.print("modelo.Rut modelo.Propietario: ");
+        System.out.print("utilidades.Rut modelo.Propietario: ");
         Rut rut = new Rut(sc.next());
 
         if(cP.createHuerto(nom, sup, ubi, rut)){
@@ -194,7 +196,7 @@ public class GestionHuertosApp {
                 int idCuadrilla = sc.nextInt();
                 System.out.print("Nombre cuadrilla: ");
                 String nombreCuadrilla = sc.next();
-                System.out.print("modelo.Rut supervisor: ");
+                System.out.print("utilidades.Rut supervisor: ");
                 Rut rutSupervisor = new Rut(sc.next());
 
                 if(cP.addCuadrillaToPlan(idPlan, idCuadrilla, nombreCuadrilla, rutSupervisor)){
@@ -221,7 +223,7 @@ public class GestionHuertosApp {
             LocalDate fFin = fechaFormateada(sc.next());
             System.out.print("Meta (Kilos): ");
             double metaKilos = sc.nextDouble();
-            System.out.print("modelo.Rut cosechador: ");
+            System.out.print("utilidades.Rut cosechador: ");
             Rut rut = new Rut(sc.next());
 
             if(cP.addCosechadorToCuadrilla(idPlan, idCuadrilla, fIni, fFin, metaKilos, rut)){
@@ -255,7 +257,7 @@ public class GestionHuertosApp {
             System.out.println("\nLISTADO DE HUERTOS");
             System.out.println("------------------");
             System.out.printf("%-20s %-12s %-20s %-15s %-20s %-15s%n",
-                    "Nombre", "Superficie", "Ubicación", "modelo.Rut propietario", "Nombre propietario", "Nro. cuarteles");
+                    "Nombre", "Superficie", "Ubicación", "utilidades.Rut propietario", "Nombre propietario", "Nro. cuarteles");
             for (String listaDeHuerto : listaDeHuertos) {
                 System.out.println(listaDeHuerto);
             }
@@ -270,7 +272,7 @@ public class GestionHuertosApp {
         System.out.println("LISTADO DE PROPIETARIOS" +
                 "\n-----------------------");
         System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
-                "modelo.Rut", "Nombre", "Dirección", "email", "Dirección comercial", "Nro. huertos");
+                "utilidades.Rut", "Nombre", "Dirección", "email", "Dirección comercial", "Nro. huertos");
         if(listPropietarios.length == 0){
             System.out.println("No hay propietarios registrados...");
         }else {
@@ -282,7 +284,7 @@ public class GestionHuertosApp {
         System.out.println("\nLISTADO DE SUPERVISORES" +
                          "\n-----------------------");
         System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
-                "modelo.Rut", "Nombre", "Dirección", "email", "Profesión", "Nombre cuadrilla");
+                "utilidades.Rut", "Nombre", "Dirección", "email", "Profesión", "Nombre cuadrilla");
         if(listSupervisores.length == 0){
             System.out.println("No hay supervisores registrados...");
         }else{
@@ -294,7 +296,7 @@ public class GestionHuertosApp {
         System.out.println("\nLISTADO DE COSECHADORES" +
                          "\n-----------------------");
         System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
-                "modelo.Rut", "Nombre", "Dirección", "email", "Fecha nacimiento", "Nro. Cuadrillas");
+                "utilidades.Rut", "Nombre", "Dirección", "email", "Fecha nacimiento", "Nro. Cuadrillas");
         if(listCosechadores.length == 0){
             System.out.println("No hay cosechadores registrados...");
         }else{

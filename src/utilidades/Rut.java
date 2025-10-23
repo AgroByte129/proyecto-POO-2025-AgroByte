@@ -1,4 +1,4 @@
-package modelo;
+package utilidades;
 
 public class Rut {
     private String numero;

@@ -1,9 +1,11 @@
+package modelo;
+
 public class Supervisor extends Persona{
   private String profesion;
   private Cuadrilla cuad;
 
   public Supervisor(Rut rut, String nombre, String email, String direccion, String profesion){
-    super(rut, nombre, email, direccion); //Llama al constructor de Persona
+    super(rut, nombre, email, direccion); //Llama al constructor de modelo.Persona
     this.profesion = profesion;
   }
   

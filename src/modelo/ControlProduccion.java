@@ -1,3 +1,5 @@
+package modelo;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,7 @@ public class ControlProduccion {
         Cultivo cultivo = buscaCultivo(idCultivo);//busca si existe el cultivo
 
         if(huerto == null || cultivo == null) {return false;}
-        //addCuartel ya hace verificación de duplicados en Huerto
+        //addCuartel ya hace verificación de duplicados en modelo.Huerto
         return huerto.addCuartel(idCuartel, superficie, cultivo);
     }
 
@@ -319,10 +321,10 @@ public class ControlProduccion {
         Supervisor sup1 = (Supervisor) buscaPersona(rutSup1);
         Supervisor sup2 = (Supervisor) buscaPersona(rutSup2);
 
-        plan1.addCuadrilla(1, "Cuadrilla A", sup1);
-        plan2.addCuadrilla(2, "Cuadrilla B", sup2);
-        plan3.addCuadrilla(3, "Cuadrilla C", sup1);
-        plan4.addCuadrilla(4, "Cuadrilla D", sup2);
+        plan1.addCuadrilla(1, "modelo.Cuadrilla A", sup1);
+        plan2.addCuadrilla(2, "modelo.Cuadrilla B", sup2);
+        plan3.addCuadrilla(3, "modelo.Cuadrilla C", sup1);
+        plan4.addCuadrilla(4, "modelo.Cuadrilla D", sup2);
 
         // ==== ASIGNAR COSECHADORES A CUADRILLAS ====
         addCosechadorToCuadrilla(1, 1, LocalDate.of(2025, 10, 5), LocalDate.of(2025, 10, 25), 150.0, rutCose1);

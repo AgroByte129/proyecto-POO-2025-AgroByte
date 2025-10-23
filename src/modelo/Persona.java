@@ -1,3 +1,5 @@
+package modelo;
+
 public class Persona {
     private Rut rut;
     private String nombre;

@@ -1,3 +1,5 @@
+package modelo;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -30,7 +32,7 @@ public class Cuadrilla {
             return false;
         }
         if(findCosechadorByRut(cos) != null) {return false;}
-        //CosechadorAsignado ya se encarga de enlazar la cuadrilla con el cosechador
+        //modelo.CosechadorAsignado ya se encarga de enlazar la cuadrilla con el cosechador
         CosechadorAsignado nueva = new CosechadorAsignado(fIni, fFin, meta, this, cos);
         asignaciones.add(nueva);
         return true;

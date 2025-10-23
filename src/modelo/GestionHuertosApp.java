@@ -1,3 +1,5 @@
+package modelo;
+
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,9 +19,9 @@ public class GestionHuertosApp {
         do {
             System.out.println("\n*** Sistema de Gestión de Huertos ***\n");
             System.out.println("MENÚ DE OPCIONES");
-            System.out.println("1. Crear Persona");
-            System.out.println("2. Crear Cultivo");
-            System.out.println("3. Crear Huerto");
+            System.out.println("1. Crear modelo.Persona");
+            System.out.println("2. Crear modelo.Cultivo");
+            System.out.println("3. Crear modelo.Huerto");
             System.out.println("4. Crear Plan de Cosecha");
             System.out.println("5. Asignar Cosechadores a Plan");
             System.out.println("6. Listar Cultivos");
@@ -41,7 +43,7 @@ public class GestionHuertosApp {
                     creaCultivo();
                 }
                 case 3 -> {
-                    System.out.println("-> Crear Huerto");
+                    System.out.println("-> Crear modelo.Huerto");
                     creaHuerto();
                 }
                 case 4 -> {
@@ -81,7 +83,7 @@ public class GestionHuertosApp {
     private void creaPersona(){
         System.out.print("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ");
         byte rol = sc.nextByte();
-        System.out.print("Rut: ");
+        System.out.print("modelo.Rut: ");
         String r = sc.next();
         Rut rut = new Rut(r);
         System.out.print("Nombre: ");
@@ -98,20 +100,20 @@ public class GestionHuertosApp {
                 System.out.print("Dirección comercial: ");
                 String dirComercial = sc.next();
                 if(cP.createPropietario(rut, nom, email, dir, dirComercial)){
-                    System.out.println("\nPropietario creado exitosamente");
+                    System.out.println("\nmodelo.Propietario creado exitosamente");
                 }else System.out.println("No se ha podido crear el propietario");
             }
             case 2 -> {
                 System.out.print("Profesión: ");
                 String profesion = sc.next();
                 if(cP.createSupervisor(rut, nom, email, dir, profesion)){
-                    System.out.println("\nSupervisor creado exitosamente");
-                }else System.out.println("No se ha podido crear el Supervisor");
+                    System.out.println("\nmodelo.Supervisor creado exitosamente");
+                }else System.out.println("No se ha podido crear el modelo.Supervisor");
             }
             case 3 -> {
                 if(cP.createCosechador(rut, nom, email, dir, fechaNac)){
                     System.out.println("\nCosechaddor creado exitosamente");
-                }else System.out.println("No se ha podido crear el Cosechador");
+                }else System.out.println("No se ha podido crear el modelo.Cosechador");
             }
         }
     }
@@ -128,7 +130,7 @@ public class GestionHuertosApp {
         float rendimiento = sc.nextFloat();
 
         if(cP.createCultivo(id, especie, variedad, rendimiento)){
-            System.out.println("\nCultivo creado exitosamente...");
+            System.out.println("\nmodelo.Cultivo creado exitosamente...");
         } else System.out.println("\nNo se pudo crear el cultivo...");
     }
 
@@ -140,11 +142,11 @@ public class GestionHuertosApp {
         float sup = sc.nextFloat();
         System.out.print("Ubicación: ");
         String ubi = sc.next();
-        System.out.print("Rut Propietario: ");
+        System.out.print("modelo.Rut modelo.Propietario: ");
         Rut rut = new Rut(sc.next());
 
         if(cP.createHuerto(nom, sup, ubi, rut)){
-            System.out.println("Huerto creado exitosamente...\n");
+            System.out.println("modelo.Huerto creado exitosamente...\n");
             System.out.println("Agregando cuarteles al huerto...");
             System.out.print("Nro de cuarteles: ");
             int nroCuarteles = sc.nextInt();
@@ -157,7 +159,7 @@ public class GestionHuertosApp {
                 System.out.print("Id cultivo del cuartel: ");
                 int idCultivo = sc.nextInt();
                 if(cP.addCuartelToHuerto(nom, idCuartel, superficie, idCultivo)){
-                    System.out.println("Cuartel agregado exitosamente al huerto\n");
+                    System.out.println("modelo.Cuartel agregado exitosamente al huerto\n");
                 } else System.out.println("No se pudo agregar el cuartel...\n");
             }
         } else System.out.println("No se ha podido crear el huerto...");
@@ -192,11 +194,11 @@ public class GestionHuertosApp {
                 int idCuadrilla = sc.nextInt();
                 System.out.print("Nombre cuadrilla: ");
                 String nombreCuadrilla = sc.next();
-                System.out.print("Rut supervisor: ");
+                System.out.print("modelo.Rut supervisor: ");
                 Rut rutSupervisor = new Rut(sc.next());
 
                 if(cP.addCuadrillaToPlan(idPlan, idCuadrilla, nombreCuadrilla, rutSupervisor)){
-                    System.out.println("Cuadrilla agregada exitosamente al plan de cosecha");
+                    System.out.println("modelo.Cuadrilla agregada exitosamente al plan de cosecha");
                 }else System.out.println("No se ha podido agregar la cuadrilla al plan...");
             }
 
@@ -219,11 +221,11 @@ public class GestionHuertosApp {
             LocalDate fFin = fechaFormateada(sc.next());
             System.out.print("Meta (Kilos): ");
             double metaKilos = sc.nextDouble();
-            System.out.print("Rut cosechador: ");
+            System.out.print("modelo.Rut cosechador: ");
             Rut rut = new Rut(sc.next());
 
             if(cP.addCosechadorToCuadrilla(idPlan, idCuadrilla, fIni, fFin, metaKilos, rut)){
-                System.out.println("Cosechador asignado exitosamente a una cuadrilla del plan de cosecha");
+                System.out.println("modelo.Cosechador asignado exitosamente a una cuadrilla del plan de cosecha");
             } else System.out.println("No se ha podido agregar el cosechador a la cuadrilla...");
         }
     }
@@ -253,7 +255,7 @@ public class GestionHuertosApp {
             System.out.println("\nLISTADO DE HUERTOS");
             System.out.println("------------------");
             System.out.printf("%-20s %-12s %-20s %-15s %-20s %-15s%n",
-                    "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre propietario", "Nro. cuarteles");
+                    "Nombre", "Superficie", "Ubicación", "modelo.Rut propietario", "Nombre propietario", "Nro. cuarteles");
             for (String listaDeHuerto : listaDeHuertos) {
                 System.out.println(listaDeHuerto);
             }
@@ -268,7 +270,7 @@ public class GestionHuertosApp {
         System.out.println("LISTADO DE PROPIETARIOS" +
                 "\n-----------------------");
         System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
-                "Rut", "Nombre", "Dirección", "email", "Dirección comercial", "Nro. huertos");
+                "modelo.Rut", "Nombre", "Dirección", "email", "Dirección comercial", "Nro. huertos");
         if(listPropietarios.length == 0){
             System.out.println("No hay propietarios registrados...");
         }else {
@@ -280,7 +282,7 @@ public class GestionHuertosApp {
         System.out.println("\nLISTADO DE SUPERVISORES" +
                          "\n-----------------------");
         System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
-                "Rut", "Nombre", "Dirección", "email", "Profesión", "Nombre cuadrilla");
+                "modelo.Rut", "Nombre", "Dirección", "email", "Profesión", "Nombre cuadrilla");
         if(listSupervisores.length == 0){
             System.out.println("No hay supervisores registrados...");
         }else{
@@ -292,7 +294,7 @@ public class GestionHuertosApp {
         System.out.println("\nLISTADO DE COSECHADORES" +
                          "\n-----------------------");
         System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
-                "Rut", "Nombre", "Dirección", "email", "Fecha nacimiento", "Nro. Cuadrillas");
+                "modelo.Rut", "Nombre", "Dirección", "email", "Fecha nacimiento", "Nro. Cuadrillas");
         if(listCosechadores.length == 0){
             System.out.println("No hay cosechadores registrados...");
         }else{

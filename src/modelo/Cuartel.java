@@ -1,5 +1,7 @@
 package modelo;
 
+import utilidades.EstadoFenologico;
+
 import java.util.ArrayList;
 import java.util.List;
 

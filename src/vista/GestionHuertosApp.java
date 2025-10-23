@@ -1,5 +1,6 @@
-package modelo;
+package vista;
 
+import modelo.ControlProduccion;
 import utilidades.Rut;
 
 import java.util.Scanner;

@@ -1,5 +1,7 @@
 package modelo;
 
+import utilidades.EstadoPlan;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 

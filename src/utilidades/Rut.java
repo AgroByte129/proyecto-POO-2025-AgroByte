@@ -1,5 +1,5 @@
 package utilidades;
-//es necesario cambiar muchas cosas en los ejemplos. Les dejo mis comentarios en cada parte para evitar cualquier problema en la comprension de Rut
+//recuerden que es necesario cambiar muchas cosas en los ejemplos. Les dejo mis comentarios en cada parte para evitar cualquier problema en la comprension de Rut
 public class Rut {
     private long numero;
     private char dv;

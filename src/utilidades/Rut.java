@@ -9,7 +9,7 @@ public class Rut {
         this.dv = dv;
     }
 
-    public Rut of(String rutStr) {
+    public static Rut of(String rutStr) {
         if (rutStr == null) {
             throw new IllegalArgumentException("rut no puede ser null");
         }

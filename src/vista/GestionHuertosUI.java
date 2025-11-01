@@ -1,6 +1,7 @@
 package vista;
 
-import utilidades.Rut;
+import modelo.ControlProduccion;
+import utilidades.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -10,6 +11,8 @@ import java.util.Scanner;
 public class GestionHuertosUI {
     private static GestionHuertosUI instance;
     private Scanner tcld = new Scanner(System.in).useDelimiter("[\\t\\n]+");
+    private ControlProduccion cP = ControlProduccion.getInstance();
+
     private GestionHuertosUI(){}
     public static GestionHuertosUI getInstance(){
         if(instance == null){
@@ -17,6 +20,7 @@ public class GestionHuertosUI {
         }
         return instance;
     }
+
     //*** MENÚ PRINCIPAL ***
     public void menu(){
         int respuesta;
@@ -147,79 +151,95 @@ public class GestionHuertosUI {
         }
         System.out.print("Rut: ");
         Rut rut = Rut.of(tcld.next());
-        System.out.print("Nombre: ");
-        String nom =tcld.next();
-        System.out.print("Email: ");
-        String email =tcld.next();
-        System.out.print("Dirección: ");
-        String dir =tcld.next();
-        System.out.print("Fecha de nacimiento (dd/mm/aaaa): ");
-        LocalDate fechaNac = fechaFormateada(tcld.next());
+        String nom = validaEntradaString("Nombre: ");
+        String email = validaEntradaString("Email: ");
+        String dir = validaEntradaString("Dirección: ");
+        LocalDate fechaNac = validaEntradaFecha("Fecha de nacimiento (dd/mm/aaaa): ");
 
         switch(rol){
             case 1 -> {
-                System.out.print("Dirección comercial: ");
-                String dirComercial =tcld.next();
-                if(cP.createPropietario(rut, nom, email, dir, dirComercial)){
-                    System.out.println("\nmodelo.Propietario creado exitosamente");
-                }else System.out.println("No se ha podido crear el propietario");
+                String dirComercial = validaEntradaString("Dirección comercial: ");
+                try{
+                    cP.createPropietario(rut, nom, email, dir, dirComercial);
+                    System.out.println("-> Propietario creado éxitosamente...");
+                }catch(GestionHuertosException e){
+                    System.out.println(e.getMessage());
+                }
             }
             case 2 -> {
-                System.out.print("Profesión: ");
-                String profesion =tcld.next();
-                if(cP.createSupervisor(rut, nom, email, dir, profesion)){
-                    System.out.println("\nmodelo.Supervisor creado exitosamente");
-                }else System.out.println("No se ha podido crear el modelo.Supervisor");
+                String profesion = validaEntradaString("Profesión: ");
+                try{
+                    cP.createSupervisor(rut, nom, email, dir, profesion);
+                    System.out.println("-> Supervisor creado éxitosamente...");
+                }catch (GestionHuertosException e){
+                    System.out.println(e.getMessage());
+                }
             }
             case 3 -> {
-                if(cP.createCosechador(rut, nom, email, dir, fechaNac)){
-                    System.out.println("\nCosechaddor creado exitosamente");
-                }else System.out.println("No se ha podido crear el modelo.Cosechador");
+                try{
+                    cP.createCosechador(rut, nom, email, dir, fechaNac);
+                    System.out.println("-> Cosechador creado éxitosamente...");
+                }catch(GestionHuertosException e){
+                    System.out.println(e.getMessage());
+                }
             }
         }
     }
     private void creaCultivo(){
-        System.out.print("Identificación: ");
-        int id =tcld.nextInt();
-        System.out.print("Especie: ");
-        String especie =tcld.next();
-        System.out.print("Variedad: ");
-        String variedad =tcld.next();
-        System.out.print("Rendimiento: ");
-        float rendimiento =tcld.nextFloat();
+        int id = validaEntradaInt("Identificación (No negativo): ");
+        while(id < 0){
+            System.out.println("ID no válido, ingrese valor positivo...");
+            id = validaEntradaInt("Identificación (No negativo): ");
+        }
+        String especie = validaEntradaString("Especie: ");
+        String variedad = validaEntradaString("Variedad: ");
+        float rendimiento = validaEntradaFloat("Rendmiento: ");
+        while(rendimiento <= 0){
+            System.out.println("Valor no válido, Ingrese valor positivo");
+            rendimiento = validaEntradaFloat("Rendmiento: ");
+        }
 
-        if(cP.createCultivo(id, especie, variedad, rendimiento)){
-            System.out.println("\nmodelo.Cultivo creado exitosamente...");
-        } else System.out.println("\nNo se pudo crear el cultivo...");
+        try{
+            cP.createCultivo(id, especie, variedad, rendimiento);
+            System.out.println("Cultivo creado éxitosamente...");
+        }catch(GestionHuertosException e){
+            System.out.println(e.getMessage());
+        }
     }
     private void creaHuerto(){
-        System.out.print("Nombre: ");
-        String nom =tcld.next();
-        System.out.print("Superficie: ");
-        float sup =tcld.nextFloat();
-        System.out.print("Ubicación: ");
-        String ubi =tcld.next();
-        System.out.print("utilidades.Rut modelo.Propietario: ");
-        Rut rut = new Rut(tcld.next());
+        String nom = validaEntradaString("Nombre: ");
+        float sup = validaEntradaFloat("Superficie: ");
+        while(sup <= 0){
+            System.out.println("Valor no válido, Ingrese valor positivo");
+            sup = validaEntradaFloat("Superficie: ");
+        }
 
-        if(cP.createHuerto(nom, sup, ubi, rut)){
-            System.out.println("modelo.Huerto creado exitosamente...\n");
-            System.out.println("Agregando cuarteles al huerto...");
-            System.out.print("Nro de cuarteles: ");
-            int nroCuarteles =tcld.nextInt();
+        String ubi = validaEntradaString("Ubicación: ")
+        System.out.print("Rut propietario: ");
+        Rut rut = Rut.of(tcld.next());
 
-            for(int i = 0; i < nroCuarteles; i++){
-                System.out.print("Id cuartel: ");
-                int idCuartel =tcld.nextInt();
-                System.out.print("Superficie cuartel: ");
-                float superficie =tcld.nextFloat();
-                System.out.print("Id cultivo del cuartel: ");
-                int idCultivo =tcld.nextInt();
-                if(cP.addCuartelToHuerto(nom, idCuartel, superficie, idCultivo)){
-                    System.out.println("modelo.Cuartel agregado exitosamente al huerto\n");
-                } else System.out.println("No se pudo agregar el cuartel...\n");
+        try{
+            (cP.createHuerto(nom, sup, ubi, rut)) {
+                System.out.println("Huerto creado exitosamente...\n");
+                System.out.println("Agregando cuarteles al huerto...");
+                System.out.print("Nro de cuarteles: ");
+                int nroCuarteles = tcld.nextInt();
+
+                for (int i = 0; i < nroCuarteles; i++) {
+                    System.out.print("Id cuartel: ");
+                    int idCuartel = tcld.nextInt();
+                    System.out.print("Superficie cuartel: ");
+                    float superficie = tcld.nextFloat();
+                    System.out.print("Id cultivo del cuartel: ");
+                    int idCultivo = tcld.nextInt();
+                    if (cP.addCuartelToHuerto(nom, idCuartel, superficie, idCultivo)) {
+                        System.out.println("modelo.Cuartel agregado exitosamente al huerto\n");
+                    } else System.out.println("No se pudo agregar el cuartel...\n");
+                }
             }
-        } else System.out.println("No se ha podido crear el huerto...");
+        } catch(GestionHuertosException e){
+                System.out.println(e.getMessage());
+        }
     }
     private void agregaCuartelesAHuerto(){}
     private void cambiaEstadoCuartel(){}
@@ -394,12 +414,25 @@ public class GestionHuertosUI {
         }
         return cadena;
     }
+    private float validaEntradaFloat(String mensaje){
+        float num;
+        String entrada;
+        while (true) {
+            entrada = validaEntradaString(mensaje);
+            try {
+                num = Float.parseFloat(entrada);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("ENTRADA NO VÁLIDA, ingresa un número válido.");
+            }
+        }
+        return num;
+    }
     private long validaEntradaLong(String mensaje) {
         long num;
         String entrada;
         while (true) {
-            System.out.print(mensaje);
-            entrada = validaEntradaString("");
+            entrada = validaEntradaString(mensaje);
             try {
                 num = Long.parseLong(entrada);
                 break;
@@ -414,8 +447,7 @@ public class GestionHuertosUI {
         String entrada;
 
         while (true) {
-            System.out.print(mensaje);
-            entrada = validaEntradaString("");
+            entrada = validaEntradaString(mensaje);
             try {
                 num = Integer.parseInt(entrada);
                 break;
@@ -430,8 +462,7 @@ public class GestionHuertosUI {
         String entrada;
 
         while(true){
-            System.out.print(mensaje);
-            entrada = validaEntradaString("");
+            entrada = validaEntradaString(mensaje);
             try{
                 num = Byte.parseByte(entrada);
                 break;
@@ -441,6 +472,29 @@ public class GestionHuertosUI {
         }
         return num;
     }
+    private Enum validaEnum(String clase, String msj) {
+        String cadena;
+        Enum e = null;
+        boolean valido = false;
+
+        while (!valido) {
+            cadena = validaEntradaString(msj).toUpperCase().trim();
+
+            try {
+                switch (clase) {
+                    case "Calidad" -> e = Calidad.valueOf(cadena);
+                    case "EstadoFenologico" -> e = EstadoFenologico.valueOf(cadena);
+                    case "EstadoPlan" -> e = EstadoPlan.valueOf(cadena);
+                }
+                valido = true; // si no lanza excepción, la entrada fue válida
+            } catch (IllegalArgumentException ex) {
+                System.out.println("Entrada no válida, intente nuevamente.");
+            }
+        }
+
+        return e;
+    }
+
     private LocalDate validaEntradaFecha(String mensaje) {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate fecha;

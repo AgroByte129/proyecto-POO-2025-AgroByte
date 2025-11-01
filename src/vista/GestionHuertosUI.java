@@ -527,8 +527,9 @@ public class GestionHuertosUI {
     "r(n,m)"
 
     r = indica que se evalúa rango
-    () = indica el valor del rango. Pueden ser ( o [ según si es
-         incluyente o excluyente
+    () = indica el valor del rango. paréntesis redondos "( )" es excluyente,
+         "[ ]" por legibilidad, dejemoslo para incluyente, aunque puede ser cualquier caracter xd...
+         por ahora dejemoslo así :v
     n,m = valores númericos separados por ","
 
     Formato cálculo positivo:

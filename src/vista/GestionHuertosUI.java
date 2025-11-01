@@ -145,11 +145,7 @@ public class GestionHuertosUI {
     }
 
     private void creaPersona(){
-        byte rol = validaEntradaByte("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ","");
-        while(rol < 1 || rol > 3){
-            System.out.println("Número ingresado no es un rol válido...");
-            rol = validaEntradaByte("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ","");
-        }
+        byte rol = validaEntradaByte("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ","r[1,3]");
         System.out.print("Rut: ");
         Rut rut = Rut.of(tcld.next());
         String nom = validaEntradaString("Nombre: ");
@@ -187,18 +183,10 @@ public class GestionHuertosUI {
         }
     }
     private void creaCultivo(){
-        int id = validaEntradaInt("Identificación (No negativo): ");
-        while(id < 0){
-            System.out.println("ID no válido, ingrese valor positivo...");
-            id = validaEntradaInt("Identificación (No negativo): ");
-        }
+        int id = validaEntradaInt("Identificación (No negativo): ", "p0");
         String especie = validaEntradaString("Especie: ");
         String variedad = validaEntradaString("Variedad: ");
-        float rendimiento = validaEntradaFloat("Rendmiento: ");
-        while(rendimiento <= 0){
-            System.out.println("Valor no válido, Ingrese valor positivo");
-            rendimiento = validaEntradaFloat("Rendmiento: ");
-        }
+        float rendimiento = validaEntradaFloat("Rendmiento: ", "p");
 
         try{
             cP.createCultivo(id, especie, variedad, rendimiento);
@@ -209,13 +197,9 @@ public class GestionHuertosUI {
     }
     private void creaHuerto(){
         String nom = validaEntradaString("Nombre: ");
-        float sup = validaEntradaFloat("Superficie: ");
-        while(sup <= 0){
-            System.out.println("Valor no válido, Ingrese valor positivo");
-            sup = validaEntradaFloat("Superficie: ");
-        }
+        float sup = validaEntradaFloat("Superficie: ", "p");
 
-        String ubi = validaEntradaString("Ubicación: ")
+        String ubi = validaEntradaString("Ubicación: ");
         System.out.print("Rut propietario: ");
         Rut rut = Rut.of(tcld.next());
 
@@ -245,16 +229,12 @@ public class GestionHuertosUI {
     private void agregaCuartelesAHuerto(){
         String nomHuerto = validaEntradaString("Nombre del huerto: ");
         System.out.println("Agregando cuarteles a huerto...");
-        int numCuarteles = validaEntradaInt("Numero de cuarteles a agregar: ");
-        while(numCuarteles <= 0){
-            System.out.println("Número de cuarteles inválido. Ingrese valor positivo.");
-            numCuarteles = validaEntradaInt("Numero de cuarteles a agregar: ");
-        }
+        int numCuarteles = validaEntradaInt("Numero de cuarteles a agregar: ", "p");
 
         for(int i = 0; i < numCuarteles; i++) {
-            int idCuartel = validaEntradaInt("\nId Cuartel: ");
-            float supCuartel = validaEntradaFloat("Superficie cuartel: ");
-            int idCultivo = validaEntradaInt("Id cultivo del cuartel: ");
+            int idCuartel = validaEntradaInt("\nId Cuartel: ", "p");
+            float supCuartel = validaEntradaFloat("Superficie cuartel: ", "p");
+            int idCultivo = validaEntradaInt("Id cultivo del cuartel: ", "p");
             try{
                 cP.addCuartelToHuerto(nomHuerto, idCuartel, supCuartel, idCultivo);
                 System.out.println("\nCuartel agregado éxitosamente al huerto");

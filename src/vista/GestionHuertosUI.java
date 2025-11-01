@@ -241,7 +241,27 @@ public class GestionHuertosUI {
                 System.out.println(e.getMessage());
         }
     }
-    private void agregaCuartelesAHuerto(){}
+    private void agregaCuartelesAHuerto(){
+        String nomHuerto = validaEntradaString("Nombre del huerto: ");
+        System.out.println("Agregando cuarteles a huerto...");
+        int numCuarteles = validaEntradaInt("Numero de cuarteles a agregar: ");
+        while(numCuarteles <= 0){
+            System.out.println("Número de cuarteles inválido. Ingrese valor positivo.");
+            numCuarteles = validaEntradaInt("Numero de cuarteles a agregar: ");
+        }
+
+        for(int i = 0; i < numCuarteles; i++) {
+            int idCuartel = validaEntradaInt("\nId Cuartel: ");
+            float supCuartel = validaEntradaFloat("Superficie cuartel: ");
+            int idCultivo = validaEntradaInt("Id cultivo del cuartel: ");
+            try{
+                cP.addCuartelToHuerto(nomHuerto, idCuartel, supCuartel, idCultivo);
+                System.out.println("\nCuartel agregado éxitosamente al huerto");
+            }catch(GestionHuertosException e){
+                System.out.println(e.getMessage());
+            }
+        }
+    }
     private void cambiaEstadoCuartel(){}
     private void creaPlanDeCosecha(){
         System.out.print("Id plan: ");
@@ -494,7 +514,6 @@ public class GestionHuertosUI {
 
         return e;
     }
-
     private LocalDate validaEntradaFecha(String mensaje) {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate fecha;

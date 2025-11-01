@@ -1,6 +1,7 @@
 package vista;
 
 import modelo.ControlProduccion;
+import org.w3c.dom.ls.LSOutput;
 import utilidades.*;
 
 import java.time.LocalDate;
@@ -144,10 +145,10 @@ public class GestionHuertosUI {
     }
 
     private void creaPersona(){
-        byte rol = validaEntradaByte("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ");
+        byte rol = validaEntradaByte("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ","");
         while(rol < 1 || rol > 3){
             System.out.println("Número ingresado no es un rol válido...");
-            rol = validaEntradaByte("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ");
+            rol = validaEntradaByte("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ","");
         }
         System.out.print("Rut: ");
         Rut rut = Rut.of(tcld.next());
@@ -262,7 +263,9 @@ public class GestionHuertosUI {
             }
         }
     }
-    private void cambiaEstadoCuartel(){}
+    private void cambiaEstadoCuartel(){
+
+    }
     private void creaPlanDeCosecha(){
         System.out.print("Id plan: ");
         int idPlan =tcld.nextInt();
@@ -434,64 +437,154 @@ public class GestionHuertosUI {
         }
         return cadena;
     }
-    private float validaEntradaFloat(String mensaje){
-        float num;
-        String entrada;
-        while (true) {
-            entrada = validaEntradaString(mensaje);
-            try {
-                num = Float.parseFloat(entrada);
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("ENTRADA NO VÁLIDA, ingresa un número válido.");
-            }
-        }
-        return num;
-    }
-    private long validaEntradaLong(String mensaje) {
-        long num;
-        String entrada;
-        while (true) {
-            entrada = validaEntradaString(mensaje);
-            try {
-                num = Long.parseLong(entrada);
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("ENTRADA NO VÁLIDA, ingresa un número válido.");
-            }
-        }
-        return num;
-    }
-    private int validaEntradaInt(String mensaje) {
-        int num;
-        String entrada;
+    private int validaEntradaInt(String mensaje, String condicion) {
+        int num = 0;
+        boolean valido = false;
 
-        while (true) {
-            entrada = validaEntradaString(mensaje);
+        while (!valido) {
+            String entrada = validaEntradaString(mensaje);
+
             try {
                 num = Integer.parseInt(entrada);
-                break;
-            }catch (NumberFormatException e) {
-                System.out.println("ENTRADA NO VÁLIDA, ingresa un número válido.");
-            }
-        }
-        return num;
-    }
-    private byte validaEntradaByte(String mensaje){
-        byte num;
-        String entrada;
 
-        while(true){
-            entrada = validaEntradaString(mensaje);
-            try{
-                num = Byte.parseByte(entrada);
-                break;
-            }catch (NumberFormatException e) {
+                if (!condicion.isBlank()) {
+                    if (validaRango(num, condicion)) {
+                        valido = true;
+                    } else {
+                        System.out.println("Valor fuera de rango.");
+                    }
+                } else {
+                    valido = true;
+                }
+
+            } catch (NumberFormatException e) {
                 System.out.println("ENTRADA NO VÁLIDA, ingresa un número válido.");
             }
         }
         return num;
     }
+    private long validaEntradaLong(String mensaje, String condicion) {
+        long num = 0;
+        boolean valido = false;
+
+        while (!valido) {
+            String entrada = validaEntradaString(mensaje);
+
+            try {
+                num = Long.parseLong(entrada);
+
+                if (!condicion.isBlank()) {
+                    if (validaRango(num, condicion)) {
+                        valido = true;
+                    } else {
+                        System.out.println("Valor fuera de rango.");
+                    }
+                } else {
+                    valido = true;
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("ENTRADA NO VÁLIDA, ingresa un número válido.");
+            }
+        }
+        return num;
+    }
+    private float validaEntradaFloat(String mensaje, String condicion) {
+        float num = 0;
+        boolean valido = false;
+
+        while (!valido) {
+            String entrada = validaEntradaString(mensaje);
+
+            try {
+                num = Float.parseFloat(entrada);
+
+                if (!condicion.isBlank()) {
+                    if (validaRango(num, condicion)) {
+                        valido = true;
+                    } else {
+                        System.out.println("Valor fuera de rango.");
+                    }
+                } else {
+                    valido = true;
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("ENTRADA NO VÁLIDA, ingresa un número válido.");
+            }
+        }
+        return num;
+    }
+    private byte validaEntradaByte(String mensaje, String condicion) {
+        byte num = 0;
+        boolean valido = false;
+
+        while (!valido) {
+            String entrada = validaEntradaString(mensaje);
+            try {
+                num = Byte.parseByte(entrada);
+
+                if (!condicion.isBlank()) {
+                    if (validaRango(num, condicion)) {
+                        valido = true;
+                    } else {
+                        System.out.println("Valor fuera de rango.");
+                    }
+                } else {
+                    valido = true;
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("ENTRADA NO VÁLIDA, ingresa un número válido.");
+            }
+        }
+        return num;
+    }
+
+
+    /*
+    Formato de cálculo de rango uwu:
+    "r(n,m)"
+
+    r = indica que se evalúa rango
+    () = indica el valor del rango. Pueden ser ( o [ según si es
+         incluyente o excluyente
+    n,m = valores númericos separados por ","
+
+    Formato cálculo positivo:
+    "p0" ó "p"
+
+    p0 = evalúa si el valor es mayor o igual a 0
+    p = evalúa si es mayor a 0
+    */
+    //basicamente acabo de hacer un mini lenguaje en un lenguaje xd
+    private boolean validaRango(double valor, String condicion) {
+        char operacion = condicion.charAt(0);
+        String rango = condicion.substring(1);
+
+        switch (operacion) {
+            case 'r' -> {
+                char desde = rango.charAt(0);
+                char hasta = rango.charAt(rango.length() - 1);
+
+                String valores = rango.substring(1, rango.length() - 1); // elimina paréntesis/brackets
+                String[] partes = valores.split(",");
+                double min = Double.parseDouble(partes[0].trim());
+                double max = Double.parseDouble(partes[1].trim());
+
+                boolean mayorQueMin = (desde == '(') ? valor > min : valor >= min;
+                boolean menorQueMax = (hasta == ')') ? valor < max : valor <= max;
+
+                return mayorQueMin && menorQueMax;
+            }
+            case 'p' -> {
+                return rango.startsWith("0") ? valor >= 0 : valor > 0;
+            }
+        }
+        return false; //esto es solo pa que no reclame el compilador :v
+    }
+
+
     private Enum validaEnum(String clase, String msj) {
         String cadena;
         Enum e = null;

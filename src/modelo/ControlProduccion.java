@@ -1,12 +1,16 @@
 package modelo;
 
+import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ControlProduccion {
+    private static ControlProduccion instance;
+
     ArrayList<Persona> personas = new ArrayList<>();
     ArrayList<Huerto> huertos = new ArrayList<>();
     ArrayList<Cultivo> cultivos = new ArrayList<>();
@@ -15,15 +19,23 @@ public class ControlProduccion {
     public ControlProduccion(){
     }
 
-    public boolean createPropietario(Rut rut, String nombre, String email, String dirParticular, String dirComercial){
-        return buscaPersona(rut) == null && personas.add(new Propietario(rut, nombre, email, dirParticular, dirComercial));
+    public static ControlProduccion getInstance(){
+        if(instance == null){
+            instance = new ControlProduccion();
+        }
+        return instance;
     }
 
-    public boolean createSupervisor(Rut rut, String nombre, String email, String direccion, String profesion){
+
+    public boolean createPropietario(Rut rut, String nombre, String email, String dirParticular, String dirComercial) throws GestionHuertosException {
+        //Optional<Persona> propietarioOp = findPropietarioByRut(rut);
+    }
+
+    public boolean createSupervisor(Rut rut, String nombre, String email, String direccion, String profesion) throws GestionHuertosException{
         return buscaPersona(rut) == null && personas.add(new Supervisor(rut, nombre, email, direccion, profesion));
     }
 
-    public boolean createCosechador(Rut rut, String nom, String email, String direccion, LocalDate fNac){
+    public boolean createCosechador(Rut rut, String nom, String email, String direccion, LocalDate fNac) throws GestionHuertosException{
         return buscaPersona(rut) == null && personas.add(new Cosechador(rut, nom, email, direccion, fNac));
     }
 
@@ -189,7 +201,15 @@ public class ControlProduccion {
         }
         return planesCosecha;
     }
+    /*
+    public Optional<Propietario> findPropietarioByRut(Rut rut) {
+        Optional<Propietario> prop;
 
+        for(Persona p: personas){
+            if(p.getRut().equals(rut){}
+        }
+    }
+    */
     private PlanCosecha buscaPlan(int idPlan) {
         for (PlanCosecha p : planes) {
             if (p.getId() == idPlan) {return p;}
@@ -246,8 +266,4 @@ public class ControlProduccion {
         }
         return "";
     }
-
-    private void generateTestData() {
-    }
-
 }

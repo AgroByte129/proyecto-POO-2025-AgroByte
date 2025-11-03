@@ -1,3 +1,7 @@
+package modelo;
+
+import utilidades.EstadoPlan;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -10,10 +14,12 @@ public class PlanCosecha {
     private double metaKilos;
     private double precioBaseKilo;
     private EstadoPlan estado;
+
     private Cuartel cuartel;
     private ArrayList<Cuadrilla> cuadrillas;
 
-    public PlanCosecha(int id, String nom, LocalDate ini, LocalDate finEst, double meta, double precio, Cuartel cuartel){
+    public PlanCosecha(int id, String nom, LocalDate ini,
+                       LocalDate finEst, double meta, double precio, Cuartel cuartel){
         this.id = id;
         this.nombre = nom;
         this.inicio = ini;
@@ -24,51 +30,46 @@ public class PlanCosecha {
         this.estado = EstadoPlan.PLANIFICADO;
         this.cuartel = cuartel;
         this.cuadrillas = new ArrayList<>();
+        this.cuartel.addPlanCosecha(this);
+    }
 
-        if (this.cuartel != null) {
-            this.cuartel.addPlanCosecha(this);
+    public int getId() {return id;}
+    public String getNombre() {return nombre;}
+    public LocalDate getInicio() {return inicio;}
+    public LocalDate getFinEstimado() {return finEstimado;}
+    public LocalDate getFinReal() {return finReal;}
+    public void setFinReal(LocalDate finReal) {this.finReal = finReal;}
+    public double getMetaKilos() {return metaKilos;}
+    public void setMetaKilos(double metaKilos) {this.metaKilos = metaKilos;}
+    public double getPrecioBaseKilo() {return precioBaseKilo;}
+    public void setPrecioBaseKilo(double precioBaseKilo) {this.precioBaseKilo = precioBaseKilo;}
+    public EstadoPlan getEstado() {return estado;}
+    public void setEstado(EstadoPlan estado) {this.estado = estado;}
+
+    public double getCumplimientoMeta(){
+        double kilos=0.0;
+
+        for (Cuadrilla cuad : cuadrillas) {
+
+            for (CosechadorAsignado asign : cuad.getAsignaciones()) {
+
+                for (Pesaje p : asign.getPesajes()) {
+                    kilos += p.getCantidadKg();
+                }
+
+            }
+
         }
+
+        if (metaKilos <= 0) {
+            return 0;
+        }
+
+        return (kilos / metaKilos) * 100.0;
     }
 
-    public int getId() {
-        return id;
-    }
-    public String getNombre() {
-        return nombre;
-    }
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-    public LocalDate getInicio() {
-        return inicio;
-    }
-    public LocalDate getFinEstimado() {
-        return finEstimado;
-    }
-    public LocalDate getFinReal() {
-        return finReal;
-    }
-    public double getMetaKilos() {
-        return metaKilos;
-    }
-    public void setMetaKilos(double metaKilos) {
-        this.metaKilos = metaKilos;
-    }
-    public double getPrecioBaseKilo() {
-        return precioBaseKilo;
-    }
-    public void setPrecioBaseKilo(double precioBaseKilo) {
-        this.precioBaseKilo = precioBaseKilo;
-    }
-    public EstadoPlan getEstado() {
-        return estado;
-    }
-    public void setEstado(EstadoPlan estado) {
-        this.estado = estado;
-    }
-    public Cuartel getCuartel() {
-        return cuartel;
-    }
+    public Cuartel getCuartel() {return cuartel;}
+
     private Cuadrilla findCuadrillaById(int idCuad) {
         for (Cuadrilla c : cuadrillas) {
             if (c.getId() == idCuad) {
@@ -77,6 +78,7 @@ public class PlanCosecha {
         }
         return null;
     }
+
     public boolean addCuadrilla(int idCuad, String nomCuadrilla, Supervisor supervisor){
         if (findCuadrillaById(idCuad) != null) {
             return false;
@@ -85,14 +87,14 @@ public class PlanCosecha {
         cuadrillas.add(nueva);
         return true;
     }
-    public Cuadrilla[] getCuadrillas() {
-        return cuadrillas.toArray(new Cuadrilla[0]);
-    }
     public boolean addCosechadorToCuadrilla(int idCuad, LocalDate fIni, LocalDate fFin, double meta, Cosechador cos){
         Cuadrilla c = findCuadrillaById(idCuad);
         if (c == null) {
             return false;
         }
         return c.addCosechador(fIni, fFin, meta, cos);
+    }
+    public Cuadrilla[] getCuadrillas() {
+        return cuadrillas.toArray(new Cuadrilla[0]);
     }
 }

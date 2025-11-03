@@ -1,3 +1,7 @@
+package modelo;
+
+import utilidades.Rut;
+
 public class Persona {
     private Rut rut;
     private String nombre;

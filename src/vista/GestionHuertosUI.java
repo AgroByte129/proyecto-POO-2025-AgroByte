@@ -1,7 +1,6 @@
 package vista;
 
-import modelo.ControlProduccion;
-import org.w3c.dom.ls.LSOutput;
+import controlador.ControladorProduccion;
 import utilidades.*;
 
 import java.time.LocalDate;
@@ -12,7 +11,7 @@ import java.util.Scanner;
 public class GestionHuertosUI {
     private static GestionHuertosUI instance;
     private Scanner tcld = new Scanner(System.in).useDelimiter("[\\t\\n]+");
-    private ControlProduccion cP = ControlProduccion.getInstance();
+    private ControladorProduccion cP = ControladorProduccion.getInstance();
 
     private GestionHuertosUI(){}
     public static GestionHuertosUI getInstance(){

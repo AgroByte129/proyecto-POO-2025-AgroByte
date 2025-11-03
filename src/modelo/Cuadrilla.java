@@ -55,4 +55,8 @@ public class Cuadrilla {
         }
         return null;
     }
+
+    public CosechadorAsignado[] getAsignaciones() {
+        return asignaciones.toArray(new CosechadorAsignado[0]);
+    }
 }

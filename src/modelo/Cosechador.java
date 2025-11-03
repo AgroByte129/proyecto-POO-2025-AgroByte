@@ -27,6 +27,10 @@ public class Cosechador extends Persona{
         }
         return cuadrillas;
     }
+
+    public CosechadorAsignado[] getAsignaciones() {
+        return cosAsignados.toArray(new CosechadorAsignado[0]);
+    }
 }
 
 

@@ -15,8 +15,23 @@ public class Propietario extends Persona{
     }
 
     public String getDireccionComercial(){return direccionCom;}
+
     public void setDireccionComercial(String direccion){direccionCom = direccion;}
-    public boolean addHuerto(Huerto huerto){return huertos.add(huerto);}
+
+    public boolean addHuerto(Huerto huerto){
+
+        for (Huerto existente : huertos) {
+
+            if (existente.getNombre().equalsIgnoreCase(huerto.getNombre())) {
+                return false;
+            }
+        }
+
+        huertos.add(huerto);
+
+        return true;
+    }
+
     public Huerto[] getHuertos(){
         return huertos.toArray(new Huerto[0]);
     }

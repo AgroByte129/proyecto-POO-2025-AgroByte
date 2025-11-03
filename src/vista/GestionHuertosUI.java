@@ -229,49 +229,73 @@ public class GestionHuertosUI {
         }
     }
     private void cambiaEstadoCuartel(){
+        int idCuartel = validaNumero("Id del cuartel: ", "p", "int").intValue();
+        String nomHuerto = validaEntradaString("Nombre del Huerto: ");
+        EstadoFenologico estado = (EstadoFenologico) validaEnum("EstadoFenologico", "Nuevo estado: ");
 
+        try{
+            cP.changeEstadoCuartel(nomHuerto, idCuartel, estado);
+        }
     }
     private void creaPlanDeCosecha(){
-        System.out.print("Id plan: ");
-        int idPlan =tcld.nextInt();
-        System.out.print("Nombre plan: ");
-        String nomPlan =tcld.next();
-        System.out.print("Fecha inicio (dd/mm/aaaa): ");
-        LocalDate fIni = fechaFormateada(tcld.next());
-        System.out.print("Fecha fin estimada (dd/mm/aaaa): ");
-        LocalDate fFin = fechaFormateada(tcld.next());
-        System.out.print("Meta kilos: ");
-        double meta =tcld.nextDouble();
-        System.out.print("Precio base por kilo: ");
-        double precio =tcld.nextDouble();
-        System.out.print("Nombre del huerto: ");
-        String nomHuerto =tcld.next();
-        System.out.print("Id del cuartel: ");
-        int idCuartel =tcld.nextInt();
+        int idPlan = validaNumero("Id de plan: ", "p", "int").intValue();
+        String nomPlan = validaEntradaString("Nombre plan: ");
 
-        if(cP.createPlanCosecha(idPlan, nomPlan, fIni, fFin, meta, precio, nomHuerto, idCuartel)) {
+        LocalDate fIni;
+        LocalDate fFin;
+        do{
+           fIni = validaEntradaFecha("Fecha inicio (dd/mm/aaaa): ");
+           fFin = validaEntradaFecha("Fecha fin estimada (dd/mm/aaaa): ");
+           if(!fIni.isBefore(fFin)){
+               System.out.println("\nLa fecha de inicio debe ser antes de la fecha de fin.");
+           }
+        }while (!fIni.isBefore(fFin));
+
+        double meta = validaNumero("Meta kilos: ", "p", "double").doubleValue();
+        double precio = validaNumero("Precio base por kilo: ", "p", "double").doubleValue();
+
+        String nomHuerto = validaEntradaString("Nombre del Huerto: ");
+        int idCuartel = validaNumero("Id del cuartel: ", "p", "int").intValue();
+
+        try{
+            cP.createPlanCosecha(idPlan, nomPlan, fIni, fFin, meta, precio, nomHuerto, idCuartel);
             System.out.println("\nPlan de Cosecha creado exitosamente");
-            System.out.println("Agregando cuadrillas al plan de cosecha");
-            System.out.print("Nro. de cuadrillas: ");
-            int nroCuadrillas =tcld.nextInt();
+        }catch(GestionHuertosException e){
+            System.out.println(e.getMessage());
+        }
 
-            for(int i = 0; i < nroCuadrillas; i++){
-                System.out.print("\nId cuadrilla: ");
-                int idCuadrilla =tcld.nextInt();
-                System.out.print("Nombre cuadrilla: ");
-                String nombreCuadrilla =tcld.next();
-                System.out.print("utilidades.Rut supervisor: ");
-                Rut rutSupervisor = new Rut(tcld.next());
-
-                if(cP.addCuadrillaToPlan(idPlan, idCuadrilla, nombreCuadrilla, rutSupervisor)){
-                    System.out.println("modelo.Cuadrilla agregada exitosamente al plan de cosecha");
-                }else System.out.println("No se ha podido agregar la cuadrilla al plan...");
-            }
-
-        }else System.out.println("No se pudo crear el Plan de Cosecha");
     }
-    private void cambiaEstadoPlan(){}
-    private void agregaCuadrillasAPlan(){}
+    private void cambiaEstadoPlan(){
+        int idPlan = validaNumero("Id plan: ", "p", "int").intValue();
+        String msj = "Nuevo estado plan [1 = Planificado, 2 = Ejecutando, 3 = Cerrado, 4 = Cancelado]: ";
+        EstadoPlan estado = (EstadoPlan) validaEnum("EstadoPlan", msj);
+
+        try{
+            changeEstadoPlan(idPlan, estado);
+            System.out.println("Estado cambiado éxitosamente...");
+        }catch(GestionHuertosException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void agregaCuadrillasAPlan(){
+        System.out.println("Agregando cuadrillas al plan de cosecha");
+        System.out.print("Nro. de cuadrillas: ");
+        int nroCuadrillas =tcld.nextInt();
+
+        for(int i = 0; i < nroCuadrillas; i++){
+            System.out.print("\nId cuadrilla: ");
+            int idCuadrilla =tcld.nextInt();
+            System.out.print("Nombre cuadrilla: ");
+            String nombreCuadrilla =tcld.next();
+            System.out.print("utilidades.Rut supervisor: ");
+            Rut rutSupervisor = new Rut(tcld.next());
+
+            if(cP.addCuadrillaToPlan(idPlan, idCuadrilla, nombreCuadrilla, rutSupervisor)){
+                System.out.println("modelo.Cuadrilla agregada exitosamente al plan de cosecha");
+            }else System.out.println("No se ha podido agregar la cuadrilla al plan...");
+        }
+    }
     private void asignaCosechadoresAPlan(){
         System.out.print("Id del plan: ");
         int idPlan =tcld.nextInt();
@@ -524,10 +548,9 @@ public class GestionHuertosUI {
                 fecha = LocalDate.parse(entrada, formato);
                 break;
             }catch (DateTimeParseException e){
-                System.out.println("FORMATO DE FECHA NO VÁLIDO, ingere en formato dd/MM/yyyy");
+                System.out.println("FORMATO DE FECHA NO VÁLIDO. Ingere en formato dd/MM/yyyy");
             }
         }
         return fecha;
     }
-
 }

@@ -34,6 +34,6 @@ public class Cuartel {
     public Cultivo getCultivo() {return cultivo;}
     public Huerto getHuerto() {return huerto;}
     public void addPlanCosecha(PlanCosecha planCosecha) {planes.add(planCosecha);} //No realiza verificación, solo agrega
-    public PlanCosecha[] getPlanes() {return planes.toArray(new PlanCosecha[0]);}
+    public PlanCosecha[] getPlanesCosecha() {return planes.toArray(new PlanCosecha[0]);}
 }
 

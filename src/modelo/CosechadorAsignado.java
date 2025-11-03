@@ -1,6 +1,8 @@
 package modelo;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CosechadorAsignado {
     private LocalDate desde;
@@ -8,7 +10,8 @@ public class CosechadorAsignado {
     private double metaKilos;
 
     private Cuadrilla cuadrilla;   
-    private Cosechador cosechador; 
+    private Cosechador cosechador;
+    private final ArrayList<Pesaje> pesajes = new ArrayList<>();
 
     public CosechadorAsignado(LocalDate fIni, LocalDate fFin, double meta,
                               Cuadrilla cuad, Cosechador cos) {
@@ -29,6 +32,59 @@ public class CosechadorAsignado {
     public void setMetaKilos(double metaKilos) {this.metaKilos = metaKilos;}
     public Cuadrilla getCuadrilla() {return cuadrilla;}
     public Cosechador getCosechador() {return cosechador;}
+
+    public double getCumplimientoMeta() {
+        double totalKilos = 0;
+        for (Pesaje p : pesajes) {
+            totalKilos += p.getCantidadKg();
+        }
+        if (metaKilos <= 0) return 0;
+        return (totalKilos / metaKilos) * 100.0;
+    }
+
+    public int getNroPesajesImpagos() {
+        int count = 0;
+        for (Pesaje p : pesajes) {
+            if (!p.isPagado()) count++;
+        }
+        return count;
+    }
+
+    public double getMontoPesajesImpagos() {
+        double total = 0;
+        for (Pesaje p : pesajes) {
+            if (!p.isPagado()) total += p.getMonto();
+        }
+        return total;
+    }
+
+    public int getNroPesajesPagados() {
+        int count = 0;
+        for (Pesaje p : pesajes) {
+            if (p.isPagado()) count++;
+        }
+        return count;
+    }
+
+    public double getMontoPesajesPagados() {
+        double total = 0;
+        for (Pesaje p : pesajes) {
+            if (p.isPagado()) total += p.getMonto();
+        }
+        return total;
+    }
+
+    public void addPesaje(Pesaje p) {
+        if (p != null && !pesajes.contains(p)) {
+            pesajes.add(p);
+        }
+    }
+
+    public Pesaje[] getPesajes() {
+        return pesajes.toArray(new Pesaje[0]);
+    }
+
+
 }
 
 

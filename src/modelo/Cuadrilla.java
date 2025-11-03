@@ -23,7 +23,6 @@ public class Cuadrilla {
 
     public int getId() { return id; }
     public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
     public Supervisor getSupervisor() { return supervisor; }
     public PlanCosecha getPlanCosecha() { return planCosecha; }
 
@@ -32,7 +31,6 @@ public class Cuadrilla {
             return false;
         }
         if(findCosechadorByRut(cos) != null) {return false;}
-        //modelo.CosechadorAsignado ya se encarga de enlazar la cuadrilla con el cosechador
         CosechadorAsignado nueva = new CosechadorAsignado(fIni, fFin, meta, this, cos);
         asignaciones.add(nueva);
         return true;
@@ -44,6 +42,15 @@ public class Cuadrilla {
         }
         return arr;
     }
+
+    public double getKilosPesados(){
+
+    }
+
+    public CosechadorAsignado[] getAsignaciones() {
+        return asignaciones.toArray(new CosechadorAsignado[0]);
+    }
+
     public static int getMaximoCosechadores() { return maximoCosechadores; }
     public static void setMaximoCosechadores(int max) { maximoCosechadores = max; }
 
@@ -56,7 +63,4 @@ public class Cuadrilla {
         return null;
     }
 
-    public CosechadorAsignado[] getAsignaciones() {
-        return asignaciones.toArray(new CosechadorAsignado[0]);
-    }
 }

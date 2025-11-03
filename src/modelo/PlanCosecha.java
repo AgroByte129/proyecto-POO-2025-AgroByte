@@ -35,7 +35,6 @@ public class PlanCosecha {
 
     public int getId() {return id;}
     public String getNombre() {return nombre;}
-    public void setNombre(String nombre) {this.nombre = nombre;}
     public LocalDate getInicio() {return inicio;}
     public LocalDate getFinEstimado() {return finEstimado;}
     public LocalDate getFinReal() {return finReal;}
@@ -46,6 +45,29 @@ public class PlanCosecha {
     public void setPrecioBaseKilo(double precioBaseKilo) {this.precioBaseKilo = precioBaseKilo;}
     public EstadoPlan getEstado() {return estado;}
     public void setEstado(EstadoPlan estado) {this.estado = estado;}
+
+    public double getCumplimientoMeta(){
+        double kilos=0.0;
+
+        for (Cuadrilla cuad : cuadrillas) {
+
+            for (CosechadorAsignado asign : cuad.getAsignaciones()) {
+
+                for (Pesaje p : asign.getPesajes()) {
+                    kilos += p.getCantidadKg();
+                }
+
+            }
+
+        }
+
+        if (metaKilos <= 0) {
+            return 0;
+        }
+
+        return (kilos / metaKilos) * 100.0;
+    }
+
     public Cuartel getCuartel() {return cuartel;}
 
     private Cuadrilla findCuadrillaById(int idCuad) {

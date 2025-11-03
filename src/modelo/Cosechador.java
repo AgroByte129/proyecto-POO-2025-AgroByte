@@ -5,6 +5,7 @@ import utilidades.Rut;
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class Cosechador extends Persona{
     private LocalDate fechaNacimiento;
@@ -26,6 +27,10 @@ public class Cosechador extends Persona{
             cuadrillas[i] = cosAsignados.get(i).getCuadrilla();
         }
         return cuadrillas;
+    }
+
+    public Optional<CosechadorAsignado> getAsignacion(int idCuad, int idPlan){
+        return Optional.ofNullable(cosAsignados.get(idCuad));
     }
 
     public CosechadorAsignado[] getAsignaciones() {

@@ -145,7 +145,8 @@ public class GestionHuertosUI {
     }
 
     private void creaPersona(){
-        byte rol = validaEntradaByte("Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ","r[1,3]");
+        String msj = "Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ";
+        byte rol = validaNumero(msj,"r[1,3]", "byte").byteValue();
         System.out.print("Rut: ");
         Rut rut = Rut.of(tcld.next());
         String nom = validaEntradaString("Nombre: ");
@@ -183,10 +184,10 @@ public class GestionHuertosUI {
         }
     }
     private void creaCultivo(){
-        int id = validaEntradaInt("Identificación (No negativo): ", "p0");
+        int id = validaNumero("Identificación (No negativo): ", "p", "int").intValue();
         String especie = validaEntradaString("Especie: ");
         String variedad = validaEntradaString("Variedad: ");
-        float rendimiento = validaEntradaFloat("Rendmiento: ", "p");
+        float rendimiento = validaNumero("Rendmiento: ", "p","float").floatValue();
 
         try{
             cP.createCultivo(id, especie, variedad, rendimiento);
@@ -197,31 +198,15 @@ public class GestionHuertosUI {
     }
     private void creaHuerto(){
         String nom = validaEntradaString("Nombre: ");
-        float sup = validaEntradaFloat("Superficie: ", "p");
+        float sup = validaNumero("Superficie: ", "p", "float").floatValue();
 
         String ubi = validaEntradaString("Ubicación: ");
         System.out.print("Rut propietario: ");
         Rut rut = Rut.of(tcld.next());
 
         try{
-            (cP.createHuerto(nom, sup, ubi, rut)) {
-                System.out.println("Huerto creado exitosamente...\n");
-                System.out.println("Agregando cuarteles al huerto...");
-                System.out.print("Nro de cuarteles: ");
-                int nroCuarteles = tcld.nextInt();
-
-                for (int i = 0; i < nroCuarteles; i++) {
-                    System.out.print("Id cuartel: ");
-                    int idCuartel = tcld.nextInt();
-                    System.out.print("Superficie cuartel: ");
-                    float superficie = tcld.nextFloat();
-                    System.out.print("Id cultivo del cuartel: ");
-                    int idCultivo = tcld.nextInt();
-                    if (cP.addCuartelToHuerto(nom, idCuartel, superficie, idCultivo)) {
-                        System.out.println("modelo.Cuartel agregado exitosamente al huerto\n");
-                    } else System.out.println("No se pudo agregar el cuartel...\n");
-                }
-            }
+            cP.createHuerto(nom, sup, ubi, rut);
+            System.out.println("Huerto creado éxitosamente...");
         } catch(GestionHuertosException e){
                 System.out.println(e.getMessage());
         }
@@ -229,12 +214,12 @@ public class GestionHuertosUI {
     private void agregaCuartelesAHuerto(){
         String nomHuerto = validaEntradaString("Nombre del huerto: ");
         System.out.println("Agregando cuarteles a huerto...");
-        int numCuarteles = validaEntradaInt("Numero de cuarteles a agregar: ", "p");
+        int numCuarteles = validaNumero("Numero de cuarteles a agregar: ", "p", "int").intValue();
 
         for(int i = 0; i < numCuarteles; i++) {
-            int idCuartel = validaEntradaInt("\nId Cuartel: ", "p");
-            float supCuartel = validaEntradaFloat("Superficie cuartel: ", "p");
-            int idCultivo = validaEntradaInt("Id cultivo del cuartel: ", "p");
+            int idCuartel = validaNumero("\nId Cuartel: ", "p", "int").intValue();
+            float supCuartel = validaNumero("Superficie cuartel: ", "p", "float").floatValue();
+            int idCultivo = validaNumero("Id cultivo del cuartel: ", "p", "int").intValue();
             try{
                 cP.addCuartelToHuerto(nomHuerto, idCuartel, supCuartel, idCultivo);
                 System.out.println("\nCuartel agregado éxitosamente al huerto");
@@ -417,15 +402,30 @@ public class GestionHuertosUI {
         }
         return cadena;
     }
-    private int validaEntradaInt(String mensaje, String condicion) {
-        int num = 0;
+    private Number validaNumero(String msj, String condicion, String tipo){
+        Number num = null;
         boolean valido = false;
 
-        while (!valido) {
-            String entrada = validaEntradaString(mensaje);
-
-            try {
-                num = Integer.parseInt(entrada);
+        while(!valido){
+            try{
+                String entrada = validaEntradaString(msj);
+                switch(tipo){
+                    case "byte" ->{
+                        num = Byte.parseByte(entrada);
+                    }
+                    case "int" ->{
+                        num = Integer.parseInt(entrada);
+                    }
+                    case "long" ->{
+                        num = Long.parseLong(entrada);
+                    }
+                    case "float" ->{
+                        num = Float.parseFloat(entrada);
+                    }
+                    case "double" ->{
+                        num = Double.parseDouble(entrada);
+                    }
+                }
 
                 if (!condicion.isBlank()) {
                     if (validaRango(num, condicion)) {
@@ -437,91 +437,12 @@ public class GestionHuertosUI {
                     valido = true;
                 }
 
-            } catch (NumberFormatException e) {
-                System.out.println("ENTRADA NO VÁLIDA, ingresa un número válido.");
+            }catch(NumberFormatException e){
+                System.out.println("Entrada no válida. Ingrese un número");
             }
         }
         return num;
     }
-    private long validaEntradaLong(String mensaje, String condicion) {
-        long num = 0;
-        boolean valido = false;
-
-        while (!valido) {
-            String entrada = validaEntradaString(mensaje);
-
-            try {
-                num = Long.parseLong(entrada);
-
-                if (!condicion.isBlank()) {
-                    if (validaRango(num, condicion)) {
-                        valido = true;
-                    } else {
-                        System.out.println("Valor fuera de rango.");
-                    }
-                } else {
-                    valido = true;
-                }
-
-            } catch (NumberFormatException e) {
-                System.out.println("ENTRADA NO VÁLIDA, ingresa un número válido.");
-            }
-        }
-        return num;
-    }
-    private float validaEntradaFloat(String mensaje, String condicion) {
-        float num = 0;
-        boolean valido = false;
-
-        while (!valido) {
-            String entrada = validaEntradaString(mensaje);
-
-            try {
-                num = Float.parseFloat(entrada);
-
-                if (!condicion.isBlank()) {
-                    if (validaRango(num, condicion)) {
-                        valido = true;
-                    } else {
-                        System.out.println("Valor fuera de rango.");
-                    }
-                } else {
-                    valido = true;
-                }
-
-            } catch (NumberFormatException e) {
-                System.out.println("ENTRADA NO VÁLIDA, ingresa un número válido.");
-            }
-        }
-        return num;
-    }
-    private byte validaEntradaByte(String mensaje, String condicion) {
-        byte num = 0;
-        boolean valido = false;
-
-        while (!valido) {
-            String entrada = validaEntradaString(mensaje);
-            try {
-                num = Byte.parseByte(entrada);
-
-                if (!condicion.isBlank()) {
-                    if (validaRango(num, condicion)) {
-                        valido = true;
-                    } else {
-                        System.out.println("Valor fuera de rango.");
-                    }
-                } else {
-                    valido = true;
-                }
-
-            } catch (NumberFormatException e) {
-                System.out.println("ENTRADA NO VÁLIDA, ingresa un número válido.");
-            }
-        }
-        return num;
-    }
-
-
     /*
     Formato de cálculo de rango uwu:
     "r(n,m)"
@@ -537,34 +458,38 @@ public class GestionHuertosUI {
     p0 = evalúa si el valor es mayor o igual a 0
     p = evalúa si es mayor a 0
     */
-    //basicamente acabo de hacer un mini lenguaje en un lenguaje xd
-    private boolean validaRango(double valor, String condicion) {
+    private boolean validaRango(Number valor, String condicion) {
         char operacion = condicion.charAt(0);
         String rango = condicion.substring(1);
+        double v = valor.doubleValue(); // 🔹 Convertimos a double para comparar genéricamente
 
         switch (operacion) {
             case 'r' -> {
                 char desde = rango.charAt(0);
                 char hasta = rango.charAt(rango.length() - 1);
 
-                String valores = rango.substring(1, rango.length() - 1); // elimina paréntesis/brackets
+                // eliminamos los delimitadores como [ , ( , ] , )
+                String valores = rango.substring(1, rango.length() - 1);
                 String[] partes = valores.split(",");
+
                 double min = Double.parseDouble(partes[0].trim());
                 double max = Double.parseDouble(partes[1].trim());
 
-                boolean mayorQueMin = (desde == '(') ? valor > min : valor >= min;
-                boolean menorQueMax = (hasta == ')') ? valor < max : valor <= max;
+                boolean mayorQueMin = (desde == '(') ? v > min : v >= min;
+                boolean menorQueMax = (hasta == ')') ? v < max : v <= max;
 
                 return mayorQueMin && menorQueMax;
             }
             case 'p' -> {
-                return rango.startsWith("0") ? valor >= 0 : valor > 0;
+                // Ejemplo: "p0" → >=0 ; "p1" → >0
+                return rango.startsWith("0") ? v >= 0 : v > 0;
+            }
+            default -> {
+                // Si no hay operación reconocida, se asume válido
+                return true;
             }
         }
-        return false; //esto es solo pa que no reclame el compilador :v
     }
-
-
     private Enum validaEnum(String clase, String msj) {
         String cadena;
         Enum e = null;

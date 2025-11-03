@@ -2,6 +2,7 @@ package modelo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import utilidades.GestionHuertosException;
 
 public class Cuadrilla {
     private int id;
@@ -11,6 +12,7 @@ public class Cuadrilla {
     private Supervisor supervisor;
     private PlanCosecha planCosecha;
     private ArrayList<CosechadorAsignado> asignaciones;
+    private ArrayList<Pesaje> pesajes;
 
     public Cuadrilla(int id, String nom, Supervisor sup, PlanCosecha plan) {
         this.id = id;
@@ -26,14 +28,19 @@ public class Cuadrilla {
     public Supervisor getSupervisor() { return supervisor; }
     public PlanCosecha getPlanCosecha() { return planCosecha; }
 
-    public boolean addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos) {
+    public void addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos)
+            throws GestionHuertosException {
+
         if (asignaciones.size() >= maximoCosechadores) {
-            return false;
+            throw new GestionHuertosException("No es posible agregar el nuevo cosechador porque se alcanzó el máximo permitido.");
         }
-        if(findCosechadorByRut(cos) != null) {return false;}
+
+        if (findCosechadorByRut(cos) != null) {
+            throw new GestionHuertosException("Ya existe un cosechador con el mismo rut en esta cuadrilla.");
+        }
+
         CosechadorAsignado nueva = new CosechadorAsignado(fIni, fFin, meta, this, cos);
         asignaciones.add(nueva);
-        return true;
     }
     public Cosechador[] getCosechadores() {
         Cosechador[] arr = new Cosechador[asignaciones.size()];
@@ -42,11 +49,14 @@ public class Cuadrilla {
         }
         return arr;
     }
+    public double getKilosPesados() {
+        double total = 0;
+        for (Pesaje p : pesajes) {
+            total +=p.getCantidadKg();
 
-    public double getKilosPesados(){
-
+        }
+        return total;
     }
-
     public CosechadorAsignado[] getAsignaciones() {
         return asignaciones.toArray(new CosechadorAsignado[0]);
     }

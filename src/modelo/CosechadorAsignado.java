@@ -9,7 +9,7 @@ public class CosechadorAsignado {
     private LocalDate hasta;
     private double metaKilos;
 
-    private Cuadrilla cuadrilla;   
+    private Cuadrilla cuadrilla;
     private Cosechador cosechador;
     private final ArrayList<Pesaje> pesajes = new ArrayList<>();
 

@@ -30,7 +30,11 @@ public class Cuartel {
         return cultivo.getRendimiento();
     }
     public EstadoFenologico getEstado() {return estado;}
-    public void setEstado(EstadoFenologico estado){this.estado = estado;}
+    public boolean setEstado(EstadoFenologico estado) {
+        this.estado = estado;
+        return true;
+    }
+
     public Cultivo getCultivo() {return cultivo;}
     public Huerto getHuerto() {return huerto;}
     public void addPlanCosecha(PlanCosecha planCosecha) {planes.add(planCosecha);} //No realiza verificación, solo agrega

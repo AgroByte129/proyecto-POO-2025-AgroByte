@@ -16,6 +16,8 @@ public class Cultivo {
         this.especie = especie;
         this.variedad = variedad;
         this.rendimiento = rendimiento;
+        this.cuarteles = new ArrayList<>();
+
     }
 
     public int getId() {return id;}

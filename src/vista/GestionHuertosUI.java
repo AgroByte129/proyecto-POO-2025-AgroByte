@@ -235,6 +235,9 @@ public class GestionHuertosUI {
 
         try{
             cP.changeEstadoCuartel(nomHuerto, idCuartel, estado);
+            System.out.println("Se ha cambiado el estado del cuartel éxitosamente...");
+        }catch(GestionHuertosException e){
+            System.out.println(e.getMessage());
         }
     }
     private void creaPlanDeCosecha(){
@@ -279,30 +282,29 @@ public class GestionHuertosUI {
     }
 
     private void agregaCuadrillasAPlan(){
-        System.out.println("Agregando cuadrillas al plan de cosecha");
-        System.out.print("Nro. de cuadrillas: ");
-        int nroCuadrillas =tcld.nextInt();
+        System.out.println("Agregando cuadrillas a un plan de cosecha...");
+        int idPlan = validaNumero("Ide del plan: ", "p", "int").intValue();
+        int nroCuadrillas = validaNumero("Nro de cuadrillas: ", "p", "int").intValue();
 
         for(int i = 0; i < nroCuadrillas; i++){
-            System.out.print("\nId cuadrilla: ");
-            int idCuadrilla =tcld.nextInt();
-            System.out.print("Nombre cuadrilla: ");
-            String nombreCuadrilla =tcld.next();
+            int idCuadrilla = validaNumero("\nId Cuadrilla: ", "p", "int").intValue();
+            String nombreCuadrilla = validaEntradaString("Nombre cuadrilla: ");
             System.out.print("utilidades.Rut supervisor: ");
-            Rut rutSupervisor = new Rut(tcld.next());
+            System.out.print("Rut supervisor [12.345.678-9]: ");
+            Rut rutSupervisor = Rut.of(tcld.next());
 
-            if(cP.addCuadrillaToPlan(idPlan, idCuadrilla, nombreCuadrilla, rutSupervisor)){
-                System.out.println("modelo.Cuadrilla agregada exitosamente al plan de cosecha");
-            }else System.out.println("No se ha podido agregar la cuadrilla al plan...");
+            try{
+                cP.addCuadrillaToPlan(idPlan, idCuadrilla, nombreCuadrilla, rutSupervisor);
+                System.out.println("Cuadrilla agregada exitosamente al plan de cosecha");
+            } catch(GestionHuertosException e){
+                System.out.println(e.getMessage());
+            }
         }
     }
     private void asignaCosechadoresAPlan(){
-        System.out.print("Id del plan: ");
-        int idPlan =tcld.nextInt();
-        System.out.print("Id cuadrilla: ");
-        int idCuadrilla =tcld.nextInt();
-        System.out.print("Nro. cosechadores a asignar: ");
-        int nroCos =tcld.nextInt();
+        int idPlan = validaNumero("Id del plan: ", "p", "int").intValue();
+        int idCuadrilla = validaNumero("Id cuadrilla: ", "p", "int").intValue();
+        int nroCos = validaNumero("Nro. cosechadores a asignar: ", "p", "int").intValue();
 
         for(int i = 0; i < nroCos; i++){
             System.out.print("\nFecha de inicio asignacion (dd/mm/aaaa): ");
@@ -485,7 +487,7 @@ public class GestionHuertosUI {
     private boolean validaRango(Number valor, String condicion) {
         char operacion = condicion.charAt(0);
         String rango = condicion.substring(1);
-        double v = valor.doubleValue(); // 🔹 Convertimos a double para comparar genéricamente
+        double v = valor.doubleValue(); //Convertimos a double para comparar genéricamente
 
         switch (operacion) {
             case 'r' -> {

@@ -29,16 +29,18 @@ public class Cosechador extends Persona{
         return cuadrillas;
     }
 
-    public Optional<CosechadorAsignado> getAsignacion(int idCuad, int idPlan){
-        return Optional.ofNullable(cosAsignados.get(idCuad));
+    public Optional<CosechadorAsignado> getAsignacion(int idCuad, int idPlan) {
+        Optional<CosechadorAsignado>  cosechadorAsignado =Optional.empty(); ;
+        for (CosechadorAsignado ca : cosAsignados) {
+            Cuadrilla cuad = ca.getCuadrilla();
+            if (cuad.getId() == idCuad && cuad.getPlanCosecha().getId() == idPlan) {
+                cosechadorAsignado = Optional.of(ca);
+                break;
+            }
+        }
+        return cosechadorAsignado;
     }
-
     public CosechadorAsignado[] getAsignaciones() {
         return cosAsignados.toArray(new CosechadorAsignado[0]);
     }
 }
-
-
-
-
-

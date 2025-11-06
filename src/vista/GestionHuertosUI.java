@@ -7,6 +7,7 @@ import utilidades.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class GestionHuertosUI {
@@ -244,15 +245,10 @@ public class GestionHuertosUI {
         int idPlan = validaNumero("Id de plan: ", "p", "int").intValue();
         String nomPlan = validaEntradaString("Nombre plan: ");
 
-        LocalDate fIni;
-        LocalDate fFin;
-        do{
-           fIni = validaEntradaFecha("Fecha inicio (dd/mm/aaaa): ");
-           fFin = validaEntradaFecha("Fecha fin estimada (dd/mm/aaaa): ");
-           if(!fIni.isBefore(fFin)){
-               System.out.println("\nLa fecha de inicio debe ser antes de la fecha de fin.");
-           }
-        }while (!fIni.isBefore(fFin));
+        LocalDate[] fechas = entradaFechaComienzoFin("Fecha inicio (dd/mm/aaaa): ",
+                "Fecga fub estimada (dd/mm/aaaa");
+        LocalDate fIni = fechas[0];
+        LocalDate fFin = fechas[1];
 
         double meta = validaNumero("Meta kilos: ", "p", "double").doubleValue();
         double precio = validaNumero("Precio base por kilo: ", "p", "double").doubleValue();
@@ -274,13 +270,12 @@ public class GestionHuertosUI {
         EstadoPlan estado = (EstadoPlan) validaEnum("EstadoPlan", msj);
 
         try{
-            changeEstadoPlan(idPlan, estado);
+            cP.changeEstadoPlan(idPlan, estado);
             System.out.println("Estado cambiado éxitosamente...");
         }catch(GestionHuertosException e){
             System.out.println(e.getMessage());
         }
     }
-
     private void agregaCuadrillasAPlan(){
         System.out.println("Agregando cuadrillas a un plan de cosecha...");
         int idPlan = validaNumero("Ide del plan: ", "p", "int").intValue();
@@ -307,31 +302,58 @@ public class GestionHuertosUI {
         int nroCos = validaNumero("Nro. cosechadores a asignar: ", "p", "int").intValue();
 
         for(int i = 0; i < nroCos; i++){
-            System.out.print("\nFecha de inicio asignacion (dd/mm/aaaa): ");
-            LocalDate fIni = fechaFormateada(tcld.next());
-            System.out.print("Fecha de término asignacion (dd/mm/aaaa): ");
-            LocalDate fFin = fechaFormateada(tcld.next());
-            System.out.print("Meta (Kilos): ");
-            double metaKilos =tcld.nextDouble();
-            System.out.print("utilidades.Rut cosechador: ");
-            Rut rut = new Rut(tcld.next());
+            System.out.println("");
+            LocalDate[] fechas = entradaFechaComienzoFin("Fecha de inicio asignación (dd/mm/aaaa): ",
+                    "Fecha de término asignacion (dd/mm/aaaa): ");
+            LocalDate fIni = fechas[0];
+            LocalDate fFin = fechas[1];
+            double metaKilos = validaNumero("Meta kilos: ", "p", "double").doubleValue();
+            System.out.print("Rut cosechador: ");
+            Rut rut = Rut.of(tcld.next());
 
-            if(cP.addCosechadorToCuadrilla(idPlan, idCuadrilla, fIni, fFin, metaKilos, rut)){
-                System.out.println("modelo.Cosechador asignado exitosamente a una cuadrilla del plan de cosecha");
-            } else System.out.println("No se ha podido agregar el cosechador a la cuadrilla...");
+            try{
+                cP.addCosechadorToCuadrilla(idPlan, idCuadrilla, fIni, fFin, metaKilos, rut);
+                System.out.println("Cosechador asignado exitosamente a una cuadrilla del plan de cosecha");
+            } catch (GestionHuertosException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
-    private void agregaPesajeACosechador(){}
-    private void pagaPesajesPendientesACosechador(){}
-    private void listaPersonas(){
-        String[] listPropietarios = cP.listPropietarios();
-        String[] listSupervisores = cP.listSupervisores();
-        String[] listCosechadores = cP.listCosechadores();
+    private void agregaPesajeACosechador(){
+        System.out.println("Agregando pesaje a un cosechador...");
+        int idPesaje = validaNumero("Id pesaje: ", "p", "int").intValue();
+        Rut rutCos = Rut.of(tcld.next());
+        int idPlan = validaNumero("Id plan: ", "p", "int").intValue();
+        int idCuadrilla = validaNumero("Id cuadrilla: ", "p", "int").intValue();
+        float cantKilos = validaNumero("Cantidad de kilos: ", "p", "float").floatValue();
+        byte calidad = validaNumero("Calidad: [1 = Excelente, 2 = Suficiente, 3 = Deficiente]: ", "r[1,3]", "byte").byteValue();
 
+        try{
+            cP.addPesaje(idPesaje, rutCos, idPlan, idCuadrilla, cantKilos, calidad);
+            System.out.println("\nPesaje agregado exitosamente al cosechador");
+        }catch(GestionHuertosException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    private void pagaPesajesPendientesACosechador(){
+        System.out.println("Pagando pesajes pendientes de un cosechador...");
+        int idPesaje = validaNumero("Id pesaje: ", "p", "int").intValue();
+        System.out.print("Rut cosechador: ");
+        Rut rutCos = Rut.of(tcld.next());
+
+        try{//Se cambia el formato a alemán poque ahí se separa con "." los miles y "," los decimales
+            System.out.printf(Locale.GERMANY,"%n%s %,.1f%n", "Monto pagado al cosechador: ", cP.addPagoPesaje(idPesaje, rutCos));
+        }catch(GestionHuertosException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void listaPropietarios(){
+        String[] listPropietarios = cP.listPropietarios();
         System.out.println("LISTADO DE PROPIETARIOS" +
                 "\n-----------------------");
         System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
-                "utilidades.Rut", "Nombre", "Dirección", "email", "Dirección comercial", "Nro. huertos");
+                "Rut", "Nombre", "Dirección", "email", "Dirección comercial", "Nro. huertos");
         if(listPropietarios.length == 0){
             System.out.println("No hay propietarios registrados...");
         }else {
@@ -339,7 +361,9 @@ public class GestionHuertosUI {
                 System.out.println(lP);
             }
         }
-
+    }
+    private void listaSupervisores(){
+        String[] listSupervisores = cP.listSupervisores();
         System.out.println("\nLISTADO DE SUPERVISORES" +
                 "\n-----------------------");
         System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
@@ -351,7 +375,9 @@ public class GestionHuertosUI {
                 System.out.println(lS);
             }
         }
-
+    }
+    private void listaCosechadores(){
+        String[] listCosechadores = cP.listCosechadores();
         System.out.println("\nLISTADO DE COSECHADORES" +
                 "\n-----------------------");
         System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
@@ -507,7 +533,7 @@ public class GestionHuertosUI {
                 return mayorQueMin && menorQueMax;
             }
             case 'p' -> {
-                // Ejemplo: "p0" → >=0 ; "p1" → >0
+                // Ejemplo: "p0" → >=0 ; "p" → >0
                 return rango.startsWith("0") ? v >= 0 : v > 0;
             }
             default -> {
@@ -554,5 +580,16 @@ public class GestionHuertosUI {
             }
         }
         return fecha;
+    }
+    private LocalDate[] entradaFechaComienzoFin(String msjFIni, String msjFFin){
+        LocalDate fIni = validaEntradaFecha(msjFIni);
+        LocalDate fFin = validaEntradaFecha(msjFFin);
+
+        while(fIni.isAfter(fFin)){
+            System.out.println("La fecha de inicio debe ser antes de la fecha de fin");
+            fIni = validaEntradaFecha(msjFIni);
+            fFin = validaEntradaFecha(msjFFin);
+        }
+        return new LocalDate[] {fIni, fFin};
     }
 }

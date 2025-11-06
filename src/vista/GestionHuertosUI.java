@@ -325,7 +325,13 @@ public class GestionHuertosUI {
         int idPlan = validaNumero("Id plan: ", "p", "int").intValue();
         int idCuadrilla = validaNumero("Id cuadrilla: ", "p", "int").intValue();
         float cantKilos = validaNumero("Cantidad de kilos: ", "p", "float").floatValue();
-        byte calidad = validaNumero("Calidad: [1 = Excelente, 2 = Suficiente, 3 = Deficiente]: ", "r[1,3]", "byte").byteValue();
+        byte opcion = validaNumero("Calidad: [1 = Excelente, 2 = Suficiente, 3 = Deficiente]: ", "r[1,3]", "byte").byteValue();
+        Calidad calidad = null;
+        switch(opcion){
+            case 1 -> calidad = Calidad.EXCELENTE;
+            case 2 -> calidad = Calidad.SUFICIENTE;
+            case 3 -> calidad = Calidad.DEFICIENTE;
+        }
 
         try{
             cP.addPesaje(idPesaje, rutCos, idPlan, idCuadrilla, cantKilos, calidad);
@@ -426,11 +432,12 @@ public class GestionHuertosUI {
                 "\n-------------------------");
 
         System.out.printf(
-                "%-6s %-15s %-15s %-15s %-10s %-17s %-12s %-12s %-20s %-15s %-15s %s%n",
+                "%-6s %-15s %-15s %-15s %-10s %-17s %-12s %-12s %-20s %-15s %s%n",
                 "Id", "Nombre", "Fecha inicio", "Fecha término", "Meta (kg)",
                 "Precio base (kg)", "Estado", "Id cuartel", "Nombre huerto",
                 "Nro. cuadrillas", "Meta %"
         );
+
         if(listaP.length == 0){
             System.out.println("No hay planes registrados...");
         }else {
@@ -464,13 +471,17 @@ public class GestionHuertosUI {
                 ---------------------------------
                  %-3s %-10s %-12s %-10s %-10s  %-8s   %-7s %s%n
                 """, "Id", "Fecha", "Calidad", "Cantidad Kg", "Precio $", "Precio $", "Monto $", "Pagado el");
-        String[] lista = cP.listPesajesCosechador(rut);
-        if(lista.length == 0){
-            System.out.println("El cosechador no tiene registrado pesajes...");
-        }else{
-            for(String l: lista){
-                System.out.println(l);
+        try{
+            String[] lista = cP.listPesajesCosechador(rut);
+            if(lista.length == 0){
+                System.out.println("El cosechador no tiene registrado pesajes...");
+            }else{
+                for(String l: lista){
+                    System.out.println(l);
+                }
             }
+        }catch(GestionHuertosException e){
+            System.out.println(e.getMessage());
         }
     }
     private void listaPagosPesajes(){
@@ -558,7 +569,11 @@ public class GestionHuertosUI {
     */
     private boolean validaRango(Number valor, String condicion) {
         char operacion = condicion.charAt(0);
-        String rango = condicion.substring(1);
+        String rango = "";
+        if(condicion.length() > 1){
+            rango = condicion.substring(1);
+        }
+
         double v = valor.doubleValue(); //Convertimos a double para comparar genéricamente
 
         switch (operacion) {

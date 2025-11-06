@@ -24,33 +24,30 @@ public class GestionHuertosUI {
 
     //*** MENÚ PRINCIPAL ***
     public void menu(){
-        int respuesta;
+        byte respuesta;
         do{
-            System.out.print("""
+            System.out.println("""
                     ::: MENU PRINCIPAL :::
                     1. Crear Personas
                     2. Menú Huertos
                     3. Menú Planes de Cosecha
                     4. Menú Listados
                     5. Salir
-                        Opción:\s""");
-            respuesta = tcld.nextInt();
+                    """);
+            respuesta = validaNumero("\tOpción: ", "r[1,5]", "byte").byteValue();
 
             switch(respuesta){
-                case 1 ->{}
-                case 2 ->{}
-                case 3 ->{}
-                case 4 ->{}
-                case 5 ->{
-                    System.out.println("Saliendo...");
-                }
-                default ->{}
+                case 1 ->{creaPersona();}
+                case 2 ->{menuHuertos();}
+                case 3 ->{menuPlanesCosecha();}
+                case 4 ->{menuListados();}
+                case 5 ->{System.out.println("Saliendo...");}
             }
         }while(respuesta != 5);
     }
     //*** MENÚ HUERTO ***
     private void menuHuertos(){
-        int respuesta;
+        byte respuesta;
         do{
             System.out.print("""
                             >>> SUBMENU HUERTOS <<<
@@ -59,19 +56,16 @@ public class GestionHuertosUI {
                             3. Agregar Cuarteles a Huerto
                             4. Cambiar Estado Cuartel
                             5. Volver
-                                Opción:\s""");
-            respuesta = tcld.nextInt();
+                            """);
+            respuesta = validaNumero("\tOpción: ", "r[1,5]", "byte").byteValue();
 
             switch(respuesta){
-                case 1 ->{}
-                case 2 ->{}
-                case 3 ->{}
-                case 4 ->{}
+                case 1 ->{creaCultivo();}
+                case 2 ->{creaHuerto();}
+                case 3 ->{agregaCuartelesAHuerto();}
+                case 4 ->{cambiaEstadoCuartel();}
                 case 5 ->{
-                    System.out.println("Volviendo a Menú Principal...");
-                }
-                default ->{
-                    System.out.println("Respuesta invalida.");
+                    System.out.println("\n-> Volviendo al menú principal");
                 }
             }
         }while(respuesta != 5);
@@ -91,18 +85,19 @@ public class GestionHuertosUI {
                     5. Agregar Pesaje a Cosechador
                     6. Pagar Pesajes Impagos de Cosechador
                     7. Volver
-                        Opción:\s""");
-            respuesta = tcld.nextByte();
+                    """);
+            respuesta = validaNumero("\tOpción: ", "r[1,7]", "byte").byteValue();
 
             switch(respuesta){
-                case 1 ->{}
-                case 2 ->{}
-                case 3 ->{}
-                case 4 ->{}
-                case 5 ->{}
-                case 6 ->{}
-                case 7 ->{}
-                default -> {}
+                case 1 ->{creaPlanDeCosecha();}
+                case 2 ->{cambiaEstadoPlan();}
+                case 3 ->{agregaCuadrillasAPlan();}
+                case 4 ->{asignaCosechadoresAPlan();}
+                case 5 ->{agregaPesajeACosechador();}
+                case 6 ->{pagaPesajesPendientesACosechador();}
+                case 7 ->{
+                    System.out.println("\n-> Volviendo al menú principal");
+                }
             }
         }while(respuesta != 7);
         menu();
@@ -124,27 +119,29 @@ public class GestionHuertosUI {
                     8. Listado Pesajes de un Cosechador
                     9. Listado de Pagos
                     10. Volver
-                        Opción:\s""");
-            respuesta = tcld.nextByte();
+                    """);
+            respuesta = validaNumero("\tOpción: ", "r[1,10]", "byte").byteValue();
 
             switch(respuesta){
-                case 1 ->{}
-                case 2 ->{}
-                case 3 ->{}
-                case 4 ->{}
-                case 5 ->{}
-                case 6 ->{}
-                case 7 ->{}
-                case 8 ->{}
-                case 9 ->{}
-                case 10 ->{}
-                default ->{}
+                case 1 ->{listaPropietarios();}
+                case 2 ->{listaSupervisores();}
+                case 3 ->{listaCosechadores();}
+                case 4 ->{listaCultivos();}
+                case 5 ->{listaHuertos();}
+                case 6 ->{listaPlanesCosecha();}
+                case 7 ->{listaPesajes();}
+                case 8 ->{listaPesajesCosechador();}
+                case 9 ->{listaPagosPesajes();}
+                case 10 ->{
+                    System.out.println("\n-> Volviendo al menú principal");
+                }
             }
         }while(respuesta != 10);
         menu();
     }
 
     private void creaPersona(){
+        System.out.println("-> Creando a una persona...");
         String msj = "Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ";
         byte rol = validaNumero(msj,"r[1,3]", "byte").byteValue();
         System.out.print("Rut: ");
@@ -184,6 +181,7 @@ public class GestionHuertosUI {
         }
     }
     private void creaCultivo(){
+        System.out.println("-> Creando un cultivo");
         int id = validaNumero("Identificación (No negativo): ", "p", "int").intValue();
         String especie = validaEntradaString("Especie: ");
         String variedad = validaEntradaString("Variedad: ");
@@ -191,12 +189,13 @@ public class GestionHuertosUI {
 
         try{
             cP.createCultivo(id, especie, variedad, rendimiento);
-            System.out.println("Cultivo creado éxitosamente...");
+            System.out.println("-> Cultivo creado éxitosamente...");
         }catch(GestionHuertosException e){
             System.out.println(e.getMessage());
         }
     }
     private void creaHuerto(){
+        System.out.println("-> Creando un huerto");
         String nom = validaEntradaString("Nombre: ");
         float sup = validaNumero("Superficie: ", "p", "float").floatValue();
 
@@ -206,14 +205,15 @@ public class GestionHuertosUI {
 
         try{
             cP.createHuerto(nom, sup, ubi, rut);
-            System.out.println("Huerto creado éxitosamente...");
+            System.out.println("-> Huerto creado éxitosamente...");
         } catch(GestionHuertosException e){
                 System.out.println(e.getMessage());
         }
     }
     private void agregaCuartelesAHuerto(){
+        System.out.println("-> Agregando cuarteles a huerto");
         String nomHuerto = validaEntradaString("Nombre del huerto: ");
-        System.out.println("Agregando cuarteles a huerto...");
+        System.out.println("\n-> Agregar cuarteles");
         int numCuarteles = validaNumero("Numero de cuarteles a agregar: ", "p", "int").intValue();
 
         for(int i = 0; i < numCuarteles; i++) {
@@ -222,25 +222,27 @@ public class GestionHuertosUI {
             int idCultivo = validaNumero("Id cultivo del cuartel: ", "p", "int").intValue();
             try{
                 cP.addCuartelToHuerto(nomHuerto, idCuartel, supCuartel, idCultivo);
-                System.out.println("\nCuartel agregado éxitosamente al huerto");
+                System.out.println("\n-> Cuartel agregado éxitosamente al huerto");
             }catch(GestionHuertosException e){
                 System.out.println(e.getMessage());
             }
         }
     }
     private void cambiaEstadoCuartel(){
+        System.out.println("-> Cambiando el estado del cuartel");
         int idCuartel = validaNumero("Id del cuartel: ", "p", "int").intValue();
         String nomHuerto = validaEntradaString("Nombre del Huerto: ");
         EstadoFenologico estado = (EstadoFenologico) validaEnum("EstadoFenologico", "Nuevo estado: ");
 
         try{
             cP.changeEstadoCuartel(nomHuerto, idCuartel, estado);
-            System.out.println("Se ha cambiado el estado del cuartel éxitosamente...");
+            System.out.println("-> Se ha cambiado el estado del cuartel éxitosamente...");
         }catch(GestionHuertosException e){
             System.out.println(e.getMessage());
         }
     }
     private void creaPlanDeCosecha(){
+        System.out.println("-> Creando un plan de cosecha");
         int idPlan = validaNumero("Id de plan: ", "p", "int").intValue();
         String nomPlan = validaEntradaString("Nombre plan: ");
 
@@ -264,19 +266,20 @@ public class GestionHuertosUI {
 
     }
     private void cambiaEstadoPlan(){
+        System.out.println("-> Cambiando el estado de un plan de cosecha");
         int idPlan = validaNumero("Id plan: ", "p", "int").intValue();
         String msj = "Nuevo estado plan [1 = Planificado, 2 = Ejecutando, 3 = Cerrado, 4 = Cancelado]: ";
         EstadoPlan estado = (EstadoPlan) validaEnum("EstadoPlan", msj);
 
         try{
             cP.changeEstadoPlan(idPlan, estado);
-            System.out.println("Estado cambiado éxitosamente...");
+            System.out.println("-> Estado cambiado éxitosamente");
         }catch(GestionHuertosException e){
             System.out.println(e.getMessage());
         }
     }
     private void agregaCuadrillasAPlan(){
-        System.out.println("Agregando cuadrillas a un plan de cosecha...");
+        System.out.println("-> Agregando cuadrillas a un plan de cosecha");
         int idPlan = validaNumero("Ide del plan: ", "p", "int").intValue();
         int nroCuadrillas = validaNumero("Nro de cuadrillas: ", "p", "int").intValue();
 
@@ -289,20 +292,20 @@ public class GestionHuertosUI {
 
             try{
                 cP.addCuadrillaToPlan(idPlan, idCuadrilla, nombreCuadrilla, rutSupervisor);
-                System.out.println("Cuadrilla agregada exitosamente al plan de cosecha");
+                System.out.println("-> Cuadrilla agregada exitosamente al plan de cosecha");
             } catch(GestionHuertosException e){
                 System.out.println(e.getMessage());
             }
         }
     }
     private void asignaCosechadoresAPlan(){
+        System.out.println("-> Asignando cosechadores a un plan");
         int idPlan = validaNumero("Id del plan: ", "p", "int").intValue();
         int idCuadrilla = validaNumero("Id cuadrilla: ", "p", "int").intValue();
         int nroCos = validaNumero("Nro. cosechadores a asignar: ", "p", "int").intValue();
 
         for(int i = 0; i < nroCos; i++){
-            System.out.println("");
-            LocalDate[] fechas = entradaFechaComienzoFin("Fecha de inicio asignación (dd/mm/aaaa): ",
+            LocalDate[] fechas = entradaFechaComienzoFin("\nFecha de inicio asignación (dd/mm/aaaa): ",
                     "Fecha de término asignacion (dd/mm/aaaa): ");
             LocalDate fIni = fechas[0];
             LocalDate fFin = fechas[1];
@@ -312,14 +315,14 @@ public class GestionHuertosUI {
 
             try{
                 cP.addCosechadorToCuadrilla(idPlan, idCuadrilla, fIni, fFin, metaKilos, rut);
-                System.out.println("Cosechador asignado exitosamente a una cuadrilla del plan de cosecha");
+                System.out.println("-> Cosechador asignado exitosamente a una cuadrilla del plan de cosecha");
             } catch (GestionHuertosException e) {
                 System.out.println(e.getMessage());
             }
         }
     }
     private void agregaPesajeACosechador(){
-        System.out.println("Agregando pesaje a un cosechador...");
+        System.out.println("-> Agregando pesaje a un cosechador");
         int idPesaje = validaNumero("Id pesaje: ", "p", "int").intValue();
         Rut rutCos = Rut.of(tcld.next());
         int idPlan = validaNumero("Id plan: ", "p", "int").intValue();
@@ -335,13 +338,13 @@ public class GestionHuertosUI {
 
         try{
             cP.addPesaje(idPesaje, rutCos, idPlan, idCuadrilla, cantKilos, calidad);
-            System.out.println("\nPesaje agregado exitosamente al cosechador");
+            System.out.println("\n-> Pesaje agregado exitosamente al cosechador");
         }catch(GestionHuertosException e){
             System.out.println(e.getMessage());
         }
     }
     private void pagaPesajesPendientesACosechador(){
-        System.out.println("Pagando pesajes pendientes de un cosechador...");
+        System.out.println("-> Pagando pesajes pendientes de un cosechador...");
         int idPesaje = validaNumero("Id pesaje: ", "p", "int").intValue();
         System.out.print("Rut cosechador: ");
         Rut rutCos = Rut.of(tcld.next());

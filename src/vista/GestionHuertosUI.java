@@ -37,11 +37,11 @@ public class GestionHuertosUI {
             respuesta = validaNumero("\tOpción: ", "r[1,5]", "byte").byteValue();
 
             switch(respuesta){
-                case 1 ->{creaPersona();}
-                case 2 ->{menuHuertos();}
-                case 3 ->{menuPlanesCosecha();}
-                case 4 ->{menuListados();}
-                case 5 ->{System.out.println("Saliendo...");}
+                case 1 -> creaPersona();
+                case 2 -> menuHuertos();
+                case 3 -> menuPlanesCosecha();
+                case 4 -> menuListados();
+                case 5 -> System.out.println("Saliendo...");
             }
         }while(respuesta != 5);
     }
@@ -60,13 +60,11 @@ public class GestionHuertosUI {
             respuesta = validaNumero("\tOpción: ", "r[1,5]", "byte").byteValue();
 
             switch(respuesta){
-                case 1 ->{creaCultivo();}
-                case 2 ->{creaHuerto();}
-                case 3 ->{agregaCuartelesAHuerto();}
-                case 4 ->{cambiaEstadoCuartel();}
-                case 5 ->{
-                    System.out.println("\n-> Volviendo al menú principal");
-                }
+                case 1 -> creaCultivo();
+                case 2 -> creaHuerto();
+                case 3 -> agregaCuartelesAHuerto();
+                case 4 -> cambiaEstadoCuartel();
+                case 5 -> System.out.println("\n-> Volviendo al menú principal");
             }
         }while(respuesta != 5);
         menu();
@@ -89,15 +87,14 @@ public class GestionHuertosUI {
             respuesta = validaNumero("\tOpción: ", "r[1,7]", "byte").byteValue();
 
             switch(respuesta){
-                case 1 ->{creaPlanDeCosecha();}
-                case 2 ->{cambiaEstadoPlan();}
-                case 3 ->{agregaCuadrillasAPlan();}
-                case 4 ->{asignaCosechadoresAPlan();}
-                case 5 ->{agregaPesajeACosechador();}
-                case 6 ->{pagaPesajesPendientesACosechador();}
-                case 7 ->{
-                    System.out.println("\n-> Volviendo al menú principal");
-                }
+                case 1 -> creaPlanDeCosecha();
+                case 2 -> cambiaEstadoPlan();
+                case 3 -> agregaCuadrillasAPlan();
+                case 4 -> asignaCosechadoresAPlan();
+                case 5 -> agregaPesajeACosechador();
+                case 6 -> pagaPesajesPendientesACosechador();
+                case 7 -> System.out.println("\n-> Volviendo al menú principal");
+
             }
         }while(respuesta != 7);
         menu();
@@ -123,18 +120,17 @@ public class GestionHuertosUI {
             respuesta = validaNumero("\tOpción: ", "r[1,10]", "byte").byteValue();
 
             switch(respuesta){
-                case 1 ->{listaPropietarios();}
-                case 2 ->{listaSupervisores();}
-                case 3 ->{listaCosechadores();}
-                case 4 ->{listaCultivos();}
-                case 5 ->{listaHuertos();}
-                case 6 ->{listaPlanesCosecha();}
-                case 7 ->{listaPesajes();}
-                case 8 ->{listaPesajesCosechador();}
-                case 9 ->{listaPagosPesajes();}
-                case 10 ->{
-                    System.out.println("\n-> Volviendo al menú principal");
-                }
+                case 1 -> listaPropietarios();
+                case 2 -> listaSupervisores();
+                case 3 -> listaCosechadores();
+                case 4 -> listaCultivos();
+                case 5 -> listaHuertos();
+                case 6 -> listaPlanesCosecha();
+                case 7 -> listaPesajes();
+                case 8 -> listaPesajesCosechador();
+                case 9 -> listaPagosPesajes();
+                case 10 -> System.out.println("\n-> Volviendo al menú principal");
+
             }
         }while(respuesta != 10);
         menu();
@@ -372,8 +368,10 @@ public class GestionHuertosUI {
     }
     private void listaSupervisores(){
         String[] listSupervisores = cP.listSupervisores();
-        System.out.println("\nLISTADO DE SUPERVISORES" +
-                "\n-----------------------");
+        System.out.println("""
+                \nLISTADO DE SUPERVISORES
+                -----------------------
+                """);
         System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
                 "utilidades.Rut", "Nombre", "Dirección", "email", "Profesión", "Nombre cuadrilla");
         if(listSupervisores.length == 0){
@@ -386,8 +384,10 @@ public class GestionHuertosUI {
     }
     private void listaCosechadores(){
         String[] listCosechadores = cP.listCosechadores();
-        System.out.println("\nLISTADO DE COSECHADORES" +
-                "\n-----------------------");
+        System.out.println("""
+        \nLISTADO DE COSECHADORES
+        -----------------------
+        """);
         System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
                 "utilidades.Rut", "Nombre", "Dirección", "email", "Fecha nacimiento", "Nro. Cuadrillas");
         if(listCosechadores.length == 0){
@@ -399,8 +399,10 @@ public class GestionHuertosUI {
         }
     }
     private void listaCultivos() {
-        System.out.println("\nLISTADO DE CULTIVOS");
-        System.out.println("--------------------");
+        System.out.println("""
+                \nLISTADO DE CULTIVOS
+                -------------------
+                """);
         System.out.printf("%-6s %-15s %-15s %-12s %-15s%n",
                 "Id", "Especie", "Variedad", "Rendimiento", "Nro. cuarteles");
 
@@ -431,8 +433,10 @@ public class GestionHuertosUI {
     private void listaPlanesCosecha(){
         String[] listaP = cP.listPlanesCosecha();
 
-        System.out.println("\nLISTADO DE PLANES COSECHA" +
-                "\n-------------------------");
+        System.out.println("""
+        \nLISTADO DE PLANES COSECHA
+        -------------------------
+        """);
 
         System.out.printf(
                 "%-6s %-15s %-15s %-15s %-10s %-17s %-12s %-12s %-20s %-15s %s%n",
@@ -451,7 +455,7 @@ public class GestionHuertosUI {
     }
     private void listaPesajes(){
         System.out.printf("""
-                LISTADO DE PESAJES
+                \nLISTADO DE PESAJES
                 ------------------
                  %-3s %-10s  %-12s  %-10s %-10s  %-8s   %-7s %s%n
                 """, "Id", "Fecha", "Rut Cosechador", "Calidad", "Cantidad Kg",
@@ -470,7 +474,7 @@ public class GestionHuertosUI {
         Rut rut = Rut.of(tcld.next());
 
         System.out.printf("""
-                LISTADO DE PESAJES DEL COSECHADOR
+                \nLISTADO DE PESAJES DEL COSECHADOR
                 ---------------------------------
                  %-3s %-10s %-12s %-10s %-10s  %-8s   %-7s %s%n
                 """, "Id", "Fecha", "Calidad", "Cantidad Kg", "Precio $", "Precio $", "Monto $", "Pagado el");
@@ -489,7 +493,7 @@ public class GestionHuertosUI {
     }
     private void listaPagosPesajes(){
         System.out.printf("""
-                LISTADO DE PAGOS DE PESAJES
+                \nLISTADO DE PAGOS DE PESAJES
                 ---------------------------
                     %-3s %-10s %-6s %-11s %s%n
                 """, "Id", "Fecha", "Monto $", "Nro.Pesajes", "Rut Cosechador");
@@ -521,21 +525,11 @@ public class GestionHuertosUI {
             try{
                 String entrada = validaEntradaString(msj);
                 switch(tipo){
-                    case "byte" ->{
-                        num = Byte.parseByte(entrada);
-                    }
-                    case "int" ->{
-                        num = Integer.parseInt(entrada);
-                    }
-                    case "long" ->{
-                        num = Long.parseLong(entrada);
-                    }
-                    case "float" ->{
-                        num = Float.parseFloat(entrada);
-                    }
-                    case "double" ->{
-                        num = Double.parseDouble(entrada);
-                    }
+                    case "byte" -> num = Byte.parseByte(entrada);
+                    case "int" -> num = Integer.parseInt(entrada);
+                    case "long" -> num = Long.parseLong(entrada);
+                    case "float" -> num = Float.parseFloat(entrada);
+                    case "double" -> num = Double.parseDouble(entrada);
                 }
 
                 if (!condicion.isBlank()) {
@@ -600,11 +594,9 @@ public class GestionHuertosUI {
                 // Ejemplo: "p0" → >=0 ; "p" → >0
                 return rango.startsWith("0") ? v >= 0 : v > 0;
             }
-            default -> {
-                // Si no hay operación reconocida, se asume válido
-                return true;
-            }
         }
+        // Si no hay operación reconocida, se asume válido
+        return true;
     }
     private Enum validaEnum(String clase, String msj) {
         String cadena;

@@ -143,27 +143,36 @@ public class ControladorProduccion {
     }
 
     public double addPagoPesaje(int id, Rut rutCosechador) throws GestionHuertosException {
-        if (findPagoPesajeById(id).isPresent())
-            throw new GestionHuertosException("Ya existe un pago con ese id");
+
+        if (findPagoPesajeById(id).isPresent()) {
+            throw new GestionHuertosException("Ya existe un pago con ese id.");
+        }
 
         Optional<Cosechador> cOp = findCosechadorByRut(rutCosechador);
-        if (cOp.isEmpty())
-            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        if (cOp.isEmpty()) {
+            throw new GestionHuertosException("No existe un cosechador con el RUT indicado.");
+        }
 
         List<Pesaje> impagos = new ArrayList<>();
         for (Pesaje p : pesajes) {
             if (p.getCosechadorAsignado() != null &&
-                    p.getCosechadorAsignado().getCosechador().getRut().toString().equals(rutCosechador.toString()) &&
-                    !p.isPagado()) {
+                    p.getCosechadorAsignado().getCosechador().getRut().equals(rutCosechador) &&
+                    !p.isPagado())
+            {
                 impagos.add(p);
             }
+        }
+
+        if (impagos.isEmpty()) {
+            throw new GestionHuertosException("El cosechador no tiene pesajes pendientes de pago.");
         }
 
         LocalDate hoy = LocalDate.now();
         PagoPesaje nuevoPago = new PagoPesaje(id, hoy, impagos);
 
-        if (nuevoPago.getFecha().isAfter(hoy))
-            throw new GestionHuertosException("La fecha del pago no puede ser posterior a la actual");
+        if (nuevoPago.getFecha().isAfter(hoy)) {
+            throw new GestionHuertosException("La fecha del pago no puede ser posterior a la actual.");
+        }
 
         pagos.add(nuevoPago);
 
@@ -173,6 +182,7 @@ public class ControladorProduccion {
 
         return nuevoPago.getMonto();
     }
+
 
     public String[] listCultivos() {
         if (cultivos.isEmpty()) return new String[0];
@@ -275,31 +285,127 @@ public class ControladorProduccion {
     }
 
     public void readDataFromTextFile(String nombreArchivo) throws GestionHuertosException {
-        File f = new File(nombreArchivo);
-        if (!f.exists()) throw new GestionHuertosException("Archivo no encontrado: " + nombreArchivo);
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+        File archivo = new File(nombreArchivo);
+
+        if (!archivo.exists()) {
+            throw new GestionHuertosException("Archivo no encontrado: " + nombreArchivo);
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+
             String linea;
+
             while ((linea = br.readLine()) != null) {
                 if (linea.trim().isEmpty()) continue;
-                String[] partes = linea.split(";", -1);
-                String tipo = partes[0].trim().toUpperCase();
-                switch (tipo) {
-                    case "PROPIETARIO" -> createPropietario(Rut.of(partes[1].trim()), partes[2].trim(), partes[3].trim(), partes[4].trim(), partes[5].trim());
-                    case "SUPERVISOR" -> createSupervisor(Rut.of(partes[1].trim()), partes[2].trim(), partes[3].trim(), partes[4].trim(), partes[5].trim());
-                    case "COSECHADOR" -> createCosechador(Rut.of(partes[1].trim()), partes[2].trim(), partes[3].trim(), partes[4].trim(), LocalDate.parse(partes[5].trim()));
-                    case "CULTIVO" -> createCultivo(Integer.parseInt(partes[1].trim()), partes[2].trim(), partes[3].trim(), Float.parseFloat(partes[4].trim()));
-                    case "HUERTO" -> createHuerto(partes[1].trim(), Float.parseFloat(partes[2].trim()), partes[3].trim(), Rut.of(partes[4].trim()));
-                    case "CUARTEL" -> addCuartelToHuerto(partes[1].trim(), Integer.parseInt(partes[2].trim()), Float.parseFloat(partes[3].trim()), Integer.parseInt(partes[4].trim()));
-                    case "PLAN" -> createPlanCosecha(Integer.parseInt(partes[1].trim()), partes[2].trim(), LocalDate.parse(partes[3].trim()), LocalDate.parse(partes[4].trim()), Double.parseDouble(partes[5].trim()), Double.parseDouble(partes[6].trim()), partes[7].trim(), Integer.parseInt(partes[8].trim()));
-                    default -> { }
+
+                String[] p = linea.split(";", -1);
+
+                if (p.length == 0) continue;
+
+                String tipo = p[0].trim().toUpperCase();
+
+                try {
+
+                    switch (tipo) {
+
+                        case "PROPIETARIO" -> {
+                            if (p.length < 6)
+                                throw new GestionHuertosException("PROPIETARIO: columnas insuficientes.");
+                            createPropietario(
+                                    Rut.of(p[1].trim()),
+                                    p[2].trim(),
+                                    p[3].trim(),
+                                    p[4].trim(),
+                                    p[5].trim()
+                            );
+                        }
+
+                        case "SUPERVISOR" -> {
+                            if (p.length < 6)
+                                throw new GestionHuertosException("SUPERVISOR: columnas insuficientes.");
+                            createSupervisor(
+                                    Rut.of(p[1].trim()),
+                                    p[2].trim(),
+                                    p[3].trim(),
+                                    p[4].trim(),
+                                    p[5].trim()
+                            );
+                        }
+
+                        case "COSECHADOR" -> {
+                            if (p.length < 6)
+                                throw new GestionHuertosException("COSECHADOR: columnas insuficientes.");
+                            createCosechador(
+                                    Rut.of(p[1].trim()),
+                                    p[2].trim(),
+                                    p[3].trim(),
+                                    p[4].trim(),
+                                    LocalDate.parse(p[5].trim())
+                            );
+                        }
+
+                        case "CULTIVO" -> {
+                            if (p.length < 5)
+                                throw new GestionHuertosException("CULTIVO: columnas insuficientes.");
+                            createCultivo(
+                                    Integer.parseInt(p[1].trim()),
+                                    p[2].trim(),
+                                    p[3].trim(),
+                                    Float.parseFloat(p[4].trim())
+                            );
+                        }
+
+                        case "HUERTO" -> {
+                            if (p.length < 5)
+                                throw new GestionHuertosException("HUERTO: columnas insuficientes.");
+                            createHuerto(
+                                    p[1].trim(),
+                                    Float.parseFloat(p[2].trim()),
+                                    p[3].trim(),
+                                    Rut.of(p[4].trim())
+                            );
+                        }
+
+                        case "CUARTEL" -> {
+                            if (p.length < 5)
+                                throw new GestionHuertosException("CUARTEL: columnas insuficientes.");
+                            addCuartelToHuerto(
+                                    p[1].trim(),
+                                    Integer.parseInt(p[2].trim()),
+                                    Float.parseFloat(p[3].trim()),
+                                    Integer.parseInt(p[4].trim())
+                            );
+                        }
+
+                        case "PLAN" -> {
+                            if (p.length < 9)
+                                throw new GestionHuertosException("PLAN: columnas insuficientes.");
+                            createPlanCosecha(
+                                    Integer.parseInt(p[1].trim()),
+                                    p[2].trim(),
+                                    LocalDate.parse(p[3].trim()),
+                                    LocalDate.parse(p[4].trim()),
+                                    Double.parseDouble(p[5].trim()),
+                                    Float.parseFloat(p[6].trim()),
+                                    p[7].trim(),
+                                    Integer.parseInt(p[8].trim())
+                            );
+                        }
+
+                        default -> {
+                        }
+                    }
+
+                } catch (NumberFormatException | DateTimeParseException e) {
+                    throw new GestionHuertosException("Error en formato de datos en línea: " + linea + "\n" + e.getMessage());
                 }
             }
-        } catch (NumberFormatException | DateTimeParseException e) {
-            throw new GestionHuertosException("Error en formato de datos: " + e.getMessage());
+
         } catch (IOException e) {
             throw new GestionHuertosException("Error al leer el archivo: " + e.getMessage());
         }
     }
+
 
     private Optional<Propietario> findPropietarioByRut(Rut rut) {
         for (Persona p : personas) {

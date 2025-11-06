@@ -444,7 +444,7 @@ public class GestionHuertosUI {
         System.out.printf("""
                 LISTADO DE PESAJES
                 ------------------
-                 %.3s %-10s  %-12s  %-10s %-10s  %-8s   %-7s %s%n
+                 %-3s %-10s  %-12s  %-10s %-10s  %-8s   %-7s %s%n
                 """, "Id", "Fecha", "Rut Cosechador", "Calidad", "Cantidad Kg",
                 "Precio $", "Monto $", "Pagado el");
         String[] lista = cP.listPesajes();
@@ -456,8 +456,39 @@ public class GestionHuertosUI {
            }
         }
     }
-    private void listaPesajesCosechador(){}
-    private void listaPagosPesajes(){}
+    private void listaPesajesCosechador(){
+        System.out.print("Rut del cosechador: ");
+        Rut rut = Rut.of(tcld.next());
+
+        System.out.printf("""
+                LISTADO DE PESAJES DEL COSECHADOR
+                ---------------------------------
+                 %-3s %-10s %-12s %-10s %-10s  %-8s   %-7s %s%n
+                """, "Id", "Fecha", "Calidad", "Cantidad Kg", "Precio $", "Precio $", "Monto $", "Pagado el");
+        String[] lista = cP.listPesajesCosechador(rut);
+        if(lista.length == 0){
+            System.out.println("El cosechador no tiene registrado pesajes...");
+        }else{
+            for(String l: lista){
+                System.out.println(l);
+            }
+        }
+    }
+    private void listaPagosPesajes(){
+        System.out.printf("""
+                LISTADO DE PAGOS DE PESAJES
+                ---------------------------
+                    %-3s %-10s %-6s %-11s %s%n
+                """, "Id", "Fecha", "Monto $", "Nro.Pesajes", "Rut Cosechador");
+        String[] lista = cP.listPagosPesajes();
+        if(lista.length == 0){
+            System.out.println("No se han registrado pagos...");
+        }else{
+            for(String l: lista){
+                System.out.println(l);
+            }
+        }
+    }
 
     private String validaEntradaString(String mensaje){
         System.out.print(mensaje);

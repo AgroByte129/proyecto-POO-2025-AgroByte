@@ -414,7 +414,7 @@ public class GestionHuertosUI {
             System.out.println("\nLISTADO DE HUERTOS");
             System.out.println("------------------");
             System.out.printf("%-20s %-12s %-20s %-15s %-20s %-15s%n",
-                    "Nombre", "Superficie", "Ubicación", "utilidades.Rut propietario", "Nombre propietario", "Nro. cuarteles");
+                    "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre propietario", "Nro. cuarteles");
             for (String listaDeHuerto : listaDeHuertos) {
                 System.out.println(listaDeHuerto);
             }
@@ -427,10 +427,10 @@ public class GestionHuertosUI {
                 "\n-------------------------");
 
         System.out.printf(
-                "%-6s %-15s %-15s %-15s %-10s %-17s %-12s %-12s %-20s %-15s%n",
+                "%-6s %-15s %-15s %-15s %-10s %-17s %-12s %-12s %-20s %-15s %-15s %s%n",
                 "Id", "Nombre", "Fecha inicio", "Fecha término", "Meta (kg)",
                 "Precio base (kg)", "Estado", "Id cuartel", "Nombre huerto",
-                "Nro. cuadrillas"
+                "Nro. cuadrillas", "Meta %"
         );
         if(listaP.length == 0){
             System.out.println("No hay planes registrados...");
@@ -440,7 +440,22 @@ public class GestionHuertosUI {
             }
         }
     }
-    private void listaPesajes(){}
+    private void listaPesajes(){
+        System.out.printf("""
+                LISTADO DE PESAJES
+                ------------------
+                 %.3s %-10s  %-12s  %-10s %-10s  %-8s   %-7s %s%n
+                """, "Id", "Fecha", "Rut Cosechador", "Calidad", "Cantidad Kg",
+                "Precio $", "Monto $", "Pagado el");
+        String[] lista = cP.listPesajes();
+        if(lista.length == 0){
+            System.out.println("No se han registrado pesajes...");
+        }else{
+           for(String l: lista){
+               System.out.println(l);
+           }
+        }
+    }
     private void listaPesajesCosechador(){}
     private void listaPagosPesajes(){}
 

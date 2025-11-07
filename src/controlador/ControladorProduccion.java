@@ -6,6 +6,7 @@ import utilidades.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 //comentario
@@ -95,8 +96,7 @@ public class ControladorProduccion {
         Optional<Supervisor> s = findSupervisorByRut(rutSupervisor);
         if (s.isEmpty()) throw new GestionHuertosException("No existe un supervisor con el rut indicado");
         if (s.get().getCuadrilla() != null) throw new GestionHuertosException("El supervisor ya tiene asignada una cuadrilla a su cargo");
-        boolean ok = p.get().addCuadrilla(idCuad, nomCuad, s.get());
-        if (!ok) throw new GestionHuertosException("No fue posible agregar la cuadrilla (duplicado)");
+        p.get().addCuadrilla(idCuad, nomCuad, s.get()); //una vez vistas todas las posibles excepciones, se realiza la asignación
     }
 
     public void addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fInicio, LocalDate fFin, double meta, Rut rutCosechador) throws GestionHuertosException {
@@ -108,8 +108,7 @@ public class ControladorProduccion {
         PlanCosecha plan = p.get();
         LocalDate finPlan = (plan.getFinReal() != null) ? plan.getFinReal() : plan.getFinEstimado();
         if (fInicio.isBefore(plan.getInicio()) || fFin.isAfter(finPlan)) throw new GestionHuertosException("El rango de fechas de asignación del cosechador a la cuadrilla está fuera del rango de fechas del plan");
-        boolean ok = plan.addCosechadorToCuadrilla(idCuadrilla, fInicio, fFin, meta, c.get());
-        if (!ok) throw new GestionHuertosException("No fue posible asignar el cosechador a la cuadrilla (duplicado o límite alcanzado)");
+        plan.addCosechadorToCuadrilla(idCuadrilla, fInicio, fFin, meta, c.get());
     }
 
     public void addPesaje(int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad) throws GestionHuertosException {
@@ -274,31 +273,158 @@ public class ControladorProduccion {
         return out;
     }
 
-    public void readDataFromTextFile(String nombreArchivo) throws GestionHuertosException {
-        File f = new File(nombreArchivo);
-        if (!f.exists()) throw new GestionHuertosException("Archivo no encontrado: " + nombreArchivo);
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                if (linea.trim().isEmpty()) continue;
-                String[] partes = linea.split(";", -1);
-                String tipo = partes[0].trim().toUpperCase();
-                switch (tipo) {
-                    case "PROPIETARIO" -> createPropietario(Rut.of(partes[1].trim()), partes[2].trim(), partes[3].trim(), partes[4].trim(), partes[5].trim());
-                    case "SUPERVISOR" -> createSupervisor(Rut.of(partes[1].trim()), partes[2].trim(), partes[3].trim(), partes[4].trim(), partes[5].trim());
-                    case "COSECHADOR" -> createCosechador(Rut.of(partes[1].trim()), partes[2].trim(), partes[3].trim(), partes[4].trim(), LocalDate.parse(partes[5].trim()));
-                    case "CULTIVO" -> createCultivo(Integer.parseInt(partes[1].trim()), partes[2].trim(), partes[3].trim(), Float.parseFloat(partes[4].trim()));
-                    case "HUERTO" -> createHuerto(partes[1].trim(), Float.parseFloat(partes[2].trim()), partes[3].trim(), Rut.of(partes[4].trim()));
-                    case "CUARTEL" -> addCuartelToHuerto(partes[1].trim(), Integer.parseInt(partes[2].trim()), Float.parseFloat(partes[3].trim()), Integer.parseInt(partes[4].trim()));
-                    case "PLAN" -> createPlanCosecha(Integer.parseInt(partes[1].trim()), partes[2].trim(), LocalDate.parse(partes[3].trim()), LocalDate.parse(partes[4].trim()), Double.parseDouble(partes[5].trim()), Double.parseDouble(partes[6].trim()), partes[7].trim(), Integer.parseInt(partes[8].trim()));
-                    default -> { }
+    public void readDataFromTextFile() throws GestionHuertosException {
+        DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        try(Scanner sc = new Scanner(new File("DatosIniciales.txt"))){
+            while(sc.hasNextLine()){
+                String linea = sc.nextLine();
+                if(linea.startsWith("#") || linea.isBlank()) continue;
+
+                String[] tokens = linea.split(";");
+                int num = Integer.parseInt(tokens[1]);
+
+                for(int i = 0;  i < num; i++){
+                    String datos = sc.nextLine();
+                    if(datos.isEmpty()) continue;
+                    String[] dato = datos.split(";");
+
+                    for(int j = 0; j < dato.length; j++){
+                        dato[j] = dato[j].trim();
+                    }
+
+                    switch (tokens[0]) {
+                        case "createPropietario" ->{
+                            Rut rut = Rut.of(dato[0]);
+                            createPropietario(rut, dato[1], dato[2], dato[3], dato[4]);
+                        }
+                        case "createSupervisor" ->{
+                            Rut rut = Rut.of(dato[0]);
+                            createSupervisor(rut, dato[1], dato[2], dato[3], dato[4]);
+                        }
+                        case "createCosechador" ->{
+                            Rut rut = Rut.of(dato[0]);
+                            try{
+                                LocalDate fNac = LocalDate.parse(dato[4], FORMATO);
+                                createCosechador(rut, dato[1], dato[2], dato[3], fNac);
+                            }catch(DateTimeParseException e){
+                                lanzaExcepcion(tokens[0], "Dato de fecha no válido");
+                            }
+                        }
+                        case "createCultivo" ->{
+                            try{
+                                int id = Integer.parseInt(dato[0]);
+                                float rendimiento = Float.parseFloat(dato[3]);
+                                createCultivo(id, dato[1], dato[2], rendimiento);
+                            }catch(NumberFormatException e){
+                                lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
+                            }
+                        }
+                        case "createHuerto" ->{
+                            Rut rut = Rut.of(dato[3]);
+                            try{
+                                float superficie = Float.parseFloat(dato[1]);
+                                createHuerto(dato[0], superficie, dato[2], rut);
+                            }catch(NumberFormatException e){
+                                lanzaExcepcion(tokens[0], "Dato numérico de superficie no es válido");
+                            }
+                        }
+                        case "addCuartelToHuerto" ->{
+                            try{
+                                int id = Integer.parseInt(dato[1]);
+                                float sup = Float.parseFloat(dato[2]);
+                                int idCul = Integer.parseInt(dato[3]);
+                                addCuartelToHuerto(dato[0], id, sup, idCul);
+                            }catch(NumberFormatException e){
+                                lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
+                            }
+
+                        }
+                        case "createPlanCosecha" ->{
+                            try{
+                                int idPlan = Integer.parseInt(dato[0]);
+                                LocalDate fIni = LocalDate.parse(dato[2], FORMATO);
+                                LocalDate fFin = LocalDate.parse(dato[3], FORMATO);
+                                double meta = Double.parseDouble(dato[4]);
+                                double precio = Double.parseDouble(dato[5]);
+                                int idCuartel = Integer.parseInt(dato[7]);
+                                createPlanCosecha(idPlan, dato[1], fIni, fFin, meta, precio, dato[6], idCuartel);
+                            }catch(NumberFormatException e){
+                                lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
+                            }
+                        }
+                        case "addCuadrillaToPlan" ->{
+                            try{
+                                int idPlan = Integer.parseInt(dato[0]);
+                                int idCuadrilla = Integer.parseInt(dato[1]);
+                                Rut rut = Rut.of(dato[3]);
+                                addCuadrillaToPlan(idPlan, idCuadrilla, dato[2], rut);
+                            }catch(NumberFormatException e){
+                                lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
+                            }
+                        }
+                        case "addCosechadorToCuadrilla" ->{
+                            try{
+                                int idPlan = Integer.parseInt(dato[0]);
+                                int idCuadrilla = Integer.parseInt(dato[1]);
+                                LocalDate fIni = LocalDate.parse(dato[2], FORMATO);
+                                LocalDate fFin = LocalDate.parse(dato[3], FORMATO);
+                                double meta = Double.parseDouble(dato[4]);
+                                Rut rut = Rut.of(dato[5]);
+                                addCosechadorToCuadrilla(idPlan, idCuadrilla, fIni, fFin, meta, rut);
+                            }catch(NumberFormatException e){
+                                lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
+                            }catch(DateTimeParseException e){
+                                lanzaExcepcion(tokens[0], "Excepción en datos de fechas");
+                            }
+                        }
+                        case "changeEstadoPlan" ->{
+                            try{
+                                int idPlan = Integer.parseInt(dato[0]);
+                                EstadoPlan estPlan = EstadoPlan.valueOf(dato[1].toUpperCase());
+                                changeEstadoPlan(idPlan, estPlan);
+                            }catch(NumberFormatException e){
+                                lanzaExcepcion(tokens[0], "Dato numérico en idPlan no válido");
+                            }catch(IllegalArgumentException e){
+                                lanzaExcepcion(tokens[0], "Dato de estado del plan no es válido");
+                            }
+                        }
+                        case "changeEstadoCuartel" ->{
+                            try{
+                                int idCuartel = Integer.parseInt(dato[0]);
+                                EstadoFenologico estCuartel = EstadoFenologico.valueOf(dato[2].toUpperCase());
+                                changeEstadoCuartel(dato[1], idCuartel, estCuartel);
+                            }catch(NumberFormatException e){
+                                lanzaExcepcion(tokens[0], "Dato numérico en idCuartel no válido");
+                            }catch(IllegalArgumentException e){
+                                lanzaExcepcion(tokens[0], "Dato de estado fenológico no válido");
+                            }
+                        }
+                        case "addPesaje" ->{
+                            try{
+                                int id = Integer.parseInt(dato[0]);
+                                Rut rut = Rut.of(dato[1]);
+                                int idPlan = Integer.parseInt(dato[2]);
+                                int idCuadrilla = Integer.parseInt(dato[3]);
+                                float cantKg = Float.parseFloat(dato[4]);
+                                Calidad calidad = Calidad.valueOf(dato[5].toUpperCase());
+                                addPesaje(id, rut, idPlan, idCuadrilla, cantKg, calidad);
+                            }catch(NumberFormatException e){
+                                lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
+                            }catch(IllegalArgumentException e){
+                                lanzaExcepcion(tokens[0], "Dato de calidad no válido");
+                            }
+                        }
+                    }
                 }
             }
-        } catch (NumberFormatException | DateTimeParseException e) {
-            throw new GestionHuertosException("Error en formato de datos: " + e.getMessage());
-        } catch (IOException e) {
-            throw new GestionHuertosException("Error al leer el archivo: " + e.getMessage());
+        }catch(FileNotFoundException e){
+            throw new GestionHuertosException("Archivo de datos inexistente");
         }
+    }
+//rutina auxiliar sólo para el lector de datos desde archivo de texto por ahora.
+    private void lanzaExcepcion(String operacion, String msj) throws GestionHuertosException{
+        throw new GestionHuertosException("Error en " + operacion + ": " + msj);
     }
 
     private Optional<Propietario> findPropietarioByRut(Rut rut) {

@@ -120,7 +120,7 @@ public class PlanCosecha {
         Cuadrilla c = findCuadrillaById(idCuad);
         if (c == null) {
             throw new GestionHuertosException("No existe una cuadrilla en el plan con el id indicado");
-        }
+        }//lanza excepción
         c.addCosechador(fIni, fFin, meta, cos);
     }
 

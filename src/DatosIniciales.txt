@@ -1,0 +1,90 @@
+# Formato del archivo:
+# ~~~~~~~~~~~~~~~~~~~~
+# Primera sección de comentarios: Se omiten todas las líneas iniciales que parten con el caracter #. Solo hay comentarios al inicio del archivo
+# Luego vienen grupos de datos que pueden o no estar separados por líneas en blanco.
+# por cada grupo viene una línea que indica la operación y cuantas líneas de datos hay que leer
+# <operación>;<N>
+# <data object 1>
+# <data object 2>
+#  ...
+# <data object N>
+#
+# Pueden existir muchos grupos de operaciones y estas repetirse. Cada agrupación va completa y es consistente el valor
+# de N con el total de líneas de cada grupo (N+1)
+#
+# Operaciones aceptadas:
+# ~~~~~~~~~~~~~~~~~~~~~~
+# <operación>::[createPropietario|createSupervisor|createCosechador|createCultivo|createHuerto|addCuartelToHuerto|
+#                createPlanCosecha|addCuadrillaToPlan|addCosechadorToCuadrilla|cambiarEstadoPlan|cambiarEstadoCuartel|addPesaje]
+# <N>:: un número entero > 0
+#
+# Campos que componen cada <data object> según la operación aceptada:
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# createPropietario(Rut rut, String nombre, String email, String direccion, String direccionComercial)
+# createSupervisor(Rut rut, String nombre, String email, String direccion, String profesion)
+# createCosechador(Rut rut, String nombre, String email, String direccion, LocalDate fechaNacimiento)
+# createCultivo(int id, String especie, String variedad, float rendimiento)
+# createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario)
+# addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo)
+# createPlanCosecha(int id, String nombrePlan, LocalDate fechaIni, LocalDate fechaFin, double metaKilos, double precioBaseKilos, String nomHuerto, int idCuartel)
+# addCuadrillaToPlan(int idPlan, int idCuadrilla, String nombreCuadrilla, Rut rutSupervisor)
+# addCosechadorToCuadrilla(int idPlanCosecha, int idCuadrilla,LocalDate fechaIniCosechador, LocalDate fechaFinCosechador, double metaKilosCosechador, Rut rutCosechador)
+# changeEstadoPlan(int idPlan, EstadoPlan nuevoEstadoPlan)
+# changeEstadoCuartel(int idCuartel, String nombreHuerto, EstadoFenologico nuevoEstado)
+# addPesaje(int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadkg, Calidad calidad)
+#
+# Consideraciones generales:
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Es obligatorio respetar el orden de los campos datos para cada operación y tipo de dato.
+# Se debe usar el caracter '.' como separador decimal. Los números no deben venir separados por miles.
+#       Ejemplo: 6350 es correcto, pero 6,350 es incorrecto y 6.350 se interpreta como número 6 con tres decimales .350
+# Los campos se separan con el caracter ';' pueden venir espacios en blanco tanto antes como después.
+# Los saltos de línea son delimitadores válidos, por lo tanto pueden venir líneas en blanco
+# La última línea no debe estar en blanco.
+
+createPropietario;1
+11.111.111-1;Daniel Ruiz Saez;daniel.ruizs@gmail.com;Las Amapolas 1234;Av Santa Marta 6350
+
+createSupervisor;1
+22.222.222-2;Leonora Casas Solis;leonora.casas@gmail.com;Los Lirios 432;Agrónomo
+
+createCosechador;2
+33.333.333-3;Perla Flores Miller;perla.floresmi@gmail.com;San Carlos 201;12/04/2005
+44.444.444-4;Mario Castro Pereira;mario.castro44@gmail.com;km12 Camino Perdido;05/07/1995
+
+createCultivo;2
+101;Manzana;Fuji;0.87
+201;Pera;Abate fetel;0.91
+
+createHuerto;1
+Fundo Los Aromos;25000;Camino al Almendral Km 5;11.111.111-1
+
+addCuartelToHuerto;2
+Fundo Los Aromos;1101;15000;101
+Fundo Los Aromos;2202;10000;201
+
+createPlanCosecha;1
+11111;Cosecha Manz01;22/09/2025;08/12/2025;300;890;Fundo Los Aromos;1101
+
+addCuadrillaToPlan;1
+11111;991;Manzanar;22.222.222-2
+
+addCosechadorToCuadrilla;2
+11111;991;23/09/2025;30/11/2025;15;33.333.333-3
+11111;991;23/09/2025;30/11/2025;15;44.444.444-4
+
+changeEstadoPlan;1
+11111;EJECUTANDO
+
+changeEstadoCuartel;1
+1101;Fundo Los Aromos;COSECHA
+
+addPesaje;8
+550;33.333.333-3;11111;991;5.2;EXCELENTE
+551;44.444.444-4;11111;991;7.2;SUFICIENTE
+552;33.333.333-3;11111;991;4.2;EXCELENTE
+553;44.444.444-4;11111;991;3.2;SUFICIENTE
+554;33.333.333-3;11111;991;2.2;EXCELENTE
+555;44.444.444-4;11111;991;8.2;SUFICIENTE
+556;33.333.333-3;11111;991;6.2;EXCELENTE
+557;44.444.444-4;11111;991;1.2;SUFICIENTE

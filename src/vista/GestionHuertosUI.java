@@ -357,13 +357,14 @@ public class GestionHuertosUI {
         String[] listPropietarios = cP.listPropietarios();
         System.out.println("LISTADO DE PROPIETARIOS" +
                 "\n-----------------------");
-        System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
+        System.out.printf("%-10s  %-20s  %-20s  %-25s  %-25s  %-15s%n",
                 "Rut", "Nombre", "Dirección", "email", "Dirección comercial", "Nro. huertos");
         if(listPropietarios.length == 0){
             System.out.println("No hay propietarios registrados...");
         }else {
             for(String lP : listPropietarios){
-                System.out.println(lP);
+                String[] dato = lP.split(";");
+                System.out.printf("%-10s %-20s  %-20s  %-25s  %-25s  %-15s%n", dato[0], dato[1], dato[2], dato[3], dato[4], dato[5]);
             }
         }
     }

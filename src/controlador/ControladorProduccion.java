@@ -20,9 +20,9 @@ public class ControladorProduccion {
     private final ArrayList<Pesaje> pesajes = new ArrayList<>();
     private final ArrayList<PagoPesaje> pagos = new ArrayList<>();
 
-    private ControladorProduccion() {}
+    private ControladorProduccion(){}
 
-    public static ControladorProduccion getInstance() {
+    public static ControladorProduccion getInstance(){
         if (instance == null) {
             instance = new ControladorProduccion();
         }
@@ -275,8 +275,7 @@ public class ControladorProduccion {
 
     public void readDataFromTextFile() throws GestionHuertosException {
         DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        try(Scanner sc = new Scanner(new File("DatosIniciales.txt"))){
+        try(Scanner sc = new Scanner(new File("src/DatosIniciales.txt"))){
             while(sc.hasNextLine()){
                 String linea = sc.nextLine();
                 if(linea.startsWith("#") || linea.isBlank()) continue;

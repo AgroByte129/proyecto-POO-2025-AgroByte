@@ -14,7 +14,13 @@ public class GestionHuertosUI {
     private Scanner tcld = new Scanner(System.in).useDelimiter("[\\t\\n]+");
     private ControladorProduccion cP = ControladorProduccion.getInstance();
 
-    private GestionHuertosUI(){}
+    private GestionHuertosUI(){
+        try{
+            cP.readDataFromTextFile();
+        }catch(GestionHuertosException e){
+            System.out.println(e.getMessage());
+        }
+    }
     public static GestionHuertosUI getInstance(){
         if(instance == null){
             instance = new GestionHuertosUI();

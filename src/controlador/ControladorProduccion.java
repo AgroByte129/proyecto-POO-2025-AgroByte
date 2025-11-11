@@ -285,7 +285,7 @@ public class ControladorProduccion {
             LocalDate finPlan = (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
             Cuartel c = p.getCuartel();
             Huerto h = c.getHuerto();
-            out[i] = String.format(Locale.GERMANY, "%d; %s; %s; %s; %.,1f; %.,1f; %s; %d; %s; %d; %.f",
+            out[i] = String.format(Locale.GERMANY, "%d; %s; %s; %s; %,.1f; %,.1f; %s; %d; %s; %d; %.1f",
                     p.getId(),
                     p.getNombre(),
                     p.getInicio().format(FORMATO_F),
@@ -343,7 +343,15 @@ public class ControladorProduccion {
                 Cuadrilla cuad = p.getCosechadorAsignado().getCuadrilla();
                 int idPlan = (cuad != null && cuad.getPlanCosecha() != null) ? cuad.getPlanCosecha().getId() : -1;
                 int idCuad = (cuad != null) ? cuad.getId() : -1;
-                outList.add(String.format("%d; %s; %.2f; %s; %d; %d; %s; %.2f", p.getId(), p.getFechaHora(), p.getCantidadKg(), p.getCalidad(), idPlan, idCuad, p.getCosechadorAsignado().getCosechador().getRut(), p.getMonto()));
+                outList.add(String.format(Locale.GERMANY, "%d; %s; %.2f; %s; %d; %d; %s; %.2f",
+                        p.getId(),
+                        p.getFechaHora(),
+                        p.getCantidadKg(),
+                        p.getCalidad(),
+                        idPlan,
+                        idCuad,
+                        p.getCosechadorAsignado().getCosechador().getRut(),
+                        p.getMonto()));
             }
         }
         return outList.toArray(new String[0]);
@@ -354,7 +362,11 @@ public class ControladorProduccion {
         String[] out = new String[pagos.size()];
         for (int i = 0; i < pagos.size(); i++) {
             PagoPesaje pago = pagos.get(i);
-            out[i] = String.format("%d; %s; %.2f; %d", pago.getId(), pago.getFecha(), pago.getMonto(), pago.getPesajes().length);
+            out[i] = String.format(Locale.GERMANY, "%d; %s; %.2f; %d",
+                    pago.getId(),
+                    pago.getFecha(),
+                    pago.getMonto(),
+                    pago.getPesajes().length);
         }
         return out;
     }

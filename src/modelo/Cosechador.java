@@ -30,7 +30,7 @@ public class Cosechador extends Persona{
     }
 
     public Optional<CosechadorAsignado> getAsignacion(int idCuad, int idPlan) {
-        Optional<CosechadorAsignado>  cosechadorAsignado =Optional.empty(); ;
+        Optional<CosechadorAsignado>  cosechadorAsignado = Optional.empty();
         for (CosechadorAsignado ca : cosAsignados) {
             Cuadrilla cuad = ca.getCuadrilla();
             if (cuad.getId() == idCuad && cuad.getPlanCosecha().getId() == idPlan) {

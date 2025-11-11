@@ -179,8 +179,8 @@ public class ControladorProduccion {
         if (cultivos.isEmpty()) return new String[0];
         String[] out = new String[cultivos.size()];
         for (int i = 0; i < cultivos.size(); i++) {
-            Cultivo c = cultivos.get(i);
-            out[i] = String.format("%d; %s; %s; %.1f; %d",
+            Cultivo c = cultivos.get(i);//pa que tenga decimal el rendimiento :v
+            out[i] = String.format(Locale.GERMANY, "%d; %s; %s; %.1f; %d",
                     c.getId(),
                     c.getEspecie(),
                     c.getVariedad(),
@@ -196,7 +196,7 @@ public class ControladorProduccion {
 
         for (int i = 0; i < huertos.size(); i++) {
             Huerto h = huertos.get(i);
-            out[i] = String.format("%s; %.1f; %s; %s; %s; %d",
+            out[i] = String.format(Locale.GERMANY, "%s; %,.1f; %s; %s; %s; %d",
                     h.getNombre(),
                     h.getSuperficie(),
                     h.getUbicacion(),
@@ -237,7 +237,7 @@ public class ControladorProduccion {
                     }
                 }
 
-                lista.add(String.format("%s; %s; %s; %s; %s; %s; %.1f; %d",
+                lista.add(String.format(Locale.GERMANY, "%s; %s; %s; %s; %s; %s; %.1f; %d",
                 s.getRut(),
                 s.getNombre(),
                 s.getDireccion(),
@@ -253,13 +253,27 @@ public class ControladorProduccion {
 
     public String[] listCosechadores() {
         List<String> lista = new ArrayList<>();
-        for (Persona p : personas) if (p instanceof Cosechador c) lista.add(String.format("%s; %s; %s; %s; %s; %d",
-                c.getRut(),
-                c.getNombre(),
-                c.getDireccion(),
-                c.getEmail(),
-                c.getFechaNacimiento().format(FORMATO_F),
-                c.getCuadrillas().length));
+        for (Persona p : personas) {
+            if (p instanceof Cosechador c) {
+                double montoImpago = 0;
+                double montoPagado = 0;
+                CosechadorAsignado[] asignaciones = c.getAsignaciones();
+                for (CosechadorAsignado asignado : asignaciones) {
+                    montoImpago += asignado.getMontoPesajesImpagos();
+                    montoPagado += asignado.getMontoPesajesPagados();
+                }
+                //Con el Locale.GERMANY los números tienen "." para miles y "," para decimales :v
+                lista.add(String.format(Locale.GERMANY, "%s; %s; %s; %s; %s; %d; %,.1f; %,.1f",
+                        c.getRut(),
+                        c.getNombre(),
+                        c.getDireccion(),
+                        c.getEmail(),
+                        c.getFechaNacimiento().format(FORMATO_F),
+                        c.getCuadrillas().length,
+                        montoImpago,
+                        montoPagado));
+            }
+        }
         return lista.toArray(new String[0]);
     }
 
@@ -271,7 +285,7 @@ public class ControladorProduccion {
             LocalDate finPlan = (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
             Cuartel c = p.getCuartel();
             Huerto h = c.getHuerto();
-            out[i] = String.format("%d; %s; %s; %s; %.1f; %.1f; %s; %d; %s; %d",
+            out[i] = String.format(Locale.GERMANY, "%d; %s; %s; %s; %.,1f; %.,1f; %s; %d; %s; %d; %.f",
                     p.getId(),
                     p.getNombre(),
                     p.getInicio().format(FORMATO_F),
@@ -281,7 +295,8 @@ public class ControladorProduccion {
                     p.getEstado(),
                     c.getId(),
                     h.getNombre(),
-                    p.getCuadrillas().length);
+                    p.getCuadrillas().length,
+                    p.getCumplimientoMeta());
         }
         return out;
     }
@@ -296,7 +311,7 @@ public class ControladorProduccion {
             String rut = p.getCosechadorAsignado().getCosechador().getRut().toString();
             String pago = p.isPagado() ? p.getPagoPesaje().getFecha().format(FORMATO_F) : "Impago";
 
-            out[i] = String.format("%d; %s; %s; %s; %.1f; %.1f; %.1f; %s",
+            out[i] = String.format(Locale.GERMANY,"%d; %s; %s; %s; %,.1f; %,.1f; %,.1f; %s",
                     p.getId(),
                     p.getFechaHora().format(FORMATO_FH),
                     rut,

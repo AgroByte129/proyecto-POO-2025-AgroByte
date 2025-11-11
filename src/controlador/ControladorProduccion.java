@@ -12,6 +12,8 @@ import java.util.*;
 //comentario
 public class ControladorProduccion {
     private static ControladorProduccion instance;
+    DateTimeFormatter FORMATO_FH = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    DateTimeFormatter FORMATO_F = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final ArrayList<Persona> personas = new ArrayList<>();
     private final ArrayList<Huerto> huertos = new ArrayList<>();
@@ -20,9 +22,9 @@ public class ControladorProduccion {
     private final ArrayList<Pesaje> pesajes = new ArrayList<>();
     private final ArrayList<PagoPesaje> pagos = new ArrayList<>();
 
-    private ControladorProduccion() {}
+    private ControladorProduccion(){}
 
-    public static ControladorProduccion getInstance() {
+    public static ControladorProduccion getInstance(){
         if (instance == null) {
             instance = new ControladorProduccion();
         }
@@ -177,8 +179,13 @@ public class ControladorProduccion {
         if (cultivos.isEmpty()) return new String[0];
         String[] out = new String[cultivos.size()];
         for (int i = 0; i < cultivos.size(); i++) {
-            Cultivo c = cultivos.get(i);
-            out[i] = String.format("%d; %s; %s; %.1f; %d", c.getId(), c.getEspecie(), c.getVariedad(), c.getRendimiento(), c.getCuarteles().length);
+            Cultivo c = cultivos.get(i);//pa que tenga decimal el rendimiento :v
+            out[i] = String.format(Locale.GERMANY, "%d; %s; %s; %.1f; %d",
+                    c.getId(),
+                    c.getEspecie(),
+                    c.getVariedad(),
+                    c.getRendimiento(),
+                    c.getCuarteles().length);
         }
         return out;
     }
@@ -186,28 +193,87 @@ public class ControladorProduccion {
     public String[] listHuertos() {
         if (huertos.isEmpty()) return new String[0];
         String[] out = new String[huertos.size()];
+
         for (int i = 0; i < huertos.size(); i++) {
             Huerto h = huertos.get(i);
-            out[i] = String.format("%s; %.1f; %s; %s; %s; %d", h.getNombre(), h.getSuperficie(), h.getUbicacion(), h.getPropietario().getRut(), h.getPropietario().getNombre(), h.getCuarteles().length);
+            out[i] = String.format(Locale.GERMANY, "%s; %,.1f; %s; %s; %s; %d",
+                    h.getNombre(),
+                    h.getSuperficie(),
+                    h.getUbicacion(),
+                    h.getPropietario().getRut(),
+                    h.getPropietario().getNombre(),
+                    h.getCuarteles().length);
         }
         return out;
     }
 
     public String[] listPropietarios() {
         List<String> lista = new ArrayList<>();
-        for (Persona p : personas) if (p instanceof Propietario pr) lista.add(String.format("%s; %s; %s; %s; %s; %d", pr.getRut(), pr.getNombre(), pr.getDireccion(), pr.getEmail(), pr.getDireccionComercial(), pr.getHuertos().length));
+        for (Persona p : personas) if (p instanceof Propietario pr) lista.add(String.format("%s; %s; %s; %s; %s; %d",
+                pr.getRut(),
+                pr.getNombre(),
+                pr.getDireccion(),
+                pr.getEmail(),
+                pr.getDireccionComercial(),
+                pr.getHuertos().length));
         return lista.toArray(new String[0]);
     }
 
     public String[] listSupervisores() {
         List<String> lista = new ArrayList<>();
-        for (Persona p : personas) if (p instanceof Supervisor s) lista.add(String.format("%s; %s; %s; %s; %s; %s", s.getRut(), s.getNombre(), s.getDireccion(), s.getEmail(), s.getProfesion(), (s.getCuadrilla() == null ? "S/A" : s.getCuadrilla().getNombre())));
+
+        for (Persona p : personas) {
+            if (p instanceof Supervisor s) {
+                String nomCuad = "N/A";
+                int psjImpago = 0;
+                double kg = 0;
+
+                if(s.getCuadrilla() != null){
+                    Cuadrilla c = s.getCuadrilla();
+                    nomCuad = c.getNombre();
+                    kg = c.getKilosPesados();
+                    for(CosechadorAsignado cosAs : c.getAsignaciones()){
+                        psjImpago += cosAs.getNroPesajesImpagos();
+                    }
+                }
+
+                lista.add(String.format(Locale.GERMANY, "%s; %s; %s; %s; %s; %s; %.1f; %d",
+                s.getRut(),
+                s.getNombre(),
+                s.getDireccion(),
+                s.getEmail(),
+                s.getProfesion(),
+                nomCuad,
+                kg,
+                psjImpago));
+            }
+        }
         return lista.toArray(new String[0]);
     }
 
     public String[] listCosechadores() {
         List<String> lista = new ArrayList<>();
-        for (Persona p : personas) if (p instanceof Cosechador c) lista.add(String.format("%s; %s; %s; %s; %s; %d", c.getRut(), c.getNombre(), c.getDireccion(), c.getEmail(), c.getFechaNacimiento(), c.getCuadrillas().length));
+        for (Persona p : personas) {
+            if (p instanceof Cosechador c) {
+                double montoImpago = 0;
+                double montoPagado = 0;
+                CosechadorAsignado[] asignaciones = c.getAsignaciones();
+                for (CosechadorAsignado asignado : asignaciones) {
+                    montoImpago += asignado.getMontoPesajesImpagos();
+                    montoPagado += asignado.getMontoPesajesPagados();
+                }
+                //Con el Locale.GERMANY los números tienen "." para miles y "," para decimales :v
+                lista.add(String.format(Locale.GERMANY, "%s; %s; %s; %s; %s; %d; %,.1f; %,.1f",
+                        c.getRut(),
+                        c.getNombre(),
+                        c.getDireccion(),
+                        c.getEmail(),
+                        c.getFechaNacimiento().format(FORMATO_F),
+                        c.getCuadrillas().length,
+                        montoImpago,
+                        montoPagado));
+            }
+        }
         return lista.toArray(new String[0]);
     }
 
@@ -219,21 +285,41 @@ public class ControladorProduccion {
             LocalDate finPlan = (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
             Cuartel c = p.getCuartel();
             Huerto h = c.getHuerto();
-            out[i] = String.format("%d; %s; %s; %s; %.1f; %.1f; %s; %d; %s; %d", p.getId(), p.getNombre(), p.getInicio(), finPlan, p.getMetaKilos(), p.getPrecioBaseKilo(), p.getEstado(), c.getId(), h.getNombre(), p.getCuadrillas().length);
+            out[i] = String.format(Locale.GERMANY, "%d; %s; %s; %s; %,.1f; %,.1f; %s; %d; %s; %d; %.1f",
+                    p.getId(),
+                    p.getNombre(),
+                    p.getInicio().format(FORMATO_F),
+                    finPlan.format(FORMATO_F),
+                    p.getMetaKilos(),
+                    p.getPrecioBaseKilo(),
+                    p.getEstado(),
+                    c.getId(),
+                    h.getNombre(),
+                    p.getCuadrillas().length,
+                    p.getCumplimientoMeta());
         }
         return out;
     }
 
     public String[] listPesajes() {
         if (pesajes.isEmpty()) return new String[0];
+
         String[] out = new String[pesajes.size()];
-        for (int i = 0; i < pesajes.size(); i++) {
+
+        for(int i = 0; i  < pesajes.size(); i++){
             Pesaje p = pesajes.get(i);
-            Cuadrilla cuad = (p.getCosechadorAsignado() != null) ? p.getCosechadorAsignado().getCuadrilla() : null;
-            int idPlan = (cuad != null && cuad.getPlanCosecha() != null) ? cuad.getPlanCosecha().getId() : -1;
-            int idCuad = (cuad != null) ? cuad.getId() : -1;
-            String rut = (p.getCosechadorAsignado() != null) ? p.getCosechadorAsignado().getCosechador().getRut().toString() : "N/A";
-            out[i] = String.format("%d; %s; %.2f; %s; %d; %d; %s; %.2f", p.getId(), p.getFechaHora(), p.getCantidadKg(), p.getCalidad(), idPlan, idCuad, rut, p.getMonto());
+            String rut = p.getCosechadorAsignado().getCosechador().getRut().toString();
+            String pago = p.isPagado() ? p.getPagoPesaje().getFecha().format(FORMATO_F) : "Impago";
+
+            out[i] = String.format(Locale.GERMANY,"%d; %s; %s; %s; %,.1f; %,.1f; %,.1f; %s",
+                    p.getId(),
+                    p.getFechaHora().format(FORMATO_FH),
+                    rut,
+                    p.getCalidad(),
+                    p.getCantidadKg(),
+                    p.getPrecioKg(),
+                    p.getMonto(),
+                    pago);
         }
         return out;
     }
@@ -257,7 +343,15 @@ public class ControladorProduccion {
                 Cuadrilla cuad = p.getCosechadorAsignado().getCuadrilla();
                 int idPlan = (cuad != null && cuad.getPlanCosecha() != null) ? cuad.getPlanCosecha().getId() : -1;
                 int idCuad = (cuad != null) ? cuad.getId() : -1;
-                outList.add(String.format("%d; %s; %.2f; %s; %d; %d; %s; %.2f", p.getId(), p.getFechaHora(), p.getCantidadKg(), p.getCalidad(), idPlan, idCuad, p.getCosechadorAsignado().getCosechador().getRut(), p.getMonto()));
+                outList.add(String.format(Locale.GERMANY, "%d; %s; %.2f; %s; %d; %d; %s; %.2f",
+                        p.getId(),
+                        p.getFechaHora(),
+                        p.getCantidadKg(),
+                        p.getCalidad(),
+                        idPlan,
+                        idCuad,
+                        p.getCosechadorAsignado().getCosechador().getRut(),
+                        p.getMonto()));
             }
         }
         return outList.toArray(new String[0]);
@@ -268,15 +362,18 @@ public class ControladorProduccion {
         String[] out = new String[pagos.size()];
         for (int i = 0; i < pagos.size(); i++) {
             PagoPesaje pago = pagos.get(i);
-            out[i] = String.format("%d; %s; %.2f; %d", pago.getId(), pago.getFecha(), pago.getMonto(), pago.getPesajes().length);
+            out[i] = String.format(Locale.GERMANY, "%d; %s; %.2f; %d",
+                    pago.getId(),
+                    pago.getFecha(),
+                    pago.getMonto(),
+                    pago.getPesajes().length);
         }
         return out;
     }
 
     public void readDataFromTextFile() throws GestionHuertosException {
         DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        try(Scanner sc = new Scanner(new File("DatosIniciales.txt"))){
+        try(Scanner sc = new Scanner(new File("src/DatosIniciales.txt"))){
             while(sc.hasNextLine()){
                 String linea = sc.nextLine();
                 if(linea.startsWith("#") || linea.isBlank()) continue;

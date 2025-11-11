@@ -7,7 +7,7 @@ import utilidades.GestionHuertosException;
 public class Cuadrilla {
     private int id;
     private String nombre;
-    private static int maximoCosechadores;
+    private static int maximoCosechadores = 5;
 
     private Supervisor supervisor;
     private PlanCosecha planCosecha;

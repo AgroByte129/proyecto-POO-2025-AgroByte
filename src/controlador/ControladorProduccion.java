@@ -327,31 +327,25 @@ public class ControladorProduccion {
     public String[] listPesajesCosechador(Rut rut) throws GestionHuertosException {
         Optional<Cosechador> cosechadorOpt = findCosechadorByRut(rut);
         if (cosechadorOpt.isEmpty()) throw new GestionHuertosException("No existe un cosechador con el rut indicado");
-        Cosechador cose = cosechadorOpt.get();
-        boolean tiene = false;
-        for (PlanCosecha p : planes) {
-            for (Cuadrilla q : p.getCuadrillas()) {
-                for (Cosechador cc : q.getCosechadores()) if (cc.getRut().toString().equals(rut.toString())) { tiene = true; break; }
-                if (tiene) break;
-            }
-            if (tiene) break;
-        }
-        if (!tiene) throw new GestionHuertosException("El cosechador no ha sido asignado a una cuadrilla");
+
+        Cosechador cos = cosechadorOpt.get();
+        CosechadorAsignado[] asignaciones = cos.getAsignaciones();
+        if(asignaciones.length == 0) throw new GestionHuertosException("El cosechador no está asignado a ninguna cuadrilla");
+
         List<String> outList = new ArrayList<>();
-        for (Pesaje p : pesajes) {
-            if (p.getCosechadorAsignado() != null && p.getCosechadorAsignado().getCosechador().getRut().toString().equals(rut.toString())) {
-                Cuadrilla cuad = p.getCosechadorAsignado().getCuadrilla();
-                int idPlan = (cuad != null && cuad.getPlanCosecha() != null) ? cuad.getPlanCosecha().getId() : -1;
-                int idCuad = (cuad != null) ? cuad.getId() : -1;
-                outList.add(String.format(Locale.GERMANY, "%d; %s; %.2f; %s; %d; %d; %s; %.2f",
+
+        for(CosechadorAsignado cosAs: asignaciones){
+            for(Pesaje p: cosAs.getPesajes()){
+                String pago = p.isPagado() ? p.getPagoPesaje().getFecha().format(FORMATO_F) : "Impago";
+                outList.add(String.format(Locale.GERMANY, "%d; %s; %s; %,.1f; %,.1f; %,.1f; %s",
                         p.getId(),
-                        p.getFechaHora(),
-                        p.getCantidadKg(),
+                        p.getFechaHora().format(FORMATO_FH),
                         p.getCalidad(),
-                        idPlan,
-                        idCuad,
-                        p.getCosechadorAsignado().getCosechador().getRut(),
-                        p.getMonto()));
+                        p.getCantidadKg(),
+                        p.getPrecioKg(),
+                        p.getMonto(),
+                        pago
+                ));
             }
         }
         return outList.toArray(new String[0]);

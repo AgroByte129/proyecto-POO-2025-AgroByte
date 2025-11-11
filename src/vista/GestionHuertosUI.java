@@ -507,7 +507,7 @@ public class GestionHuertosUI {
             ---------------------------------
             %-3s  %-10s  %-10s  %-12s  %-10s  %-10s  %-10s  %s%n
             """,
-                "Id", "Fecha", "Calidad", "Cantidad Kg", "Precio $", "Monto $", "Pagado el", "Estado");
+                "Id", "Fecha", "Calidad", "Cantidad Kg", "Precio $", "Monto $", "Pagado el");
 
         try {
             String[] lista = cP.listPesajesCosechador(rut);

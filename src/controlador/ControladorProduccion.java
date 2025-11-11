@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-//comentario
+
 public class ControladorProduccion {
     private static ControladorProduccion instance;
     DateTimeFormatter FORMATO_FH = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -565,8 +565,3 @@ public class ControladorProduccion {
         return Optional.empty();
     }
 }
-
-
-
-
-

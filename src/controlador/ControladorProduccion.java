@@ -372,7 +372,6 @@ public class ControladorProduccion {
     }
 
     public void readDataFromTextFile() throws GestionHuertosException {
-        DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         try(Scanner sc = new Scanner(new File("src/DatosIniciales.txt"))){
             while(sc.hasNextLine()){
                 String linea = sc.nextLine();
@@ -402,7 +401,7 @@ public class ControladorProduccion {
                         case "createCosechador" ->{
                             Rut rut = Rut.of(dato[0]);
                             try{
-                                LocalDate fNac = LocalDate.parse(dato[4], FORMATO);
+                                LocalDate fNac = LocalDate.parse(dato[4], FORMATO_F);
                                 createCosechador(rut, dato[1], dato[2], dato[3], fNac);
                             }catch(DateTimeParseException e){
                                 lanzaExcepcion(tokens[0], "Dato de fecha no válido");
@@ -440,8 +439,8 @@ public class ControladorProduccion {
                         case "createPlanCosecha" ->{
                             try{
                                 int idPlan = Integer.parseInt(dato[0]);
-                                LocalDate fIni = LocalDate.parse(dato[2], FORMATO);
-                                LocalDate fFin = LocalDate.parse(dato[3], FORMATO);
+                                LocalDate fIni = LocalDate.parse(dato[2], FORMATO_F);
+                                LocalDate fFin = LocalDate.parse(dato[3], FORMATO_F);
                                 double meta = Double.parseDouble(dato[4]);
                                 double precio = Double.parseDouble(dato[5]);
                                 int idCuartel = Integer.parseInt(dato[7]);
@@ -464,8 +463,8 @@ public class ControladorProduccion {
                             try{
                                 int idPlan = Integer.parseInt(dato[0]);
                                 int idCuadrilla = Integer.parseInt(dato[1]);
-                                LocalDate fIni = LocalDate.parse(dato[2], FORMATO);
-                                LocalDate fFin = LocalDate.parse(dato[3], FORMATO);
+                                LocalDate fIni = LocalDate.parse(dato[2], FORMATO_F);
+                                LocalDate fFin = LocalDate.parse(dato[3], FORMATO_F);
                                 double meta = Double.parseDouble(dato[4]);
                                 Rut rut = Rut.of(dato[5]);
                                 addCosechadorToCuadrilla(idPlan, idCuadrilla, fIni, fFin, meta, rut);

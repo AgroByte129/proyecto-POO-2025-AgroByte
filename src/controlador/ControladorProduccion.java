@@ -356,11 +356,15 @@ public class ControladorProduccion {
         String[] out = new String[pagos.size()];
         for (int i = 0; i < pagos.size(); i++) {
             PagoPesaje pago = pagos.get(i);
-            out[i] = String.format(Locale.GERMANY, "%d; %s; %.2f; %d",
+            Pesaje[] pesajes = pago.getPesajes();
+            Rut rut = pesajes[0].getCosechadorAsignado().getCosechador().getRut();
+            out[i] = String.format(Locale.GERMANY, "%d; %s; %,.2f; %d; %s",
                     pago.getId(),
-                    pago.getFecha(),
+                    pago.getFecha().format(FORMATO_F),
                     pago.getMonto(),
-                    pago.getPesajes().length);
+                    pesajes.length,
+                    rut
+                    );
         }
         return out;
     }

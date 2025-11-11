@@ -20,6 +20,7 @@ public class Cuadrilla {
         this.supervisor = sup;
         this.planCosecha = plan;
         this.asignaciones = new ArrayList<>();
+        this.pesajes = new ArrayList<>();
         sup.setCuadrilla(this); //relación bicondicional
     }
 
@@ -51,9 +52,8 @@ public class Cuadrilla {
     }
     public double getKilosPesados() {
         double total = 0;
-        for (Pesaje p : pesajes) {
+        for (Pesaje p : pesajes) {//aquí lanza nullpointerException
             total +=p.getCantidadKg();
-
         }
         return total;
     }

@@ -366,7 +366,7 @@ public class GestionHuertosUI {
         } else {
             for (String lP : listPropietarios) {
                 String[] dato = lP.split(";");
-                System.out.printf("%-10s  %-20s  %-20s  %-25s  %-25s  %-15s%n",
+                System.out.printf("%-10s %-20s  %-20s  %-25s  %-25s  %-15s%n",
                         dato[0], dato[1], dato[2], dato[3], dato[4], dato[5]);
             }
         }
@@ -377,17 +377,18 @@ public class GestionHuertosUI {
         System.out.printf("""
         LISTADO DE SUPERVISORES
         -----------------------
-        %-14s  %-22s  %-25s  %-30s  %-22s  %-22s%n
+        %-14s  %-22s  %-25s  %-30s  %-22s  %-22s %-10s %s%n
         """,
-                "Rut", "Nombre", "Dirección", "Email", "Profesión", "Nombre cuadrilla");
+                "Rut", "Nombre", "Dirección", "Email", "Profesión",
+                "Nombre cuadrilla", "Kg pesados", "#Pjes.impagos");
 
         if (listSupervisores.length == 0) {
             System.out.println("No hay supervisores registrados...");
         } else {
             for (String lS : listSupervisores) {
                 String[] dato = lS.split(";");
-                System.out.printf("%-14s  %-22s  %-25s  %-30s  %-22s  %-22s%n",
-                        dato[0], dato[1], dato[2], dato[3], dato[4], dato[5]);
+                System.out.printf("%-14s  %-22s  %-25s  %-30s  %-22s  %-22s %-10s %s%n",
+                        dato[0], dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7]);
             }
         }
     }
@@ -397,17 +398,18 @@ public class GestionHuertosUI {
         System.out.printf("""
         LISTADO DE COSECHADORES
         -----------------------
-        %-14s  %-22s  %-25s  %-30s  %-17s  %-15s%n
+        %-14s  %-22s  %-25s  %-30s  %-17s  %-15s %-10s %s%n
         """,
-                "Rut", "Nombre", "Dirección", "Email", "Fecha nacimiento", "Nro. Cuadrillas");
+                "Rut", "Nombre", "Dirección", "Email", "Fecha nacimiento",
+                "Nro. Cuadrillas", "Monto impago $", "Monto pagado $");
 
         if (listCosechadores.length == 0) {
             System.out.println("No hay cosechadores registrados...");
         } else {
             for (String lC : listCosechadores) {
                 String[] dato = lC.split(";");
-                System.out.printf("%-14s  %-22s  %-25s  %-30s  %-17s  %-15s%n",
-                        dato[0], dato[1], dato[2], dato[3], dato[4], dato[5]);
+                System.out.printf("%-14s  %-22s  %-25s  %-30s  %-17s  %-15s %-13s %s%n",
+                        dato[0], dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7]);
             }
         }
     }
@@ -447,7 +449,7 @@ public class GestionHuertosUI {
         } else {
             for (String lH : listaDeHuertos) {
                 String[] dato = lH.split(";");
-                System.out.printf("%-25s  %-15s  %-35s  %-18s  %-25s  %-15s%n",
+                System.out.printf("%-25s %-15s  %-35s  %-18s  %-25s  %-15s%n",
                         dato[0], dato[1], dato[2], dato[3], dato[4], dato[5]);
             }
         }
@@ -469,7 +471,7 @@ public class GestionHuertosUI {
         } else {
             for (String lP : listaP) {
                 String[] dato = lP.split(";");
-                System.out.printf("%-6s  %-15s  %-15s  %-15s  %-10s  %-17s  %-12s  %-12s  %-20s  %-15s  %s%n",
+                System.out.printf("%-6s %-15s  %-15s  %-15s  %-10s  %-17s  %-12s  %-12s  %-20s  %-15s  %s%n",
                         dato[0], dato[1], dato[2], dato[3], dato[4],
                         dato[5], dato[6], dato[7], dato[8], dato[9], dato[10]);
             }
@@ -491,7 +493,7 @@ public class GestionHuertosUI {
             for (String l : lista) {
                 String[] dato = l.split(";");
 
-                System.out.printf("%-5s  %-19s  %-15s  %-12s  %-12s  %-10s  %-12s  %-12s%n",
+                System.out.printf("%-5s %-19s  %-15s  %-12s  %-12s  %-10s  %-12s  %-12s%n",
                         dato[0], dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7]);
             }
         }
@@ -505,7 +507,7 @@ public class GestionHuertosUI {
         System.out.printf("""
             LISTADO DE PESAJES DEL COSECHADOR
             ---------------------------------
-            %-3s  %-10s  %-10s  %-12s  %-10s  %-10s  %-10s  %s%n
+            %-3s  %-10s  %-10s  %-12s  %-10s  %-10s  %-10s%n
             """,
                 "Id", "Fecha", "Calidad", "Cantidad Kg", "Precio $", "Monto $", "Pagado el");
 
@@ -516,8 +518,8 @@ public class GestionHuertosUI {
             } else {
                 for (String l : lista) {
                     String[] dato = l.split(";");
-                    System.out.printf("%-3s  %-10s  %-10s  %-12s  %-10s  %-10s  %-10s  %s%n",
-                            dato[0], dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7]);
+                    System.out.printf("%-3s  %-10s  %-10s  %-12s  %-10s  %-10s  %-10s%n",
+                            dato[0], dato[1], dato[2], dato[3], dato[4], dato[5], dato[6]);
                 }
             }
         } catch (GestionHuertosException e) {

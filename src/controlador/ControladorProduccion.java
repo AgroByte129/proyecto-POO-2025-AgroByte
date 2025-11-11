@@ -12,6 +12,8 @@ import java.util.*;
 //comentario
 public class ControladorProduccion {
     private static ControladorProduccion instance;
+    DateTimeFormatter FORMATO_FH = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    DateTimeFormatter FORMATO_F = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final ArrayList<Persona> personas = new ArrayList<>();
     private final ArrayList<Huerto> huertos = new ArrayList<>();
@@ -178,7 +180,12 @@ public class ControladorProduccion {
         String[] out = new String[cultivos.size()];
         for (int i = 0; i < cultivos.size(); i++) {
             Cultivo c = cultivos.get(i);
-            out[i] = String.format("%d; %s; %s; %.1f; %d", c.getId(), c.getEspecie(), c.getVariedad(), c.getRendimiento(), c.getCuarteles().length);
+            out[i] = String.format("%d; %s; %s; %.1f; %d",
+                    c.getId(),
+                    c.getEspecie(),
+                    c.getVariedad(),
+                    c.getRendimiento(),
+                    c.getCuarteles().length);
         }
         return out;
     }
@@ -186,28 +193,73 @@ public class ControladorProduccion {
     public String[] listHuertos() {
         if (huertos.isEmpty()) return new String[0];
         String[] out = new String[huertos.size()];
+
         for (int i = 0; i < huertos.size(); i++) {
             Huerto h = huertos.get(i);
-            out[i] = String.format("%s; %.1f; %s; %s; %s; %d", h.getNombre(), h.getSuperficie(), h.getUbicacion(), h.getPropietario().getRut(), h.getPropietario().getNombre(), h.getCuarteles().length);
+            out[i] = String.format("%s; %.1f; %s; %s; %s; %d",
+                    h.getNombre(),
+                    h.getSuperficie(),
+                    h.getUbicacion(),
+                    h.getPropietario().getRut(),
+                    h.getPropietario().getNombre(),
+                    h.getCuarteles().length);
         }
         return out;
     }
 
     public String[] listPropietarios() {
         List<String> lista = new ArrayList<>();
-        for (Persona p : personas) if (p instanceof Propietario pr) lista.add(String.format("%s; %s; %s; %s; %s; %d", pr.getRut(), pr.getNombre(), pr.getDireccion(), pr.getEmail(), pr.getDireccionComercial(), pr.getHuertos().length));
+        for (Persona p : personas) if (p instanceof Propietario pr) lista.add(String.format("%s; %s; %s; %s; %s; %d",
+                pr.getRut(),
+                pr.getNombre(),
+                pr.getDireccion(),
+                pr.getEmail(),
+                pr.getDireccionComercial(),
+                pr.getHuertos().length));
         return lista.toArray(new String[0]);
     }
 
     public String[] listSupervisores() {
         List<String> lista = new ArrayList<>();
-        for (Persona p : personas) if (p instanceof Supervisor s) lista.add(String.format("%s; %s; %s; %s; %s; %s", s.getRut(), s.getNombre(), s.getDireccion(), s.getEmail(), s.getProfesion(), (s.getCuadrilla() == null ? "S/A" : s.getCuadrilla().getNombre())));
+
+        for (Persona p : personas) {
+            if (p instanceof Supervisor s) {
+                String nomCuad = "N/A";
+                int psjImpago = 0;
+                double kg = 0;
+
+                if(s.getCuadrilla() != null){
+                    Cuadrilla c = s.getCuadrilla();
+                    nomCuad = c.getNombre();
+                    kg = c.getKilosPesados();
+                    for(CosechadorAsignado cosAs : c.getAsignaciones()){
+                        psjImpago += cosAs.getNroPesajesImpagos();
+                    }
+                }
+
+                lista.add(String.format("%s; %s; %s; %s; %s; %s; %.1f; %d",
+                s.getRut(),
+                s.getNombre(),
+                s.getDireccion(),
+                s.getEmail(),
+                s.getProfesion(),
+                nomCuad,
+                kg,
+                psjImpago));
+            }
+        }
         return lista.toArray(new String[0]);
     }
 
     public String[] listCosechadores() {
         List<String> lista = new ArrayList<>();
-        for (Persona p : personas) if (p instanceof Cosechador c) lista.add(String.format("%s; %s; %s; %s; %s; %d", c.getRut(), c.getNombre(), c.getDireccion(), c.getEmail(), c.getFechaNacimiento(), c.getCuadrillas().length));
+        for (Persona p : personas) if (p instanceof Cosechador c) lista.add(String.format("%s; %s; %s; %s; %s; %d",
+                c.getRut(),
+                c.getNombre(),
+                c.getDireccion(),
+                c.getEmail(),
+                c.getFechaNacimiento().format(FORMATO_F),
+                c.getCuadrillas().length));
         return lista.toArray(new String[0]);
     }
 
@@ -219,21 +271,40 @@ public class ControladorProduccion {
             LocalDate finPlan = (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
             Cuartel c = p.getCuartel();
             Huerto h = c.getHuerto();
-            out[i] = String.format("%d; %s; %s; %s; %.1f; %.1f; %s; %d; %s; %d", p.getId(), p.getNombre(), p.getInicio(), finPlan, p.getMetaKilos(), p.getPrecioBaseKilo(), p.getEstado(), c.getId(), h.getNombre(), p.getCuadrillas().length);
+            out[i] = String.format("%d; %s; %s; %s; %.1f; %.1f; %s; %d; %s; %d",
+                    p.getId(),
+                    p.getNombre(),
+                    p.getInicio().format(FORMATO_F),
+                    finPlan.format(FORMATO_F),
+                    p.getMetaKilos(),
+                    p.getPrecioBaseKilo(),
+                    p.getEstado(),
+                    c.getId(),
+                    h.getNombre(),
+                    p.getCuadrillas().length);
         }
         return out;
     }
 
     public String[] listPesajes() {
         if (pesajes.isEmpty()) return new String[0];
+
         String[] out = new String[pesajes.size()];
-        for (int i = 0; i < pesajes.size(); i++) {
+
+        for(int i = 0; i  < pesajes.size(); i++){
             Pesaje p = pesajes.get(i);
-            Cuadrilla cuad = (p.getCosechadorAsignado() != null) ? p.getCosechadorAsignado().getCuadrilla() : null;
-            int idPlan = (cuad != null && cuad.getPlanCosecha() != null) ? cuad.getPlanCosecha().getId() : -1;
-            int idCuad = (cuad != null) ? cuad.getId() : -1;
-            String rut = (p.getCosechadorAsignado() != null) ? p.getCosechadorAsignado().getCosechador().getRut().toString() : "N/A";
-            out[i] = String.format("%d; %s; %.2f; %s; %d; %d; %s; %.2f", p.getId(), p.getFechaHora(), p.getCantidadKg(), p.getCalidad(), idPlan, idCuad, rut, p.getMonto());
+            String rut = p.getCosechadorAsignado().getCosechador().getRut().toString();
+            String pago = p.isPagado() ? p.getPagoPesaje().getFecha().format(FORMATO_F) : "Impago";
+
+            out[i] = String.format("%d; %s; %s; %s; %.1f; %.1f; %.1f; %s",
+                    p.getId(),
+                    p.getFechaHora().format(FORMATO_FH),
+                    rut,
+                    p.getCalidad(),
+                    p.getCantidadKg(),
+                    p.getPrecioKg(),
+                    p.getMonto(),
+                    pago);
         }
         return out;
     }

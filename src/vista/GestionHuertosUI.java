@@ -38,8 +38,7 @@ public class GestionHuertosUI {
                     2. Menú Huertos
                     3. Menú Planes de Cosecha
                     4. Menú Listados
-                    5. Salir
-                    """);
+                    5. Salir""");
             respuesta = validaNumero("\tOpción: ", "r[1,5]", "byte").byteValue();
 
             switch(respuesta){
@@ -127,7 +126,7 @@ public class GestionHuertosUI {
                     10. Volver
                     """);
             respuesta = validaNumero("\tOpción: ", "r[1,10]", "byte").byteValue();
-
+            System.out.println();
             switch(respuesta){
                 case 1 -> listaPropietarios();
                 case 2 -> listaSupervisores();
@@ -186,7 +185,7 @@ public class GestionHuertosUI {
     }
     private void creaCultivo(){
         System.out.println("\n-> Creando un cultivo\n");
-        int id = validaNumero("Identificación (No negativo): ", "p", "int").intValue();
+        int id = validaNumero("Identificación (No negativo): ", "p0", "int").intValue();
         String especie = validaEntradaString("Especie: ");
         String variedad = validaEntradaString("Variedad: ");
         float rendimiento = validaNumero("Rendmiento: ", "p","float").floatValue();
@@ -353,161 +352,199 @@ public class GestionHuertosUI {
         }
     }
 
-    private void listaPropietarios(){
+    private void listaPropietarios() {
         String[] listPropietarios = cP.listPropietarios();
-        System.out.println("LISTADO DE PROPIETARIOS" +
-                "\n-----------------------");
-        System.out.printf("%-10s  %-20s  %-20s  %-25s  %-25s  %-15s%n",
+        System.out.printf("""
+            LISTADO DE PROPIETARIOS
+            -----------------------
+            %-10s  %-20s  %-20s  %-25s  %-25s  %-15s%n
+            """,
                 "Rut", "Nombre", "Dirección", "email", "Dirección comercial", "Nro. huertos");
-        if(listPropietarios.length == 0){
-            System.out.println("No hay propietarios registrados...");
-        }else {
-            for(String lP : listPropietarios){
-                String[] dato = lP.split(";");
-                System.out.printf("%-10s %-20s  %-20s  %-25s  %-25s  %-15s%n", dato[0], dato[1], dato[2], dato[3], dato[4], dato[5]);
-            }
-        }
-    }
-    private void listaSupervisores(){
-        String[] listSupervisores = cP.listSupervisores();
-        System.out.println("""
-                \nLISTADO DE SUPERVISORES
-                -----------------------
-                """);
-        System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
-                "utilidades.Rut", "Nombre", "Dirección", "email", "Profesión", "Nombre cuadrilla");
-        if(listSupervisores.length == 0){
-            System.out.println("No hay supervisores registrados...");
-        }else{
-            for(String lS : listSupervisores){
-                System.out.println(lS);
-            }
-        }
-    }
-    private void listaCosechadores(){
-        String[] listCosechadores = cP.listCosechadores();
-        System.out.println("""
-        \nLISTADO DE COSECHADORES
-        -----------------------
-        """);
-        System.out.printf("%-12s %-15s %-20s %-25s %-25s %-15s%n",
-                "utilidades.Rut", "Nombre", "Dirección", "email", "Fecha nacimiento", "Nro. Cuadrillas");
-        if(listCosechadores.length == 0){
-            System.out.println("No hay cosechadores registrados...");
-        }else{
-            for(String lC : listCosechadores){
-                System.out.println(lC);
-            }
-        }
-    }
-    private void listaCultivos() {
-        System.out.println("""
-                \nLISTADO DE CULTIVOS
-                -------------------
-                """);
-        System.out.printf("%-6s %-15s %-15s %-12s %-15s%n",
-                "Id", "Especie", "Variedad", "Rendimiento", "Nro. cuarteles");
 
+        if (listPropietarios.length == 0) {
+            System.out.println("No hay propietarios registrados...");
+        } else {
+            for (String lP : listPropietarios) {
+                String[] dato = lP.split(";");
+                System.out.printf("%-10s  %-20s  %-20s  %-25s  %-25s  %-15s%n",
+                        dato[0], dato[1], dato[2], dato[3], dato[4], dato[5]);
+            }
+        }
+    }
+
+    private void listaSupervisores() {
+        String[] listSupervisores = cP.listSupervisores();
+        System.out.printf("""
+        LISTADO DE SUPERVISORES
+        -----------------------
+        %-14s  %-22s  %-25s  %-30s  %-22s  %-22s%n
+        """,
+                "Rut", "Nombre", "Dirección", "Email", "Profesión", "Nombre cuadrilla");
+
+        if (listSupervisores.length == 0) {
+            System.out.println("No hay supervisores registrados...");
+        } else {
+            for (String lS : listSupervisores) {
+                String[] dato = lS.split(";");
+                System.out.printf("%-14s  %-22s  %-25s  %-30s  %-22s  %-22s%n",
+                        dato[0], dato[1], dato[2], dato[3], dato[4], dato[5]);
+            }
+        }
+    }
+
+    private void listaCosechadores() {
+        String[] listCosechadores = cP.listCosechadores();
+        System.out.printf("""
+        LISTADO DE COSECHADORES
+        -----------------------
+        %-14s  %-22s  %-25s  %-30s  %-17s  %-15s%n
+        """,
+                "Rut", "Nombre", "Dirección", "Email", "Fecha nacimiento", "Nro. Cuadrillas");
+
+        if (listCosechadores.length == 0) {
+            System.out.println("No hay cosechadores registrados...");
+        } else {
+            for (String lC : listCosechadores) {
+                String[] dato = lC.split(";");
+                System.out.printf("%-14s  %-22s  %-25s  %-30s  %-17s  %-15s%n",
+                        dato[0], dato[1], dato[2], dato[3], dato[4], dato[5]);
+            }
+        }
+    }
+
+
+    private void listaCultivos() {
         String[] listaCultivos = cP.listCultivos();
+        System.out.printf("""
+            LISTADO DE CULTIVOS
+            -------------------
+            %-6s  %-15s  %-15s  %-12s  %-15s%n
+            """,
+                "Id", "Especie", "Variedad", "Rendimiento", "Nro. cuarteles");
 
         if (listaCultivos.length == 0) {
             System.out.println("No existen cultivos registrados.");
         } else {
             for (String linea : listaCultivos) {
-                System.out.println(linea);
+                String[] dato = linea.split(";");
+                System.out.printf("%-6s  %-15s  %-15s  %-12s  %-15s%n",
+                        dato[0], dato[1], dato[2], dato[3], dato[4]);
             }
         }
     }
-    private void listaHuertos(){
-        String [] listaDeHuertos = cP.listHuertos();
-        if(listaDeHuertos.length == 0){
-            System.out.println("No existen huertos registrados");
-        }else{
-            System.out.println("\nLISTADO DE HUERTOS");
-            System.out.println("------------------");
-            System.out.printf("%-20s %-12s %-20s %-15s %-20s %-15s%n",
-                    "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre propietario", "Nro. cuarteles");
-            for (String listaDeHuerto : listaDeHuertos) {
-                System.out.println(listaDeHuerto);
+
+    private void listaHuertos() {
+        String[] listaDeHuertos = cP.listHuertos();
+        System.out.printf("""
+        LISTADO DE HUERTOS
+        ------------------
+        %-25s  %-15s  %-35s  %-18s  %-25s  %-15s%n
+        """,
+                "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre propietario", "Nro. cuarteles");
+
+        if (listaDeHuertos.length == 0) {
+            System.out.println("No existen huertos registrados.");
+        } else {
+            for (String lH : listaDeHuertos) {
+                String[] dato = lH.split(";");
+                System.out.printf("%-25s  %-15s  %-35s  %-18s  %-25s  %-15s%n",
+                        dato[0], dato[1], dato[2], dato[3], dato[4], dato[5]);
             }
         }
     }
-    private void listaPlanesCosecha(){
+
+    private void listaPlanesCosecha() {
         String[] listaP = cP.listPlanesCosecha();
-
-        System.out.println("""
-        \nLISTADO DE PLANES COSECHA
-        -------------------------
-        """);
-
-        System.out.printf(
-                "%-6s %-15s %-15s %-15s %-10s %-17s %-12s %-12s %-20s %-15s %s%n",
+        System.out.printf("""
+            LISTADO DE PLANES COSECHA
+            -------------------------
+            %-6s  %-15s  %-15s  %-15s  %-10s  %-17s  %-12s  %-12s  %-20s  %-15s  %s%n
+            """,
                 "Id", "Nombre", "Fecha inicio", "Fecha término", "Meta (kg)",
                 "Precio base (kg)", "Estado", "Id cuartel", "Nombre huerto",
-                "Nro. cuadrillas", "Meta %"
-        );
+                "Nro. cuadrillas", "Meta %");
 
-        if(listaP.length == 0){
+        if (listaP.length == 0) {
             System.out.println("No hay planes registrados...");
-        }else {
-            for(String l : listaP){
-                System.out.println(l);
+        } else {
+            for (String lP : listaP) {
+                String[] dato = lP.split(";");
+                System.out.printf("%-6s  %-15s  %-15s  %-15s  %-10s  %-17s  %-12s  %-12s  %-20s  %-15s  %s%n",
+                        dato[0], dato[1], dato[2], dato[3], dato[4],
+                        dato[5], dato[6], dato[7], dato[8], dato[9], dato[10]);
             }
         }
     }
-    private void listaPesajes(){
+
+    private void listaPesajes() {
         System.out.printf("""
-                \nLISTADO DE PESAJES
-                ------------------
-                 %-3s %-10s  %-12s  %-10s %-10s  %-8s   %-7s %s%n
-                """, "Id", "Fecha", "Rut Cosechador", "Calidad", "Cantidad Kg",
-                "Precio $", "Monto $", "Pagado el");
+        LISTADO DE PESAJES
+        ------------------
+        %-5s  %-19s  %-15s  %-12s  %-12s  %-10s  %-12s  %-12s%n
+        """,
+                "Id", "Fecha", "Rut Cosechador", "Calidad", "Cantidad Kg", "Precio $", "Monto $", "Pagado el");
+
         String[] lista = cP.listPesajes();
-        if(lista.length == 0){
+        if (lista.length == 0) {
             System.out.println("No se han registrado pesajes...");
-        }else{
-           for(String l: lista){
-               System.out.println(l);
-           }
+        } else {
+            for (String l : lista) {
+                String[] dato = l.split(";");
+
+                System.out.printf("%-5s  %-19s  %-15s  %-12s  %-12s  %-10s  %-12s  %-12s%n",
+                        dato[0], dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7]);
+            }
         }
     }
-    private void listaPesajesCosechador(){
+
+
+    private void listaPesajesCosechador() {
         System.out.print("Rut del cosechador: ");
         Rut rut = Rut.of(tcld.next());
 
         System.out.printf("""
-                \nLISTADO DE PESAJES DEL COSECHADOR
-                ---------------------------------
-                 %-3s %-10s %-12s %-10s %-10s  %-8s   %-7s %s%n
-                """, "Id", "Fecha", "Calidad", "Cantidad Kg", "Precio $", "Precio $", "Monto $", "Pagado el");
-        try{
+            LISTADO DE PESAJES DEL COSECHADOR
+            ---------------------------------
+            %-3s  %-10s  %-10s  %-12s  %-10s  %-10s  %-10s  %s%n
+            """,
+                "Id", "Fecha", "Calidad", "Cantidad Kg", "Precio $", "Monto $", "Pagado el", "Estado");
+
+        try {
             String[] lista = cP.listPesajesCosechador(rut);
-            if(lista.length == 0){
-                System.out.println("El cosechador no tiene registrado pesajes...");
-            }else{
-                for(String l: lista){
-                    System.out.println(l);
+            if (lista.length == 0) {
+                System.out.println("El cosechador no tiene pesajes registrados...");
+            } else {
+                for (String l : lista) {
+                    String[] dato = l.split(";");
+                    System.out.printf("%-3s  %-10s  %-10s  %-12s  %-10s  %-10s  %-10s  %s%n",
+                            dato[0], dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7]);
                 }
             }
-        }catch(GestionHuertosException e){
+        } catch (GestionHuertosException e) {
             System.out.println(e.getMessage());
         }
     }
-    private void listaPagosPesajes(){
+
+    private void listaPagosPesajes() {
         System.out.printf("""
-                \nLISTADO DE PAGOS DE PESAJES
-                ---------------------------
-                    %-3s %-10s %-6s %-11s %s%n
-                """, "Id", "Fecha", "Monto $", "Nro.Pesajes", "Rut Cosechador");
+            LISTADO DE PAGOS DE PESAJES
+            ---------------------------
+            %-3s  %-10s  %-10s  %-12s  %s%n
+            """,
+                "Id", "Fecha", "Monto $", "Nro. Pesajes", "Rut Cosechador");
+
         String[] lista = cP.listPagosPesajes();
-        if(lista.length == 0){
+        if (lista.length == 0) {
             System.out.println("No se han registrado pagos...");
-        }else{
-            for(String l: lista){
-                System.out.println(l);
+        } else {
+            for (String l : lista) {
+                String[] dato = l.split(";");
+                System.out.printf("%-3s  %-10s  %-10s  %-12s  %s%n",
+                        dato[0], dato[1], dato[2], dato[3], dato[4]);
             }
         }
     }
+
 
     private String validaEntradaString(String mensaje){
         System.out.print(mensaje);

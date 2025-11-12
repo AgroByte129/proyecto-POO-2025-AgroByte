@@ -235,7 +235,8 @@ public class GestionHuertosUI {
         System.out.println("\n-> Cambiando el estado del cuartel\n");
         int idCuartel = validaNumero("Id del cuartel: ", "p", "int").intValue();
         String nomHuerto = validaEntradaString("Nombre del Huerto: ");
-        EstadoFenologico estado = (EstadoFenologico) validaEnum("EstadoFenologico", "Nuevo estado: ");
+        EstadoFenologico estado = (EstadoFenologico) validaEnum("EstadoFenologico",
+                "REPOSO_INVERNAL" + "\nFLORACION"  + "\nCUAJA, FRUCTIFICACION, MADURACION, COSECHA, POSTCOSECHA Nuevo estado : ");
 
         try{
             cP.changeEstadoCuartel(nomHuerto, idCuartel, estado);
@@ -270,7 +271,7 @@ public class GestionHuertosUI {
     private void cambiaEstadoPlan(){
         System.out.println("\n-> Cambiando el estado de un plan de cosecha\n");
         int idPlan = validaNumero("Id plan: ", "p", "int").intValue();
-        String msj = "Nuevo estado plan [1 = Planificado, 2 = Ejecutando, 3 = Cerrado, 4 = Cancelado]: ";
+        String msj = "Nuevo estado plan [Planificado, Ejecutando, Cerrado, Cancelado]: ";
         EstadoPlan estado = (EstadoPlan) validaEnum("EstadoPlan", msj);
 
         try{
@@ -647,7 +648,7 @@ public class GestionHuertosUI {
         boolean valido = false;
 
         while (!valido) {
-            cadena = validaEntradaString(msj).toUpperCase().trim();
+            cadena = validaEntradaString(msj);
 
             try {
                 switch (clase) {

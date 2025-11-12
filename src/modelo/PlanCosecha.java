@@ -86,21 +86,14 @@ public class PlanCosecha {
         double kilos = 0.0;
 
         for (Cuadrilla cuad : cuadrillas) {
-
             for (CosechadorAsignado asign : cuad.getAsignaciones()) {
-
                 for (Pesaje p : asign.getPesajes()) {
                     kilos += p.getCantidadKg();
                 }
-
             }
-
         }
 
-        if (metaKilos <= 0) {
-            return 0;
-        }
-
+        if (metaKilos <= 0) return 0;
         return (kilos / metaKilos) * 100.0;
     }
 

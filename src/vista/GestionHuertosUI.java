@@ -186,7 +186,7 @@ public class GestionHuertosUI {
     }
     private void creaCultivo(){
         System.out.println("\n-> Creando un cultivo\n");
-        int id = validaNumero("Identificación (No negativo): ", "p0", "int").intValue();
+        int id = validaNumero("Identificación (No negativo): ", "p", "int").intValue();
         String especie = validaEntradaString("Especie: ");
         String variedad = validaEntradaString("Variedad: ");
         float rendimiento = validaNumero("Rendmiento: ", "p","float").floatValue();
@@ -227,6 +227,7 @@ public class GestionHuertosUI {
                 System.out.println("\n-> Cuartel agregado éxitosamente al huerto");
             }catch(GestionHuertosException e){
                 System.out.println(e.getMessage());
+                if(e.getMessage().equals("No existe un huerto con el nombre indicado")) break;
             }
         }
     }

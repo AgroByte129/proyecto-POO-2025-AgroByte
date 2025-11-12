@@ -78,8 +78,21 @@ public class PlanCosecha {
     }
 
     public boolean setEstado(EstadoPlan estado) {
-        this.estado = estado;
-        return true;
+        switch(this.estado){
+            case PLANIFICADO ->{
+                if(estado == EstadoPlan.CANCELADO || estado == EstadoPlan.EJECUTANDO) {
+                    this.estado = estado;
+                    return true;
+                }
+            }
+            case EJECUTANDO -> {
+                if(estado == EstadoPlan.CANCELADO || estado == EstadoPlan.CERRADO) {
+                    this.estado = estado;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public double getCumplimientoMeta() {

@@ -87,9 +87,12 @@ public class ControladorProduccion {
     }
 
     public void changeEstadoPlan(int idPlan, EstadoPlan estado) throws GestionHuertosException {
-        Optional<PlanCosecha> p = findPlanById(idPlan);
-        if (p.isEmpty()) throw new GestionHuertosException("No existe un plan con el id indicado");
-        p.get().setEstado(estado);
+        Optional<PlanCosecha> pOp = findPlanById(idPlan);
+        if (pOp.isEmpty()) throw new GestionHuertosException("No existe un plan con el id indicado");
+        PlanCosecha p = pOp.get();
+        if(!p.setEstado(estado)){
+            throw new GestionHuertosException("Cambio de estado no válido. Estado actual " + p.getEstado());
+        }
     }
 
     public void addCuadrillaToPlan(int idPlan, int idCuad, String nomCuad, Rut rutSupervisor) throws GestionHuertosException {

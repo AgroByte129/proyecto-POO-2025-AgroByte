@@ -12,7 +12,6 @@ public class Cuadrilla {
     private Supervisor supervisor;
     private PlanCosecha planCosecha;
     private ArrayList<CosechadorAsignado> asignaciones;
-    private ArrayList<Pesaje> pesajes;
 
     public Cuadrilla(int id, String nom, Supervisor sup, PlanCosecha plan) {
         this.id = id;
@@ -20,7 +19,6 @@ public class Cuadrilla {
         this.supervisor = sup;
         this.planCosecha = plan;
         this.asignaciones = new ArrayList<>();
-        this.pesajes = new ArrayList<>();
         sup.setCuadrilla(this); //relación bicondicional
     }
 
@@ -52,9 +50,13 @@ public class Cuadrilla {
     }
     public double getKilosPesados() {
         double total = 0;
-        for (Pesaje p : pesajes) {//aquí lanza nullpointerException
-            total +=p.getCantidadKg();
+
+        for(CosechadorAsignado cosAs: asignaciones){
+            for(Pesaje p: cosAs.getPesajes()){
+                total += p.getCantidadKg();
+            }
         }
+
         return total;
     }
     public CosechadorAsignado[] getAsignaciones() {

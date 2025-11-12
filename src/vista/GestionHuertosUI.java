@@ -282,7 +282,7 @@ public class GestionHuertosUI {
     }
     private void agregaCuadrillasAPlan(){
         System.out.println("\n-> Agregando cuadrillas a un plan de cosecha\n");
-        int idPlan = validaNumero("Ide del plan: ", "p", "int").intValue();
+        int idPlan = validaNumero("Id del plan: ", "p", "int").intValue();
         int nroCuadrillas = validaNumero("Nro de cuadrillas: ", "p", "int").intValue();
 
         for(int i = 0; i < nroCuadrillas; i++){
@@ -389,7 +389,7 @@ public class GestionHuertosUI {
         } else {
             for (String lS : listSupervisores) {
                 String[] dato = lS.split(";");
-                System.out.printf("%-14s  %-22s  %-25s  %-30s  %-22s  %-22s %-10s %s%n",
+                System.out.printf("%-14s %-22s  %-25s  %-30s  %-22s  %-22s %-10s %s%n",
                         dato[0], dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7]);
             }
         }
@@ -410,7 +410,7 @@ public class GestionHuertosUI {
         } else {
             for (String lC : listCosechadores) {
                 String[] dato = lC.split(";");
-                System.out.printf("%-14s  %-22s  %-25s  %-30s  %-17s  %-15s %-13s %s%n",
+                System.out.printf("%-14s %-22s  %-25s  %-30s  %-17s  %-15s %-13s %s%n",
                         dato[0], dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7]);
             }
         }
@@ -431,7 +431,7 @@ public class GestionHuertosUI {
         } else {
             for (String linea : listaCultivos) {
                 String[] dato = linea.split(";");
-                System.out.printf("%-6s  %-15s  %-15s  %-12s  %-15s%n",
+                System.out.printf("%-6s %-15s  %-15s  %-12s  %-15s%n",
                         dato[0], dato[1], dato[2], dato[3], dato[4]);
             }
         }
@@ -509,7 +509,7 @@ public class GestionHuertosUI {
         System.out.printf("""
             LISTADO DE PESAJES DEL COSECHADOR
             ---------------------------------
-            %-3s  %-10s  %-10s  %-12s  %-10s  %-10s  %-10s%n
+            %-3s   %-17s  %-10s  %-12s  %-10s  %-10s  %-10s%n
             """,
                 "Id", "Fecha", "Calidad", "Cantidad Kg", "Precio $", "Monto $", "Pagado el");
 
@@ -533,7 +533,7 @@ public class GestionHuertosUI {
         System.out.printf("""
             LISTADO DE PAGOS DE PESAJES
             ---------------------------
-            %-3s  %-10s  %-10s  %-12s  %s%n
+            %-3s %-10s %-10s  %-12s  %s%n
             """,
                 "Id", "Fecha", "Monto $", "Nro. Pesajes", "Rut Cosechador");
 

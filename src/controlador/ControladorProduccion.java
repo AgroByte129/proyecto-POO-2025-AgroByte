@@ -14,8 +14,8 @@ public class ControladorProduccion {
     private static ControladorProduccion instance;
 
     //Formato de fechas
-    DateTimeFormatter FORMATO_FH = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-    DateTimeFormatter FORMATO_F = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter FORMATO_FH = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    private static final DateTimeFormatter FORMATO_F = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final ArrayList<Persona> personas = new ArrayList<>();
     private final ArrayList<Huerto> huertos = new ArrayList<>();

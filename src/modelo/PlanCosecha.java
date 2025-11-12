@@ -3,6 +3,8 @@ package modelo;
 import utilidades.EstadoPlan;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
+
 import utilidades.GestionHuertosException;
 
 
@@ -107,7 +109,7 @@ public class PlanCosecha {
         }
 
         if (metaKilos <= 0) return 0;
-        return (kilos / metaKilos) * 100.0;
+        return Math.min((kilos / metaKilos) * 100.0, 100.0);
     }
 
     public Cuartel getCuartel() {
@@ -115,7 +117,7 @@ public class PlanCosecha {
     }
 
     public void addCuadrilla(int idCuad, String nomCuadrilla, Supervisor supervisor) throws GestionHuertosException {
-        if (findCuadrillaById(idCuad) != null) {
+        if (findCuadrillaById(idCuad).isPresent()) {
             throw new GestionHuertosException("Ya existe en el plan una cuadrilla con id indicado");
         }
         Cuadrilla nueva = new Cuadrilla(idCuad, nomCuadrilla, supervisor, this);
@@ -123,23 +125,20 @@ public class PlanCosecha {
     }
 
     public void addCosechadorToCuadrilla(int idCuad, LocalDate fIni, LocalDate fFin, double meta, Cosechador cos) throws GestionHuertosException {
-        Cuadrilla c = findCuadrillaById(idCuad);
-        if (c == null) {
-            throw new GestionHuertosException("No existe una cuadrilla en el plan con el id indicado");
-        }//lanza excepción
-        c.addCosechador(fIni, fFin, meta, cos);
+        Optional<Cuadrilla> c = findCuadrillaById(idCuad);
+        if(c.isEmpty()) throw new GestionHuertosException("No existe una cuadrilla en el plan con el id indicado");
+        c.get().addCosechador(fIni, fFin, meta, cos);
     }
 
     public Cuadrilla[] getCuadrillas() {
         return cuadrillas.toArray(new Cuadrilla[0]);
     }
 
-    private Cuadrilla findCuadrillaById(int idCuad) {
+    private Optional<Cuadrilla> findCuadrillaById(int idCuad) {
         for (Cuadrilla c : cuadrillas) {
-            if (c.getId() == idCuad) {
-                return c;
-            }
+            if (c.getId() == idCuad) return Optional.of(c);
         }
-        return null;
+        return Optional.empty();
     }
+
 }

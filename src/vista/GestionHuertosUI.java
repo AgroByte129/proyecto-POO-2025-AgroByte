@@ -75,7 +75,6 @@ public class GestionHuertosUI {
                 case 5 -> System.out.println("\n-> Volviendo al menú principal");
             }
         }while(respuesta != 5);
-        menu();
     }
     //*** MENÚ PLANES DE COSECHA ***
     public void menuPlanesCosecha(){
@@ -106,7 +105,6 @@ public class GestionHuertosUI {
 
             }
         }while(respuesta != 7);
-        menu();
     }
     //*** MENÚ DE LISTAS ***
     public void menuListados(){
@@ -143,7 +141,6 @@ public class GestionHuertosUI {
 
             }
         }while(respuesta != 10);
-        menu();
     }
 
     private void creaPersona(){

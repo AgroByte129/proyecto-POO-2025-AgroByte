@@ -2,6 +2,8 @@ package modelo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
+
 import utilidades.GestionHuertosException;
 
 public class Cuadrilla {
@@ -34,7 +36,7 @@ public class Cuadrilla {
             throw new GestionHuertosException("No es posible agregar el nuevo cosechador porque se alcanzó el máximo permitido.");
         }
 
-        if (findCosechadorByRut(cos) != null) {
+        if (findCosechadorByRut(cos).isPresent()) {
             throw new GestionHuertosException("Ya existe un cosechador con el mismo rut en esta cuadrilla.");
         }
 
@@ -66,13 +68,13 @@ public class Cuadrilla {
     public static int getMaximoCosechadores() { return maximoCosechadores; }
     public static void setMaximoCosechadores(int max) { maximoCosechadores = max; }
 
-    private CosechadorAsignado findCosechadorByRut(Cosechador cos) {
+    private Optional<CosechadorAsignado> findCosechadorByRut(Cosechador cos) {
         for (CosechadorAsignado ca : asignaciones) {
             if (ca.getCosechador().getRut().equals(cos.getRut())) {
-                return ca;
+                return Optional.of(ca);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
 }

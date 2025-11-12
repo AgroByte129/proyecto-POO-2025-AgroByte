@@ -9,7 +9,7 @@ public class Cultivo {
     private String variedad;
     private float rendimiento;
 
-    private List<Cuartel> cuarteles = new ArrayList<>();
+    private List<Cuartel> cuarteles;
 
     public Cultivo(int id, String especie, String variedad, float rendimiento) {
         this.id = id;

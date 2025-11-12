@@ -21,6 +21,8 @@ public class Pesaje {
         this.calidad = cal;
         this.fechaHora = fechaHora;
         this.cosAsig = cosAsgn;
+        this.precioKg = cosAsig.getCuadrilla().getPlanCosecha().getPrecioBaseKilo();
+        cosAsgn.addPesaje(this); //relación bidireccional
     }
 
     public int getId() {return id;}

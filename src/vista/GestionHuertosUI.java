@@ -33,6 +33,7 @@ public class GestionHuertosUI {
         byte respuesta;
         do{
             System.out.println("""
+                    
                     ::: MENU PRINCIPAL :::
                     1. Crear Personas
                     2. Menú Huertos
@@ -342,11 +343,11 @@ public class GestionHuertosUI {
     }
     private void pagaPesajesPendientesACosechador(){
         System.out.println("\n-> Pagando pesajes pendientes de un cosechador\n");
-        int idPesaje = validaNumero("Id pesaje: ", "p", "int").intValue();
+        int idPesaje = validaNumero("Ingrese un ID para el pago: ", "p", "int").intValue();
         Rut rutCos = ingresaRut("Rut cosechador: ");
 
         try{//Se cambia el formato a alemán poque ahí se separa con "." los miles y "," los decimales
-            System.out.printf(Locale.GERMANY,"%n%s %,.1f%n", "Monto pagado al cosechador: ", cP.addPagoPesaje(idPesaje, rutCos));
+            System.out.printf(Locale.GERMANY,"%n%s %,.1f%n", "Monto ha pagar al cosechador: ", cP.addPagoPesaje(idPesaje, rutCos));
         }catch(GestionHuertosException e){
             System.out.println(e.getMessage());
         }
@@ -694,7 +695,6 @@ public class GestionHuertosUI {
         Rut rut;
         while(true){
             try{
-                System.out.print(msj);
                 entrada = validaEntradaString(msj);
                 rut = Rut.of(entrada);
                 break;

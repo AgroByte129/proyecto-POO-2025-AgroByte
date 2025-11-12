@@ -17,6 +17,7 @@ public class GestionHuertosUI {
     private GestionHuertosUI(){
         try{
             cP.readDataFromTextFile();
+            System.out.println("\n-> DATOS DE PRUEBA CARGADOS ÉXITOSAMENTE DESDE EL ARCHIVO DE TEXTO");
         }catch(GestionHuertosException e){
             System.out.println(e.getMessage());
         }
@@ -235,8 +236,15 @@ public class GestionHuertosUI {
         System.out.println("\n-> Cambiando el estado del cuartel\n");
         int idCuartel = validaNumero("Id del cuartel: ", "p", "int").intValue();
         String nomHuerto = validaEntradaString("Nombre del Huerto: ");
-        EstadoFenologico estado = (EstadoFenologico) validaEnum("EstadoFenologico",
-                "REPOSO_INVERNAL" + "\nFLORACION"  + "\nCUAJA, FRUCTIFICACION, MADURACION, COSECHA, POSTCOSECHA Nuevo estado : ");
+        String msj = """
+                
+                ESTADOS FENOLÓGICOS
+                -------------------
+                REPOSO_INVERNAL | FLORACION | CUAJA |
+                FRUTIFICACION | MADURACION | COSECHA | POSTCOSECHA|
+                
+                Ingrese uno de los estados:\s""";
+        EstadoFenologico estado = (EstadoFenologico) validaEnum("EstadoFenologico", msj);
 
         try{
             cP.changeEstadoCuartel(nomHuerto, idCuartel, estado);
@@ -648,7 +656,7 @@ public class GestionHuertosUI {
         boolean valido = false;
 
         while (!valido) {
-            cadena = validaEntradaString(msj);
+            cadena = validaEntradaString(msj).toUpperCase();
 
             try {
                 switch (clase) {

@@ -74,7 +74,7 @@ public class ControladorProduccion {
         if (h.isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
         Cuartel c = h.get().getCuartel(idCuartel);
         if (c == null) throw new GestionHuertosException("No existe el cuartel con el id indicado");
-        c.setEstado(estado);
+        if(!c.setEstado(estado)) throw new GestionHuertosException("El nuevo estado del cuartel no es compatible con el estado actual");
     }
 
     public void createPlanCosecha(int idPlan, String nom, LocalDate inicio, LocalDate finEstim, double meta, double precioBase, String nomHuerto, int idCuartel) throws GestionHuertosException {

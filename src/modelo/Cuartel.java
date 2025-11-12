@@ -31,8 +31,16 @@ public class Cuartel {
     }
     public EstadoFenologico getEstado() {return estado;}
     public boolean setEstado(EstadoFenologico estado) {
-        this.estado = estado;
-        return true;
+        if (estado.compareTo(this.estado) > 0) {
+            this.estado = estado;
+            return true;
+        }
+        if (this.estado == EstadoFenologico.POSTCOSECHA &&
+                estado == EstadoFenologico.REPOSO_INVERNAL) {
+            this.estado = estado;
+            return true;
+        }
+        return false;
     }
 
     public Cultivo getCultivo() {return cultivo;}

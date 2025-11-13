@@ -49,11 +49,26 @@ public class Rut {
 
         char dvChar = dvPart.charAt(0);
 
-        if (!(Character.isDigit(dvChar) || dvChar == 'K')) {
+        if (!(Character.isDigit(dvChar) || dvChar != 'K')) {
             throw new IllegalArgumentException("DV invalido. Debe ser 0-9 o K.");
         }
+        char dvCal = calcularDV(numero);
+
+        if(dvChar != dvCal) throw new IllegalArgumentException("DV invalido. Debe ingresar el DV correspondiente al rut.");
 
         return new Rut(numero, dvChar);
+    }
+
+    private static char calcularDV(long rut) {
+        long m = 0, s = 1;
+        for (; rut != 0; rut /= 10) {
+            s = (s + rut % 10 * (9 - m++ % 6)) % 11;
+        }
+        if (s != 0) {
+            return (char) (s + 47);
+        } else {
+            return 'K';
+        }
     }
 
     @Override

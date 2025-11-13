@@ -8,6 +8,4 @@ public enum EstadoFenologico {
     MADURACION,
     COSECHA,
     POSTCOSECHA
-    
-
 }

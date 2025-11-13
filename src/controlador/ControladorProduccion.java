@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-//comentario de confirmacion para commit
+//comentario de confirmacion
 public class ControladorProduccion {
     private static ControladorProduccion instance;
 

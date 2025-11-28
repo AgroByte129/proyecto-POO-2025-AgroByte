@@ -1,12 +1,13 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import utilidades.GestionHuertosException;
 
-public class Cuadrilla {
+public class Cuadrilla implements Serializable {
     private int id;
     private String nombre;
     private static int maximoCosechadores = 5;

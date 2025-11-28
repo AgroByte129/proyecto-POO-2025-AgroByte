@@ -2,10 +2,11 @@ package modelo;
 
 import utilidades.EstadoFenologico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cuartel {
+public class Cuartel implements Serializable {
     private int id;
     private float superficie;
     private EstadoFenologico estado;

@@ -1,9 +1,10 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class CosechadorAsignado {
+public class CosechadorAsignado implements Serializable {
     private LocalDate desde;
     private LocalDate hasta;
     private double metaKilos;

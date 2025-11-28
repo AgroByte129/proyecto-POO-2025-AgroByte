@@ -1,9 +1,10 @@
 package modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cultivo {
+public class Cultivo implements Serializable {
     private int id;
     private String especie;
     private String variedad;

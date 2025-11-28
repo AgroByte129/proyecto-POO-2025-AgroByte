@@ -2,7 +2,9 @@ package modelo;
 
 import utilidades.Rut;
 
-public class Persona {
+import java.io.Serializable;
+
+public class Persona implements Serializable {
     private Rut rut;
     private String nombre;
     private String email;

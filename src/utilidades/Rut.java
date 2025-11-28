@@ -1,6 +1,8 @@
 package utilidades;
 
-public class Rut {
+import java.io.Serializable;
+
+public class Rut implements Serializable {
     private long numero;
     private char dv;
 

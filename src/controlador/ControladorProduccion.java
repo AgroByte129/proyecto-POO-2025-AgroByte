@@ -1,6 +1,7 @@
 package controlador;
 
 import modelo.*;
+import persistencia.GestionHuertosIO;
 import utilidades.*;
 
 import java.io.*;
@@ -12,6 +13,7 @@ import java.util.*;
 //comentario de confirmacion para develop 3
 public class ControladorProduccion {
     private static ControladorProduccion instance;
+    private static final GestionHuertosIO iO = GestionHuertosIO.getInstance();
 
     //Formato de fechas
     private static final DateTimeFormatter FORMATO_FH = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -372,6 +374,41 @@ public class ControladorProduccion {
                     );
         }
         return out;
+    }
+
+    public void readSystemData() throws GestionHuertosException {
+        //******** Personas *********
+        personas.clear();
+        Persona[] p = iO.readPersonas();
+        personas.addAll(Arrays.asList(p));
+
+        //******** Cultivos **********
+        cultivos.clear();
+        Cultivo[] c = iO.readCultivos();
+        cultivos.addAll(Arrays.asList(c));
+
+        //******** Planes Cosecha **********
+        planes.clear();
+        PlanCosecha[] pC = iO.readPlanesCosecha();
+        planes.addAll(Arrays.asList(pC));
+    }
+    private void saveSystemData() throws GestionHuertosException {
+        //Personas
+        iO.savePersonas(personas.toArray(Persona[]::new));
+
+        //Cultivos
+        Cultivo[] arrayCultivo = cultivos.stream()
+                .filter(c -> c.getCuarteles().length == 0)
+                .toArray(Cultivo[]::new);
+
+        iO.saveCultivos(arrayCultivo);
+
+        //Planes Cosecha
+        PlanCosecha[] arrayPlanes = planes.stream()
+                .filter(p -> p.getCuadrillas().length == 0)
+                .toArray(PlanCosecha[]::new);
+
+        iO.savePlanesCosecha(arrayPlanes);
     }
 
     public void readDataFromTextFile() throws GestionHuertosException {

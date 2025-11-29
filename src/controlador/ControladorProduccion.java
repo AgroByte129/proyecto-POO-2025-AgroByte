@@ -564,46 +564,56 @@ public class ControladorProduccion {
     }
 
     private Optional<Propietario> findPropietarioByRut(Rut rut) {
-        for (Persona p : personas) {
-            if (p instanceof Propietario pr && pr.getRut().toString().equals(rut.toString())) {
-                return Optional.of(pr);
-            }
-        }
-        return Optional.empty();
+        return personas.stream()
+                .filter(Propietario.class::isInstance)
+                .map(Propietario.class::cast)
+                .filter(p -> p.getRut().equals(rut))
+                .findFirst();
     }
 
     private Optional<Supervisor> findSupervisorByRut(Rut rut) {
-        for (Persona p : personas) if (p instanceof Supervisor s && s.getRut().toString().equals(rut.toString())) return Optional.of(s);
-        return Optional.empty();
+        return personas.stream()
+                .filter(Supervisor.class::isInstance)
+                .map(Supervisor.class::cast)
+                .filter(s -> s.getRut().equals(rut))
+                .findFirst();
     }
 
     private Optional<Cosechador> findCosechadorByRut(Rut rut) {
-        for (Persona p : personas) if (p instanceof Cosechador c && c.getRut().toString().equals(rut.toString())) return Optional.of(c);
-        return Optional.empty();
+        return personas.stream()
+                .filter(Cosechador.class::isInstance)
+                .map(Cosechador.class::cast)
+                .filter(c -> c.getRut().equals(rut))
+                .findFirst();
     }
 
     private Optional<Cultivo> findCultivoById(int id) {
-        for (Cultivo c : cultivos) if (c.getId() == id) return Optional.of(c);
-        return Optional.empty();
+        return cultivos.stream()
+                .filter(c -> c.getId() == id)
+                .findFirst();
     }
 
     private Optional<Huerto> findHuertoByNombre(String nombre) {
-        for (Huerto h : huertos) if (h.getNombre().equalsIgnoreCase(nombre)) return Optional.of(h);
-        return Optional.empty();
+        return huertos.stream()
+                .filter(h -> h.getNombre().equals(nombre))
+                .findFirst();
     }
 
     private Optional<PlanCosecha> findPlanById(int id) {
-        for (PlanCosecha p : planes) if (p.getId() == id) return Optional.of(p);
-        return Optional.empty();
+        return planes.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst();
     }
 
     private Optional<Pesaje> findPesajeById(int id) {
-        for (Pesaje p : pesajes) if (p.getId() == id) return Optional.of(p);
-        return Optional.empty();
+        return pesajes.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst();
     }
 
     private Optional<PagoPesaje> findPagoPesajeById(int id) {
-        for (PagoPesaje p : pagos) if (p.getId() == id) return Optional.of(p);
-        return Optional.empty();
+        return pagos.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst();
     }
 }

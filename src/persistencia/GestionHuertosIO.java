@@ -7,16 +7,13 @@ import utilidades.GestionHuertosException;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GestionHuertosIO {
     //Nicolás Ignacio González Canales
     private static GestionHuertosIO instance;
-
     private GestionHuertosIO() {
     }
-
     public static GestionHuertosIO getInstance() {
         if (instance == null) {
             instance = new GestionHuertosIO();

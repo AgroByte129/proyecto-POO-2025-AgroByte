@@ -201,6 +201,36 @@ public class ControladorProduccion {
         return nuevoPago.getMonto();
     }
 
+    public String[] getCuadrillasDeCosechadorDePlan(Rut rutCosechador) throws GestionHuertosException{
+        Cosechador cos = findCosechadorByRut(rutCosechador)
+                .orElseThrow(() -> new GestionHuertosException("No existe un cosechador con ese Rut."));
+
+        LocalDate hoy = LocalDate.now();
+        Cuadrilla[] cuadrillas = Arrays.stream(cos.getAsignaciones())
+                .filter(cosAs ->
+                        !cosAs.getDesde().isAfter(hoy) &&
+                                !cosAs.getHasta().isBefore(hoy)
+                )
+                .map(CosechadorAsignado::getCuadrilla)
+                .filter(c -> c.getPlanCosecha().getEstado() == EstadoPlan.EJECUTANDO)
+                .toArray(Cuadrilla[]::new);
+
+        if(cuadrillas.length == 0) throw new GestionHuertosException(
+                "El cosechador no tiene cuadrillas asignadas" +
+                "\n a las que se le puedan agregar pesajes"
+        );
+
+        return Arrays.stream(cuadrillas)
+                .map(c -> String.format(
+                        "%s;%s;%s",
+                        c.getId(),
+                        c.getNombre(),
+                        c.getPlanCosecha().getId()
+                        )
+                )
+                .toArray(String[]::new);
+    }
+
     public String[] listCultivos() {
         if (cultivos.isEmpty()) return new String[0];
         String[] out = new String[cultivos.size()];

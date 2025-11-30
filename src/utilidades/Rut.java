@@ -1,6 +1,8 @@
 package utilidades;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Rut implements Serializable {
     private long numero;
@@ -74,8 +76,25 @@ public class Rut implements Serializable {
     }
 
     @Override
-    public String toString(){
-        return Long.toString(numero)+"-"+dv;
+    public String toString() {
+        String s = String.valueOf(numero);
+        StringBuilder sb = new StringBuilder();
+
+        int count = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            sb.append(s.charAt(i)); //Va agregando caracter a caracter desde atrás hacia adelante.
+            count++;
+
+            if (count == 3 && i != 0) { //Cuando el contador llega a 3 agrega el "."
+                sb.append('.');
+                count = 0;//Vuelve el contador a 0 para ir agregando "." cada 3 dígidos
+            }
+        }
+        //Se invierte porque se arma la cadena desde atrás hacia adelante.
+        sb.reverse();
+        return sb + "-" + dv;
     }
+
+
 }
 

@@ -37,99 +37,154 @@ public class ControladorProduccion {
         return instance;
     }
 
-    public void createPropietario(Rut rut, String nombre, String email, String dirParticular, String dirComercial) throws GestionHuertosException {
+    public void createPropietario(Rut rut, String nombre, String email,
+                                  String dirParticular, String dirComercial) throws GestionHuertosException {
 
         if (findPropietarioByRut(rut).isPresent())
             throw new GestionHuertosException("Ya existe un propietario con el rut indicado");
         personas.add(new Propietario(rut, nombre, email, dirParticular, dirComercial));
     }
 
-    public void createSupervisor(Rut rut, String nombre, String email, String direccion, String profesion) throws GestionHuertosException {
+    public void createSupervisor(Rut rut, String nombre, String email,
+                                 String direccion, String profesion) throws GestionHuertosException {
+
         if (findSupervisorByRut(rut).isPresent())
             throw new GestionHuertosException("Ya existe un supervisor con el rut indicado");
         personas.add(new Supervisor(rut, nombre, email, direccion, profesion));
     }
 
-    public void createCosechador(Rut rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) throws GestionHuertosException {
+    public void createCosechador(Rut rut, String nombre, String email, String direccion,
+                                 LocalDate fechaNacimiento) throws GestionHuertosException {
+
         if (findCosechadorByRut(rut).isPresent())
             throw new GestionHuertosException("Ya existe un cosechador con el rut indicado");
         personas.add(new Cosechador(rut, nombre, email, direccion, fechaNacimiento));
     }
 
-    public void createCultivo(int id, String especie, String variedad, float rendimiento) throws GestionHuertosException {
+    public void createCultivo(int id, String especie, String variedad,
+                              float rendimiento) throws GestionHuertosException {
+
         if (findCultivoById(id).isPresent())
             throw new GestionHuertosException("Ya existe un cultivo con el id indicado");
+
         cultivos.add(new Cultivo(id, especie, variedad, rendimiento));
     }
 
-    public void createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario) throws GestionHuertosException {
+    public void createHuerto(String nombre, float superficie, String ubicacion,
+                             Rut rutPropietario) throws GestionHuertosException {
+
         if (findHuertoByNombre(nombre).isPresent())
             throw new GestionHuertosException("Ya existe un huerto con el nombre indicado");
+
         Optional<Propietario> p = findPropietarioByRut(rutPropietario);
         if (p.isEmpty()) throw new GestionHuertosException("No existe un propietario con el rut indicado");
+
         huertos.add(new Huerto(nombre, superficie, ubicacion, p.get()));
     }
 
-    public void addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) throws GestionHuertosException {
+    public void addCuartelToHuerto(String nombreHuerto, int idCuartel,
+                                   float superficie, int idCultivo) throws GestionHuertosException {
+
         Optional<Huerto> h = findHuertoByNombre(nombreHuerto);
-        if (h.isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+        if (h.isEmpty())
+            throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+
         Optional<Cultivo> c = findCultivoById(idCultivo);
-        if (c.isEmpty()) throw new GestionHuertosException("No existe un cultivo con el id indicado");
+        if (c.isEmpty())
+            throw new GestionHuertosException("No existe un cultivo con el id indicado");
+
         boolean ok = h.get().addCuartel(idCuartel, superficie, c.get());
-        if (!ok) throw new GestionHuertosException("No fue posible agregar el cuartel (duplicado o superficie excede)");
+        if (!ok)
+            throw new GestionHuertosException("No fue posible agregar el cuartel (duplicado o superficie excede)");
     }
 
-    public void changeEstadoCuartel(String nombreHuerto, int idCuartel, EstadoFenologico estado) throws GestionHuertosException {
+    public void changeEstadoCuartel(String nombreHuerto, int idCuartel,
+                                    EstadoFenologico estado) throws GestionHuertosException {
+
         Optional<Huerto> h = findHuertoByNombre(nombreHuerto);
-        if (h.isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+        if (h.isEmpty())
+            throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+
         Cuartel c = h.get().getCuartel(idCuartel);
-        if (c == null) throw new GestionHuertosException("No existe el cuartel con el id indicado");
+        if (c == null)
+            throw new GestionHuertosException("No existe el cuartel con el id indicado");
+
         if (!c.setEstado(estado))
             throw new GestionHuertosException("El nuevo estado del cuartel no es compatible con el estado actual");
     }
 
-    public void createPlanCosecha(int idPlan, String nom, LocalDate inicio, LocalDate finEstim, double meta, double precioBase, String nomHuerto, int idCuartel) throws GestionHuertosException {
-        if (findPlanById(idPlan).isPresent()) throw new GestionHuertosException("Ya existe un plan con el id indicado");
+    public void createPlanCosecha(int idPlan, String nom, LocalDate inicio,
+                                  LocalDate finEstim, double meta, double precioBase,
+                                  String nomHuerto, int idCuartel) throws GestionHuertosException {
+
+        if (findPlanById(idPlan).isPresent())
+            throw new GestionHuertosException("Ya existe un plan con el id indicado");
+
         Optional<Huerto> h = findHuertoByNombre(nomHuerto);
-        if (h.isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+        if (h.isEmpty())
+            throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+
         Cuartel c = h.get().getCuartel(idCuartel);
-        if (c == null) throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado");
+        if (c == null)
+            throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado");
+
         if (!finEstim.isAfter(inicio))
             throw new GestionHuertosException("La fecha de término debe ser posterior a la de inicio");
+
         PlanCosecha plan = new PlanCosecha(idPlan, nom, inicio, finEstim, meta, precioBase, c);
         planes.add(plan);
     }
 
     public void changeEstadoPlan(int idPlan, EstadoPlan estado) throws GestionHuertosException {
         Optional<PlanCosecha> pOp = findPlanById(idPlan);
-        if (pOp.isEmpty()) throw new GestionHuertosException("No existe un plan con el id indicado");
+        if (pOp.isEmpty())
+            throw new GestionHuertosException("No existe un plan con el id indicado");
+
         PlanCosecha p = pOp.get();
-        if (!p.setEstado(estado)) {
+        if (!p.setEstado(estado))
             throw new GestionHuertosException("Cambio de estado no válido. Estado actual " + p.getEstado());
-        }
     }
 
-    public void addCuadrillaToPlan(int idPlan, int idCuad, String nomCuad, Rut rutSupervisor) throws GestionHuertosException {
+    public void addCuadrillaToPlan(int idPlan, int idCuad, String nomCuad,
+                                   Rut rutSupervisor) throws GestionHuertosException {
+
         Optional<PlanCosecha> p = findPlanById(idPlan);
-        if (p.isEmpty()) throw new GestionHuertosException("No existe un plan con el id indicado");
+        if (p.isEmpty())
+            throw new GestionHuertosException("No existe un plan con el id indicado");
+
         Optional<Supervisor> s = findSupervisorByRut(rutSupervisor);
-        if (s.isEmpty()) throw new GestionHuertosException("No existe un supervisor con el rut indicado");
+        if (s.isEmpty())
+            throw new GestionHuertosException("No existe un supervisor con el rut indicado");
+
         if (s.get().getCuadrilla() != null)
             throw new GestionHuertosException("El supervisor ya tiene asignada una cuadrilla a su cargo");
+
         p.get().addCuadrilla(idCuad, nomCuad, s.get()); //una vez vistas todas las posibles excepciones, se realiza la asignación
     }
 
-    public void addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fInicio, LocalDate fFin, double meta, Rut rutCosechador) throws GestionHuertosException {
+    public void addCosechadorToCuadrilla(int idPlan, int idCuadrilla,
+                                         LocalDate fInicio, LocalDate fFin,
+                                         double meta, Rut rutCosechador) throws GestionHuertosException {
+
         Optional<PlanCosecha> p = findPlanById(idPlan);
-        if (p.isEmpty()) throw new GestionHuertosException("No existe un plan con el id indicado");
+        if (p.isEmpty())
+            throw new GestionHuertosException("No existe un plan con el id indicado");
+
         Optional<Cosechador> c = findCosechadorByRut(rutCosechador);
-        if (c.isEmpty()) throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        if (c.isEmpty())
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+
         if (!fFin.isAfter(fInicio))
             throw new GestionHuertosException("La fecha de inicio debe ser anterior a la fecha de término");
+
         PlanCosecha plan = p.get();
         LocalDate finPlan = (plan.getFinReal() != null) ? plan.getFinReal() : plan.getFinEstimado();
+
         if (fInicio.isBefore(plan.getInicio()) || fFin.isAfter(finPlan))
-            throw new GestionHuertosException("El rango de fechas de asignación del cosechador a la cuadrilla está fuera del rango de fechas del plan");
+            throw new GestionHuertosException(
+                    "El rango de fechas de asignación del cosechador" +
+                            "\n a la cuadrilla está fuera del rango de fechas del plan"
+            );
         plan.addCosechadorToCuadrilla(idCuadrilla, fInicio, fFin, meta, c.get());
     }
 

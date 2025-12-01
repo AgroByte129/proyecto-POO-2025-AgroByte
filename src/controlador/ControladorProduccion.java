@@ -342,9 +342,9 @@ public class ControladorProduccion {
                 })
 
                 //Ordena según los kilos de manera descendente.
-                .sorted(Comparator.comparing((String s) -> {
+                .sorted(Comparator.comparingDouble((String s) -> {
                     String[] datos = s.split(";");
-                    return Float.parseFloat(datos[6]);
+                    return Double.parseDouble(datos[6]);
                 }).reversed()) //revierte el orden para que sea descendente.
 
                 .toArray(String[]::new); //transforma los datos en array.
@@ -358,29 +358,41 @@ public class ControladorProduccion {
     }
 
     public String[] listCosechadores() {
-        List<String> lista = new ArrayList<>();
-        for (Persona p : personas) {
-            if (p instanceof Cosechador c) {
-                double montoImpago = 0;
-                double montoPagado = 0;
-                CosechadorAsignado[] asignaciones = c.getAsignaciones();
-                for (CosechadorAsignado asignado : asignaciones) {
-                    montoImpago += asignado.getMontoPesajesImpagos();
-                    montoPagado += asignado.getMontoPesajesPagados();
-                }
-                //Con el Locale.GERMANY los números tienen "." para miles y "," para decimales :v
-                lista.add(String.format(Locale.GERMANY, "%s; %s; %s; %s; %s; %d; %,.1f; %,.1f",
-                        c.getRut(),
-                        c.getNombre(),
-                        c.getDireccion(),
-                        c.getEmail(),
-                        c.getFechaNacimiento().format(FORMATO_F),
-                        c.getCuadrillas().length,
-                        montoImpago,
-                        montoPagado));
-            }
-        }
-        return lista.toArray(new String[0]);
+        String[] arr = personas.stream()
+                .filter(Cosechador.class::isInstance)
+                .map(Cosechador.class::cast)
+
+                .map(c -> {
+                    double montoImpago = 0;
+                    double montoPagado = 0;
+
+                    CosechadorAsignado[] asignaciones = c.getAsignaciones();
+                    for (CosechadorAsignado asignado : asignaciones) {
+                        montoImpago += asignado.getMontoPesajesImpagos();
+                        montoPagado += asignado.getMontoPesajesPagados();
+                    }
+
+                    return String.format("%s;%s;%s;%s;%s;%d;%,.1f;%,.1f",
+                            c.getRut(),
+                            c.getNombre(),
+                            c.getDireccion(),
+                            c.getEmail(),
+                            c.getFechaNacimiento().format(FORMATO_F),
+                            c.getCuadrillas().length,
+                            montoImpago,
+                            montoPagado
+                    );
+                })
+
+                .sorted(Comparator.comparing((String s) ->{
+                    String[] datos = s.split(";");
+                    return Double.parseDouble(datos[6]);
+                }))
+                .toArray(String[]::new);
+
+        if(arr.length == 0)
+            return new String[0];
+        return arr;
     }
 
     public String[] listPlanesCosecha() {

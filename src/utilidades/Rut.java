@@ -78,16 +78,21 @@ public class Rut implements Serializable {
     @Override
     public String toString() {
         String s = String.valueOf(numero);
+        //El StringBuilder servirá para crear la parte numerica del rut
+        //con formato xx.xxx.xxx
         StringBuilder sb = new StringBuilder();
 
         int count = 0;
         for (int i = s.length() - 1; i >= 0; i--) {
-            sb.append(s.charAt(i)); //Va agregando caracter a caracter desde atrás hacia adelante.
+            //Va agregando caracter a caracter desde atrás hacia adelante.
+            sb.append(s.charAt(i));
             count++;
 
-            if (count == 3 && i != 0) { //Cuando el contador llega a 3 agrega el "."
+            //Cuando el contador llega a 3 agrega el "."
+            if (count == 3 && i != 0) {
                 sb.append('.');
-                count = 0;//Vuelve el contador a 0 para ir agregando "." cada 3 dígidos
+                //Vuelve el contador a 0 para ir agregando "." cada 3 dígidos
+                count = 0;
             }
         }
         //Se invierte porque se arma la cadena desde atrás hacia adelante.

@@ -133,14 +133,21 @@ public class ControladorProduccion {
     }
 
     public void addPesaje(int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad) throws GestionHuertosException {
-        if (findPesajeById(id).isPresent()) throw new GestionHuertosException("Ya existe un pesaje con id indicado");
+        if (findPesajeById(id).isPresent())
+            throw new GestionHuertosException("Ya existe un pesaje con id indicado");
+
         Optional<Cosechador> cosechadorOpt = findCosechadorByRut(rutCosechador);
-        if (cosechadorOpt.isEmpty()) throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        if (cosechadorOpt.isEmpty())
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+
         Optional<PlanCosecha> planOpt = findPlanById(idPlan);
-        if (planOpt.isEmpty()) throw new GestionHuertosException("No existe un plan con el id indicado");
+        if (planOpt.isEmpty())
+            throw new GestionHuertosException("No existe un plan con el id indicado");
         PlanCosecha plan = planOpt.get();
+
         if (plan.getEstado() != EstadoPlan.EJECUTANDO)
             throw new GestionHuertosException("El plan no se encuentra en estado EJECUTANDO");
+
         Cuadrilla cuad = null;
         for (Cuadrilla q : plan.getCuadrillas()) {
             if (q.getId() == idCuadrilla) {
@@ -148,23 +155,37 @@ public class ControladorProduccion {
                 break;
             }
         }
-        if (cuad == null) throw new GestionHuertosException("No existe una cuadrilla con el id indicado en el plan");
+
+        if (cuad == null)
+            throw new GestionHuertosException("No existe una cuadrilla con el id indicado en el plan");
+
         boolean asignado = false;
         CosechadorAsignado asign = null;
         for (CosechadorAsignado ca : cuad.getAsignaciones()) {
-            if (ca.getCosechador().getRut().toString().equals(rutCosechador.toString())) {
+            if (ca.getCosechador()
+                    .getRut()
+                    .toString()
+                    .equals(rutCosechador.toString())
+            ) {
                 asignado = true;
                 asign = ca;
-                break;
+                break;d
             }
         }
+
         if (!asignado)
             throw new GestionHuertosException("El cosechador no tiene una asignación a la cuadrilla indicada en el plan");
+
         LocalDateTime ahora = LocalDateTime.now();
-        if (ahora.toLocalDate().isBefore(asign.getDesde()) || ahora.toLocalDate().isAfter(asign.getHasta()))
+        if (
+                ahora.toLocalDate().isBefore(asign.getDesde())
+                        || ahora.toLocalDate().isAfter(asign.getHasta())
+        )
             throw new GestionHuertosException("La fecha no está en el rango de la asignación del cosechador a la cuadrilla");
+
         if (cuad.getPlanCosecha().getCuartel().getEstado() != EstadoFenologico.COSECHA)
             throw new GestionHuertosException("El cuartel no se encuentra en estado fenológico COSECHA");
+
         Pesaje pe = new Pesaje(id, cantidadKg, calidad, ahora, asign);
         pesajes.add(pe);
     }
@@ -264,48 +285,76 @@ public class ControladorProduccion {
     }
 
     public String[] listPropietarios() {
-        List<String> lista = new ArrayList<>();
-        for (Persona p : personas)
-            if (p instanceof Propietario pr) lista.add(String.format("%s; %s; %s; %s; %s; %d",
-                    pr.getRut(),
-                    pr.getNombre(),
-                    pr.getDireccion(),
-                    pr.getEmail(),
-                    pr.getDireccionComercial(),
-                    pr.getHuertos().length));
-        return lista.toArray(new String[0]);
+        String[] arr = personas.stream()
+                .filter(Propietario.class::isInstance)
+                .map(Propietario.class::cast)
+                .sorted(Comparator.comparing(Propietario::getNombre))
+                .map(p ->
+                    String.format("%s;%s;%s;%s;%s;%d",
+                            p.getRut().toString(),
+                            p.getNombre(),
+                            p.getDireccion(),
+                            p.getEmail(),
+                            p.getDireccionComercial(),
+                            p.getHuertos().length
+                    )
+                )
+                .toArray(String[]::new);
+        /*
+        Redundante, pero deja en claro que si no hay
+        supervisores se retorna un array de tamaño 0.
+        */
+        if(arr.length == 0)
+            return new String[0];
+        return arr;
     }
 
     public String[] listSupervisores() {
-        List<String> lista = new ArrayList<>();
+        String[] arr = personas.stream()
+                .filter(Supervisor.class::isInstance)
+                .map(Supervisor.class::cast)
 
-        for (Persona p : personas) {
-            if (p instanceof Supervisor s) {
-                String nomCuad = "N/A";
-                int psjImpago = 0;
-                double kg = 0;
+                //crea los String con los datos.
+                .map(s ->{
+                    String nomCuad = "N/A";
+                    int psjImpago = 0;
+                    double kg = 0;
 
-                if (s.getCuadrilla() != null) {
-                    Cuadrilla c = s.getCuadrilla();
-                    nomCuad = c.getNombre();
-                    kg = c.getKilosPesados();
-                    for (CosechadorAsignado cosAs : c.getAsignaciones()) {
-                        psjImpago += cosAs.getNroPesajesImpagos();
+                    if (s.getCuadrilla() != null) {
+                        Cuadrilla c = s.getCuadrilla();
+                        nomCuad = c.getNombre();
+                        kg = c.getKilosPesados();
+                        for (CosechadorAsignado cosAs : c.getAsignaciones()) {
+                            psjImpago += cosAs.getNroPesajesImpagos();
+                        }
                     }
-                }
 
-                lista.add(String.format(Locale.GERMANY, "%s; %s; %s; %s; %s; %s; %.1f; %d",
-                        s.getRut(),
-                        s.getNombre(),
-                        s.getDireccion(),
-                        s.getEmail(),
-                        s.getProfesion(),
-                        nomCuad,
-                        kg,
-                        psjImpago));
-            }
-        }
-        return lista.toArray(new String[0]);
+                    return String.format("%s;%s;%s;%s;%s;%s;%.1f;%d",
+                            s.getRut().toString(),
+                            s.getNombre(),
+                            s.getDireccion(),
+                            s.getEmail(),
+                            s.getProfesion(),
+                            nomCuad,
+                            kg,
+                            psjImpago
+                    );
+                })
+
+                //Ordena según los kilos de manera descendente.
+                .sorted(Comparator.comparing((String s) -> {
+                    String[] datos = s.split(";");
+                    return Float.parseFloat(datos[6]);
+                }).reversed()) //revierte el orden para que sea descendente.
+
+                .toArray(String[]::new); //transforma los datos en array.
+        /*
+        Si el array obtenido es de tamaño 0 se retorna un array de tamaño 0
+        [...] Sí, es más por claridad de código que por funcionalidad :v.
+        */
+        if(arr.length == 0)
+            return new String[0];
+        return arr;
     }
 
     public String[] listCosechadores() {

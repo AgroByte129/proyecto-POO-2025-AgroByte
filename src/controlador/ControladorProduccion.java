@@ -418,7 +418,8 @@ public class ControladorProduccion {
     }
 
     public String[] listPesajes() {
-        if (pesajes.isEmpty()) return new String[0];
+        if (pesajes.isEmpty())
+            return new String[0];
 
         return pesajes.stream()
                 .map(p -> {
@@ -475,21 +476,26 @@ public class ControladorProduccion {
     }
 
     public String[] listPagosPesajes() {
-        if (pagos.isEmpty()) return new String[0];
-        String[] out = new String[pagos.size()];
-        for (int i = 0; i < pagos.size(); i++) {
-            PagoPesaje pago = pagos.get(i);
-            Pesaje[] pesajes = pago.getPesajes();
-            Rut rut = pesajes[0].getCosechadorAsignado().getCosechador().getRut();
-            out[i] = String.format(Locale.GERMANY, "%d; %s; %,.2f; %d; %s",
-                    pago.getId(),
-                    pago.getFecha().format(FORMATO_F),
-                    pago.getMonto(),
-                    pesajes.length,
-                    rut
-            );
-        }
-        return out;
+        if (pagos.isEmpty())
+            return new String[0];
+
+        return pagos.stream()
+                .map(p -> {
+                    Pesaje[] pesajes = p.getPesajes();
+                    Rut rut = pesajes[0]
+                            .getCosechadorAsignado()
+                            .getCosechador()
+                            .getRut();
+
+                    return String.format("%d;%s;%,.2f;%d;%s",
+                            p.getId(),
+                            p.getFecha().format(FORMATO_F),
+                            p.getMonto(),
+                            pesajes.length,
+                            rut
+                            );
+                })
+                .toArray(String[]::new);
     }
 
     public void readSystemData() throws GestionHuertosException {

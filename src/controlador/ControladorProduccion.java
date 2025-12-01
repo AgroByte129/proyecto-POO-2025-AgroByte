@@ -38,6 +38,7 @@ public class ControladorProduccion {
     }
 
     public void createPropietario(Rut rut, String nombre, String email, String dirParticular, String dirComercial) throws GestionHuertosException {
+
         if (findPropietarioByRut(rut).isPresent())
             throw new GestionHuertosException("Ya existe un propietario con el rut indicado");
         personas.add(new Propietario(rut, nombre, email, dirParticular, dirComercial));
@@ -254,38 +255,44 @@ public class ControladorProduccion {
 
     public String[] listCultivos() {
         if (cultivos.isEmpty()) return new String[0];
-        String[] out = new String[cultivos.size()];
-        for (int i = 0; i < cultivos.size(); i++) {
-            Cultivo c = cultivos.get(i);//pa que tenga decimal el rendimiento :v
-            out[i] = String.format(Locale.GERMANY, "%d; %s; %s; %.1f; %d",
-                    c.getId(),
-                    c.getEspecie(),
-                    c.getVariedad(),
-                    c.getRendimiento(),
-                    c.getCuarteles().length);
-        }
-        return out;
+
+        return cultivos.stream()
+                .sorted(Comparator.comparing(Cultivo::getEspecie)
+                        .thenComparing(Cultivo::getVariedad)
+                )
+                .map(c -> {
+                    return String.format("%d;%s;%s;%.1f;%d",
+                            c.getId(),
+                            c.getEspecie(),
+                            c.getVariedad(),
+                            c.getRendimiento(),
+                            c.getCuarteles().length);
+                })
+                .toArray(String[]::new);
     }
 
     public String[] listHuertos() {
         if (huertos.isEmpty()) return new String[0];
-        String[] out = new String[huertos.size()];
 
-        for (int i = 0; i < huertos.size(); i++) {
-            Huerto h = huertos.get(i);
-            out[i] = String.format(Locale.GERMANY, "%s; %,.1f; %s; %s; %s; %d",
-                    h.getNombre(),
-                    h.getSuperficie(),
-                    h.getUbicacion(),
-                    h.getPropietario().getRut(),
-                    h.getPropietario().getNombre(),
-                    h.getCuarteles().length);
-        }
-        return out;
+        return huertos.stream()
+                .map(h -> {
+                    return String.format("%s;%,.1f;%s;%s;%s;%d",
+                            h.getNombre(),
+                            h.getSuperficie(),
+                            h.getUbicacion(),
+                            h.getPropietario().getRut().toString(),
+                            h.getPropietario().getNombre(),
+                            h.getCuarteles().length);
+                })
+                .toArray(String[]::new);
     }
 
     public String[] listPropietarios() {
-        String[] arr = personas.stream()
+        if(personas.stream()
+                .noneMatch(Propietario.class::isInstance))
+            return new String[0];
+
+        return personas.stream()
                 .filter(Propietario.class::isInstance)
                 .map(Propietario.class::cast)
                 .sorted(Comparator.comparing(Propietario::getNombre))
@@ -300,17 +307,14 @@ public class ControladorProduccion {
                     )
                 )
                 .toArray(String[]::new);
-        /*
-        Redundante, pero deja en claro que si no hay
-        supervisores se retorna un array de tamaño 0.
-        */
-        if(arr.length == 0)
-            return new String[0];
-        return arr;
     }
 
     public String[] listSupervisores() {
-        String[] arr = personas.stream()
+        if(personas.stream()
+                .noneMatch(Supervisor.class::isInstance))
+            return new String[0];
+
+        return personas.stream()
                 .filter(Supervisor.class::isInstance)
                 .map(Supervisor.class::cast)
 
@@ -348,17 +352,14 @@ public class ControladorProduccion {
                 }).reversed()) //revierte el orden para que sea descendente.
 
                 .toArray(String[]::new); //transforma los datos en array.
-        /*
-        Si el array obtenido es de tamaño 0 se retorna un array de tamaño 0
-        [...] Sí, es más por claridad de código que por funcionalidad :v.
-        */
-        if(arr.length == 0)
-            return new String[0];
-        return arr;
     }
 
     public String[] listCosechadores() {
-        String[] arr = personas.stream()
+        if(personas.stream()
+                .noneMatch(Cosechador.class::isInstance))
+            return new String[0];
+
+        return personas.stream()
                 .filter(Cosechador.class::isInstance)
                 .map(Cosechador.class::cast)
 
@@ -389,12 +390,8 @@ public class ControladorProduccion {
                     return Double.parseDouble(datos[6]);
                 }))
                 .toArray(String[]::new);
-
-        if(arr.length == 0)
-            return new String[0];
-        return arr;
     }
-
+    //Pendiente
     public String[] listPlanesCosecha() {
         if (planes.isEmpty()) return new String[0];
         String[] out = new String[planes.size()];
@@ -416,30 +413,36 @@ public class ControladorProduccion {
                     p.getCuadrillas().length,
                     p.getCumplimientoMeta());
         }
-        return out;
+        return planes.stream()
+                .sorted(Comparator.comparing(PlanCosecha::))
     }
 
     public String[] listPesajes() {
         if (pesajes.isEmpty()) return new String[0];
 
-        String[] out = new String[pesajes.size()];
+        return pesajes.stream()
+                .map(p -> {
+                    String rut = p.getCosechadorAsignado()
+                            .getCosechador()
+                            .getRut()
+                            .toString();
 
-        for (int i = 0; i < pesajes.size(); i++) {
-            Pesaje p = pesajes.get(i);
-            String rut = p.getCosechadorAsignado().getCosechador().getRut().toString();
-            String pago = p.isPagado() ? p.getPagoPesaje().getFecha().format(FORMATO_F) : "Impago";
+                    String pago = p.isPagado() ? p.getPagoPesaje()
+                            .getFecha()
+                            .format(FORMATO_F)
+                            : "Impago";
 
-            out[i] = String.format(Locale.GERMANY, "%d; %s; %s; %s; %,.1f; %,.1f; %,.1f; %s",
-                    p.getId(),
-                    p.getFechaHora().format(FORMATO_FH),
-                    rut,
-                    p.getCalidad(),
-                    p.getCantidadKg(),
-                    p.getPrecioKg(),
-                    p.getMonto(),
-                    pago);
-        }
-        return out;
+                    return String.format("%d;%s;%s;%s;%,.1f;%,.1f;%,.1f;%s",
+                            p.getId(),
+                            p.getFechaHora().format(FORMATO_FH),
+                            rut,
+                            p.getCalidad(),
+                            p.getCantidadKg(),
+                            p.getPrecioKg(),
+                            p.getMonto(),
+                            pago);
+                })
+                .toArray(String[]::new);
     }
 
     public String[] listPesajesCosechador(Rut rut) throws GestionHuertosException {

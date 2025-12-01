@@ -169,7 +169,7 @@ public class ControladorProduccion {
             ) {
                 asignado = true;
                 asign = ca;
-                break;d
+                break;
             }
         }
 

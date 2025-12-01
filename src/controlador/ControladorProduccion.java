@@ -414,7 +414,7 @@ public class ControladorProduccion {
                     p.getCumplimientoMeta());
         }
         return planes.stream()
-                .sorted(Comparator.comparing(PlanCosecha::))
+                .sorted(Comparator.comparing(PlanCosecha::))//no entendí cómo usar los criterios que pide :'v
     }
 
     public String[] listPesajes() {
@@ -446,31 +446,32 @@ public class ControladorProduccion {
     }
 
     public String[] listPesajesCosechador(Rut rut) throws GestionHuertosException {
-        Optional<Cosechador> cosechadorOpt = findCosechadorByRut(rut);
-        if (cosechadorOpt.isEmpty()) throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        Cosechador cos = findCosechadorByRut(rut)
+                .orElseThrow(
+                        () -> new GestionHuertosException("No existe un cosechador con el rut indicado")
+                );
 
-        Cosechador cos = cosechadorOpt.get();
+
         CosechadorAsignado[] asignaciones = cos.getAsignaciones();
         if (asignaciones.length == 0)
             throw new GestionHuertosException("El cosechador no está asignado a ninguna cuadrilla");
 
-        List<String> outList = new ArrayList<>();
-
-        for (CosechadorAsignado cosAs : asignaciones) {
-            for (Pesaje p : cosAs.getPesajes()) {
-                String pago = p.isPagado() ? p.getPagoPesaje().getFecha().format(FORMATO_F) : "Impago";
-                outList.add(String.format(Locale.GERMANY, "%d; %s; %s; %,.1f; %,.1f; %,.1f; %s",
-                        p.getId(),
-                        p.getFechaHora().format(FORMATO_FH),
-                        p.getCalidad(),
-                        p.getCantidadKg(),
-                        p.getPrecioKg(),
-                        p.getMonto(),
-                        pago
-                ));
-            }
-        }
-        return outList.toArray(new String[0]);
+        return Arrays.stream(asignaciones)
+                .map(CosechadorAsignado::getPesajes)
+                .flatMap(Arrays::stream)
+                .map(p -> {
+                    String pago = p.isPagado() ? p.getPagoPesaje().getFecha().format(FORMATO_F) : "Impago";
+                    return String.format( "%d;%s;%s;%,.1f;%,.1f;%,.1f;%s",
+                            p.getId(),
+                            p.getFechaHora().format(FORMATO_FH),
+                            p.getCalidad(),
+                            p.getCantidadKg(),
+                            p.getPrecioKg(),
+                            p.getMonto(),
+                            pago
+                    );
+                })
+                .toArray(String[]::new);
     }
 
     public String[] listPagosPesajes() {

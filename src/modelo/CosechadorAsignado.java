@@ -1,15 +1,15 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
-public class CosechadorAsignado {
+public class CosechadorAsignado implements Serializable {
     private LocalDate desde;
     private LocalDate hasta;
     private double metaKilos;
 
-    private Cuadrilla cuadrilla;   
+    private Cuadrilla cuadrilla;
     private Cosechador cosechador;
     private final ArrayList<Pesaje> pesajes = new ArrayList<>();
 

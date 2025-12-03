@@ -1,9 +1,10 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public class PagoPesaje {
+public class PagoPesaje implements Serializable {
     private int id;
     private LocalDate fecha;
 

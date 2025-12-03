@@ -2,10 +2,15 @@ package modelo;
 
 import utilidades.EstadoPlan;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
-public class PlanCosecha {
+import utilidades.GestionHuertosException;
+
+
+public class PlanCosecha implements Serializable {
     private int id;
     private String nombre;
     private LocalDate inicio;
@@ -18,8 +23,7 @@ public class PlanCosecha {
     private Cuartel cuartel;
     private ArrayList<Cuadrilla> cuadrillas;
 
-    public PlanCosecha(int id, String nom, LocalDate ini,
-                       LocalDate finEst, double meta, double precio, Cuartel cuartel){
+    public PlanCosecha(int id, String nom, LocalDate ini, LocalDate finEst, double meta, double precio, Cuartel cuartel) {
         this.id = id;
         this.nombre = nom;
         this.inicio = ini;
@@ -33,68 +37,110 @@ public class PlanCosecha {
         this.cuartel.addPlanCosecha(this);
     }
 
-    public int getId() {return id;}
-    public String getNombre() {return nombre;}
-    public LocalDate getInicio() {return inicio;}
-    public LocalDate getFinEstimado() {return finEstimado;}
-    public LocalDate getFinReal() {return finReal;}
-    public void setFinReal(LocalDate finReal) {this.finReal = finReal;}
-    public double getMetaKilos() {return metaKilos;}
-    public void setMetaKilos(double metaKilos) {this.metaKilos = metaKilos;}
-    public double getPrecioBaseKilo() {return precioBaseKilo;}
-    public void setPrecioBaseKilo(double precioBaseKilo) {this.precioBaseKilo = precioBaseKilo;}
-    public EstadoPlan getEstado() {return estado;}
-    public void setEstado(EstadoPlan estado) {this.estado = estado;}
+    public int getId() {
+        return id;
+    }
 
-    public double getCumplimientoMeta(){
-        double kilos=0.0;
+    public String getNombre() {
+        return nombre;
+    }
+
+    public LocalDate getInicio() {
+        return inicio;
+    }
+
+    public LocalDate getFinEstimado() {
+        return finEstimado;
+    }
+
+    public LocalDate getFinReal() {
+        return finReal;
+    }
+
+    public void setFinReal(LocalDate finReal) {
+        this.finReal = finReal;
+    }
+
+    public double getMetaKilos() {
+        return metaKilos;
+    }
+
+    public void setMetaKilos(double metaKilos) {
+        this.metaKilos = metaKilos;
+    }
+
+    public double getPrecioBaseKilo() {
+        return precioBaseKilo;
+    }
+
+    public void setPrecioBaseKilo(double precioBaseKilo) {
+        this.precioBaseKilo = precioBaseKilo;
+    }
+
+    public EstadoPlan getEstado() {
+        return estado;
+    }
+
+    public boolean setEstado(EstadoPlan estado) {
+        switch(this.estado){
+            case PLANIFICADO ->{
+                if(estado == EstadoPlan.CANCELADO || estado == EstadoPlan.EJECUTANDO) {
+                    this.estado = estado;
+                    return true;
+                }
+            }
+            case EJECUTANDO -> {
+                if(estado == EstadoPlan.CANCELADO || estado == EstadoPlan.CERRADO) {
+                    this.estado = estado;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public double getCumplimientoMeta() {
+        double kilos = 0.0;
 
         for (Cuadrilla cuad : cuadrillas) {
-
             for (CosechadorAsignado asign : cuad.getAsignaciones()) {
-
                 for (Pesaje p : asign.getPesajes()) {
                     kilos += p.getCantidadKg();
                 }
-
-            }
-
-        }
-
-        if (metaKilos <= 0) {
-            return 0;
-        }
-
-        return (kilos / metaKilos) * 100.0;
-    }
-
-    public Cuartel getCuartel() {return cuartel;}
-
-    private Cuadrilla findCuadrillaById(int idCuad) {
-        for (Cuadrilla c : cuadrillas) {
-            if (c.getId() == idCuad) {
-                return c;
             }
         }
-        return null;
+
+        if (metaKilos <= 0) return 0;
+        return Math.min((kilos / metaKilos) * 100.0, 100.0);
     }
 
-    public boolean addCuadrilla(int idCuad, String nomCuadrilla, Supervisor supervisor){
-        if (findCuadrillaById(idCuad) != null) {
-            return false;
+    public Cuartel getCuartel() {
+        return cuartel;
+    }
+
+    public void addCuadrilla(int idCuad, String nomCuadrilla, Supervisor supervisor) throws GestionHuertosException {
+        if (findCuadrillaById(idCuad).isPresent()) {
+            throw new GestionHuertosException("Ya existe en el plan una cuadrilla con id indicado");
         }
         Cuadrilla nueva = new Cuadrilla(idCuad, nomCuadrilla, supervisor, this);
         cuadrillas.add(nueva);
-        return true;
     }
-    public boolean addCosechadorToCuadrilla(int idCuad, LocalDate fIni, LocalDate fFin, double meta, Cosechador cos){
-        Cuadrilla c = findCuadrillaById(idCuad);
-        if (c == null) {
-            return false;
-        }
-        return c.addCosechador(fIni, fFin, meta, cos);
+
+    public void addCosechadorToCuadrilla(int idCuad, LocalDate fIni, LocalDate fFin, double meta, Cosechador cos) throws GestionHuertosException {
+        Optional<Cuadrilla> c = findCuadrillaById(idCuad);
+        if(c.isEmpty()) throw new GestionHuertosException("No existe una cuadrilla en el plan con el id indicado");
+        c.get().addCosechador(fIni, fFin, meta, cos);
     }
+
     public Cuadrilla[] getCuadrillas() {
         return cuadrillas.toArray(new Cuadrilla[0]);
     }
+
+    private Optional<Cuadrilla> findCuadrillaById(int idCuad) {
+        for (Cuadrilla c : cuadrillas) {
+            if (c.getId() == idCuad) return Optional.of(c);
+        }
+        return Optional.empty();
+    }
+
 }

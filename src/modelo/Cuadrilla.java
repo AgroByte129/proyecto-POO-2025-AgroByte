@@ -1,12 +1,16 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
-public class Cuadrilla {
+import utilidades.GestionHuertosException;
+
+public class Cuadrilla implements Serializable {
     private int id;
     private String nombre;
-    private static int maximoCosechadores;
+    private static int maximoCosechadores = 5;
 
     private Supervisor supervisor;
     private PlanCosecha planCosecha;
@@ -26,14 +30,19 @@ public class Cuadrilla {
     public Supervisor getSupervisor() { return supervisor; }
     public PlanCosecha getPlanCosecha() { return planCosecha; }
 
-    public boolean addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos) {
+    public void addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos)
+            throws GestionHuertosException {
+
         if (asignaciones.size() >= maximoCosechadores) {
-            return false;
+            throw new GestionHuertosException("No es posible agregar el nuevo cosechador porque se alcanzó el máximo permitido.");
         }
-        if(findCosechadorByRut(cos) != null) {return false;}
+
+        if (findCosechadorByRut(cos).isPresent()) {
+            throw new GestionHuertosException("Ya existe un cosechador con el mismo rut en esta cuadrilla.");
+        }
+
         CosechadorAsignado nueva = new CosechadorAsignado(fIni, fFin, meta, this, cos);
         asignaciones.add(nueva);
-        return true;
     }
     public Cosechador[] getCosechadores() {
         Cosechador[] arr = new Cosechador[asignaciones.size()];
@@ -42,11 +51,17 @@ public class Cuadrilla {
         }
         return arr;
     }
+    public double getKilosPesados() {
+        double total = 0;
 
-    public double getKilosPesados(){
+        for(CosechadorAsignado cosAs: asignaciones){
+            for(Pesaje p: cosAs.getPesajes()){
+                total += p.getCantidadKg();
+            }
+        }
 
+        return total;
     }
-
     public CosechadorAsignado[] getAsignaciones() {
         return asignaciones.toArray(new CosechadorAsignado[0]);
     }
@@ -54,13 +69,13 @@ public class Cuadrilla {
     public static int getMaximoCosechadores() { return maximoCosechadores; }
     public static void setMaximoCosechadores(int max) { maximoCosechadores = max; }
 
-    private CosechadorAsignado findCosechadorByRut(Cosechador cos) {
+    private Optional<CosechadorAsignado> findCosechadorByRut(Cosechador cos) {
         for (CosechadorAsignado ca : asignaciones) {
             if (ca.getCosechador().getRut().equals(cos.getRut())) {
-                return ca;
+                return Optional.of(ca);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
 }

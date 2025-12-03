@@ -1,16 +1,24 @@
 package controlador;
 
 import modelo.*;
+import persistencia.GestionHuertosIO;
 import utilidades.*;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-//comentario
+
+//comentario de confirmacion para icons
 public class ControladorProduccion {
     private static ControladorProduccion instance;
+    private static final GestionHuertosIO iO = GestionHuertosIO.getInstance();
+
+    //Formato de fechas
+    private static final DateTimeFormatter FORMATO_FH = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    private static final DateTimeFormatter FORMATO_F = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final ArrayList<Persona> personas = new ArrayList<>();
     private final ArrayList<Huerto> huertos = new ArrayList<>();
@@ -19,7 +27,8 @@ public class ControladorProduccion {
     private final ArrayList<Pesaje> pesajes = new ArrayList<>();
     private final ArrayList<PagoPesaje> pagos = new ArrayList<>();
 
-    private ControladorProduccion() {}
+    private ControladorProduccion() {
+    }
 
     public static ControladorProduccion getInstance() {
         if (instance == null) {
@@ -28,151 +37,237 @@ public class ControladorProduccion {
         return instance;
     }
 
-    public void createPropietario(Rut rut, String nombre, String email, String dirParticular, String dirComercial) throws GestionHuertosException {
-        if (findPropietarioByRut(rut).isPresent()) throw new GestionHuertosException("Ya existe un propietario con el rut indicado");
+    public void createPropietario(Rut rut, String nombre, String email,
+                                  String dirParticular, String dirComercial) throws GestionHuertosException {
+
+        if (findPropietarioByRut(rut).isPresent())
+            throw new GestionHuertosException("Ya existe un propietario con el rut indicado");
         personas.add(new Propietario(rut, nombre, email, dirParticular, dirComercial));
     }
 
-    public void createSupervisor(Rut rut, String nombre, String email, String direccion, String profesion) throws GestionHuertosException {
-        if (findSupervisorByRut(rut).isPresent()) throw new GestionHuertosException("Ya existe un supervisor con el rut indicado");
+    public void createSupervisor(Rut rut, String nombre, String email,
+                                 String direccion, String profesion) throws GestionHuertosException {
+
+        if (findSupervisorByRut(rut).isPresent())
+            throw new GestionHuertosException("Ya existe un supervisor con el rut indicado");
         personas.add(new Supervisor(rut, nombre, email, direccion, profesion));
     }
 
-    public void createCosechador(Rut rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) throws GestionHuertosException {
-        if (findCosechadorByRut(rut).isPresent()) throw new GestionHuertosException("Ya existe un cosechador con el rut indicado");
+    public void createCosechador(Rut rut, String nombre, String email, String direccion,
+                                 LocalDate fechaNacimiento) throws GestionHuertosException {
+
+        if (findCosechadorByRut(rut).isPresent())
+            throw new GestionHuertosException("Ya existe un cosechador con el rut indicado");
         personas.add(new Cosechador(rut, nombre, email, direccion, fechaNacimiento));
     }
 
-    public void createCultivo(int id, String especie, String variedad, float rendimiento) throws GestionHuertosException {
-        if (findCultivoById(id).isPresent()) throw new GestionHuertosException("Ya existe un cultivo con el id indicado");
+    public void createCultivo(int id, String especie, String variedad,
+                              float rendimiento) throws GestionHuertosException {
+
+        if (findCultivoById(id).isPresent())
+            throw new GestionHuertosException("Ya existe un cultivo con el id indicado");
+
         cultivos.add(new Cultivo(id, especie, variedad, rendimiento));
     }
 
-    public void createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario) throws GestionHuertosException {
-        if (findHuertoByNombre(nombre).isPresent()) throw new GestionHuertosException("Ya existe un huerto con el nombre indicado");
+    public void createHuerto(String nombre, float superficie, String ubicacion,
+                             Rut rutPropietario) throws GestionHuertosException {
+
+        if (findHuertoByNombre(nombre).isPresent())
+            throw new GestionHuertosException("Ya existe un huerto con el nombre indicado");
+
         Optional<Propietario> p = findPropietarioByRut(rutPropietario);
         if (p.isEmpty()) throw new GestionHuertosException("No existe un propietario con el rut indicado");
+
         huertos.add(new Huerto(nombre, superficie, ubicacion, p.get()));
     }
 
-    public void addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) throws GestionHuertosException {
+    public void addCuartelToHuerto(String nombreHuerto, int idCuartel,
+                                   float superficie, int idCultivo) throws GestionHuertosException {
+
         Optional<Huerto> h = findHuertoByNombre(nombreHuerto);
-        if (h.isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+        if (h.isEmpty())
+            throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+
         Optional<Cultivo> c = findCultivoById(idCultivo);
-        if (c.isEmpty()) throw new GestionHuertosException("No existe un cultivo con el id indicado");
+        if (c.isEmpty())
+            throw new GestionHuertosException("No existe un cultivo con el id indicado");
+
         boolean ok = h.get().addCuartel(idCuartel, superficie, c.get());
-        if (!ok) throw new GestionHuertosException("No fue posible agregar el cuartel (duplicado o superficie excede)");
+        if (!ok)
+            throw new GestionHuertosException("No fue posible agregar el cuartel (duplicado o superficie excede)");
     }
 
-    public void changeEstadoCuartel(String nombreHuerto, int idCuartel, EstadoFenologico estado) throws GestionHuertosException {
+    public void changeEstadoCuartel(String nombreHuerto, int idCuartel,
+                                    EstadoFenologico estado) throws GestionHuertosException {
+
         Optional<Huerto> h = findHuertoByNombre(nombreHuerto);
-        if (h.isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+        if (h.isEmpty())
+            throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+
         Cuartel c = h.get().getCuartel(idCuartel);
-        if (c == null) throw new GestionHuertosException("No existe el cuartel con el id indicado");
-        c.setEstado(estado);
+        if (c == null)
+            throw new GestionHuertosException("No existe el cuartel con el id indicado");
+
+        if (!c.setEstado(estado))
+            throw new GestionHuertosException("El nuevo estado del cuartel no es compatible con el estado actual");
     }
 
-    public void createPlanCosecha(int idPlan, String nom, LocalDate inicio, LocalDate finEstim, double meta, double precioBase, String nomHuerto, int idCuartel) throws GestionHuertosException {
-        if (findPlanById(idPlan).isPresent()) throw new GestionHuertosException("Ya existe un plan con el id indicado");
+    public void createPlanCosecha(int idPlan, String nom, LocalDate inicio,
+                                  LocalDate finEstim, double meta, double precioBase,
+                                  String nomHuerto, int idCuartel) throws GestionHuertosException {
+
+        if (findPlanById(idPlan).isPresent())
+            throw new GestionHuertosException("Ya existe un plan con el id indicado");
+
         Optional<Huerto> h = findHuertoByNombre(nomHuerto);
-        if (h.isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+        if (h.isEmpty())
+            throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+
         Cuartel c = h.get().getCuartel(idCuartel);
-        if (c == null) throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado");
-        if (!finEstim.isAfter(inicio)) throw new GestionHuertosException("La fecha de término debe ser posterior a la de inicio");
+        if (c == null)
+            throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado");
+
+        if (!finEstim.isAfter(inicio))
+            throw new GestionHuertosException("La fecha de término debe ser posterior a la de inicio");
+
         PlanCosecha plan = new PlanCosecha(idPlan, nom, inicio, finEstim, meta, precioBase, c);
         planes.add(plan);
     }
 
     public void changeEstadoPlan(int idPlan, EstadoPlan estado) throws GestionHuertosException {
-        Optional<PlanCosecha> p = findPlanById(idPlan);
-        if (p.isEmpty()) throw new GestionHuertosException("No existe un plan con el id indicado");
-        p.get().setEstado(estado);
+        Optional<PlanCosecha> pOp = findPlanById(idPlan);
+        if (pOp.isEmpty())
+            throw new GestionHuertosException("No existe un plan con el id indicado");
+
+        PlanCosecha p = pOp.get();
+        if (!p.setEstado(estado))
+            throw new GestionHuertosException("Cambio de estado no válido. Estado actual " + p.getEstado());
     }
 
-    public void addCuadrillaToPlan(int idPlan, int idCuad, String nomCuad, Rut rutSupervisor) throws GestionHuertosException {
+    public void addCuadrillaToPlan(int idPlan, int idCuad, String nomCuad,
+                                   Rut rutSupervisor) throws GestionHuertosException {
+
         Optional<PlanCosecha> p = findPlanById(idPlan);
-        if (p.isEmpty()) throw new GestionHuertosException("No existe un plan con el id indicado");
+        if (p.isEmpty())
+            throw new GestionHuertosException("No existe un plan con el id indicado");
+
         Optional<Supervisor> s = findSupervisorByRut(rutSupervisor);
-        if (s.isEmpty()) throw new GestionHuertosException("No existe un supervisor con el rut indicado");
-        if (s.get().getCuadrilla() != null) throw new GestionHuertosException("El supervisor ya tiene asignada una cuadrilla a su cargo");
-        boolean ok = p.get().addCuadrilla(idCuad, nomCuad, s.get());
-        if (!ok) throw new GestionHuertosException("No fue posible agregar la cuadrilla (duplicado)");
+        if (s.isEmpty())
+            throw new GestionHuertosException("No existe un supervisor con el rut indicado");
+
+        if (s.get().getCuadrilla() != null)
+            throw new GestionHuertosException("El supervisor ya tiene asignada una cuadrilla a su cargo");
+
+        p.get().addCuadrilla(idCuad, nomCuad, s.get()); //una vez vistas todas las posibles excepciones, se realiza la asignación
     }
 
-    public void addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fInicio, LocalDate fFin, double meta, Rut rutCosechador) throws GestionHuertosException {
+    public void addCosechadorToCuadrilla(int idPlan, int idCuadrilla,
+                                         LocalDate fInicio, LocalDate fFin,
+                                         double meta, Rut rutCosechador) throws GestionHuertosException {
+
         Optional<PlanCosecha> p = findPlanById(idPlan);
-        if (p.isEmpty()) throw new GestionHuertosException("No existe un plan con el id indicado");
+        if (p.isEmpty())
+            throw new GestionHuertosException("No existe un plan con el id indicado");
+
         Optional<Cosechador> c = findCosechadorByRut(rutCosechador);
-        if (c.isEmpty()) throw new GestionHuertosException("No existe un cosechador con el rut indicado");
-        if (!fFin.isAfter(fInicio)) throw new GestionHuertosException("La fecha de inicio debe ser anterior a la fecha de término");
+        if (c.isEmpty())
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+
+        if (!fFin.isAfter(fInicio))
+            throw new GestionHuertosException("La fecha de inicio debe ser anterior a la fecha de término");
+
         PlanCosecha plan = p.get();
         LocalDate finPlan = (plan.getFinReal() != null) ? plan.getFinReal() : plan.getFinEstimado();
-        if (fInicio.isBefore(plan.getInicio()) || fFin.isAfter(finPlan)) throw new GestionHuertosException("El rango de fechas de asignación del cosechador a la cuadrilla está fuera del rango de fechas del plan");
-        boolean ok = plan.addCosechadorToCuadrilla(idCuadrilla, fInicio, fFin, meta, c.get());
-        if (!ok) throw new GestionHuertosException("No fue posible asignar el cosechador a la cuadrilla (duplicado o límite alcanzado)");
+
+        if (fInicio.isBefore(plan.getInicio()) || fFin.isAfter(finPlan))
+            throw new GestionHuertosException(
+                    "El rango de fechas de asignación del cosechador" +
+                            "\n a la cuadrilla está fuera del rango de fechas del plan"
+            );
+        plan.addCosechadorToCuadrilla(idCuadrilla, fInicio, fFin, meta, c.get());
     }
 
     public void addPesaje(int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad) throws GestionHuertosException {
-        if (findPesajeById(id).isPresent()) throw new GestionHuertosException("Ya existe un pesaje con id indicado");
+        if (findPesajeById(id).isPresent())
+            throw new GestionHuertosException("Ya existe un pesaje con id indicado");
+
         Optional<Cosechador> cosechadorOpt = findCosechadorByRut(rutCosechador);
-        if (cosechadorOpt.isEmpty()) throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        if (cosechadorOpt.isEmpty())
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+
         Optional<PlanCosecha> planOpt = findPlanById(idPlan);
-        if (planOpt.isEmpty()) throw new GestionHuertosException("No existe un plan con el id indicado");
+        if (planOpt.isEmpty())
+            throw new GestionHuertosException("No existe un plan con el id indicado");
         PlanCosecha plan = planOpt.get();
-        if (plan.getEstado() != EstadoPlan.EJECUTANDO) throw new GestionHuertosException("El plan no se encuentra en estado EJECUTANDO");
+
+        if (plan.getEstado() != EstadoPlan.EJECUTANDO)
+            throw new GestionHuertosException("El plan no se encuentra en estado EJECUTANDO");
+
         Cuadrilla cuad = null;
         for (Cuadrilla q : plan.getCuadrillas()) {
-            if (q.getId() == idCuadrilla) { cuad = q; break; }
+            if (q.getId() == idCuadrilla) {
+                cuad = q;
+                break;
+            }
         }
-        if (cuad == null) throw new GestionHuertosException("No existe una cuadrilla con el id indicado en el plan");
+
+        if (cuad == null)
+            throw new GestionHuertosException("No existe una cuadrilla con el id indicado en el plan");
+
         boolean asignado = false;
         CosechadorAsignado asign = null;
         for (CosechadorAsignado ca : cuad.getAsignaciones()) {
-            if (ca.getCosechador().getRut().toString().equals(rutCosechador.toString())) {
+            if (ca.getCosechador()
+                    .getRut()
+                    .toString()
+                    .equals(rutCosechador.toString())
+            ) {
                 asignado = true;
                 asign = ca;
                 break;
             }
         }
-        if (!asignado) throw new GestionHuertosException("El cosechador no tiene una asignación a la cuadrilla indicada en el plan");
+
+        if (!asignado)
+            throw new GestionHuertosException("El cosechador no tiene una asignación a la cuadrilla indicada en el plan");
+
         LocalDateTime ahora = LocalDateTime.now();
-        if (ahora.toLocalDate().isBefore(asign.getDesde()) || ahora.toLocalDate().isAfter(asign.getHasta())) throw new GestionHuertosException("La fecha no está en el rango de la asignación del cosechador a la cuadrilla");
-        if (cuad.getPlanCosecha().getCuartel().getEstado() != EstadoFenologico.COSECHA) throw new GestionHuertosException("El cuartel no se encuentra en estado fenológico COSECHA");
+        if (
+                ahora.toLocalDate().isBefore(asign.getDesde())
+                        || ahora.toLocalDate().isAfter(asign.getHasta())
+        )
+            throw new GestionHuertosException("La fecha no está en el rango de la asignación del cosechador a la cuadrilla");
+
+        if (cuad.getPlanCosecha().getCuartel().getEstado() != EstadoFenologico.COSECHA)
+            throw new GestionHuertosException("El cuartel no se encuentra en estado fenológico COSECHA");
+
         Pesaje pe = new Pesaje(id, cantidadKg, calidad, ahora, asign);
         pesajes.add(pe);
     }
 
     public double addPagoPesaje(int id, Rut rutCosechador) throws GestionHuertosException {
-
-        if (findPagoPesajeById(id).isPresent()) {
-            throw new GestionHuertosException("Ya existe un pago con ese id.");
-        }
+        if (findPagoPesajeById(id).isPresent())
+            throw new GestionHuertosException("Ya existe un pago con ese id");
 
         Optional<Cosechador> cOp = findCosechadorByRut(rutCosechador);
-        if (cOp.isEmpty()) {
-            throw new GestionHuertosException("No existe un cosechador con el RUT indicado.");
-        }
+        if (cOp.isEmpty())
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
 
         List<Pesaje> impagos = new ArrayList<>();
         for (Pesaje p : pesajes) {
             if (p.getCosechadorAsignado() != null &&
-                    p.getCosechadorAsignado().getCosechador().getRut().equals(rutCosechador) &&
-                    !p.isPagado())
-            {
+                    p.getCosechadorAsignado().getCosechador().getRut().toString().equals(rutCosechador.toString()) &&
+                    !p.isPagado()) {
                 impagos.add(p);
             }
-        }
-
-        if (impagos.isEmpty()) {
-            throw new GestionHuertosException("El cosechador no tiene pesajes pendientes de pago.");
         }
 
         LocalDate hoy = LocalDate.now();
         PagoPesaje nuevoPago = new PagoPesaje(id, hoy, impagos);
 
-        if (nuevoPago.getFecha().isAfter(hoy)) {
-            throw new GestionHuertosException("La fecha del pago no puede ser posterior a la actual.");
-        }
+        if (nuevoPago.getFecha().isAfter(hoy))
+            throw new GestionHuertosException("La fecha del pago no puede ser posterior a la actual");
 
         pagos.add(nuevoPago);
 
@@ -183,45 +278,175 @@ public class ControladorProduccion {
         return nuevoPago.getMonto();
     }
 
+    public String[] getCuadrillasDeCosechadorDePlan(Rut rutCosechador) throws GestionHuertosException{
+        Cosechador cos = findCosechadorByRut(rutCosechador)
+                .orElseThrow(() -> new GestionHuertosException("No existe un cosechador con ese Rut."));
+
+        LocalDate hoy = LocalDate.now();
+        Cuadrilla[] cuadrillas = Arrays.stream(cos.getAsignaciones())
+                .filter(cosAs ->
+                        !cosAs.getDesde().isAfter(hoy) &&
+                                !cosAs.getHasta().isBefore(hoy)
+                )
+                .map(CosechadorAsignado::getCuadrilla)
+                .filter(c -> c.getPlanCosecha().getEstado() == EstadoPlan.EJECUTANDO)
+                .toArray(Cuadrilla[]::new);
+
+        if(cuadrillas.length == 0) throw new GestionHuertosException(
+                "El cosechador no tiene cuadrillas asignadas" +
+                "\n a las que se le puedan agregar pesajes"
+        );
+
+        return Arrays.stream(cuadrillas)
+                .map(c -> String.format(
+                        "%s;%s;%s",
+                        c.getId(),
+                        c.getNombre(),
+                        c.getPlanCosecha().getId()
+                        )
+                )
+                .toArray(String[]::new);
+    }
 
     public String[] listCultivos() {
         if (cultivos.isEmpty()) return new String[0];
-        String[] out = new String[cultivos.size()];
-        for (int i = 0; i < cultivos.size(); i++) {
-            Cultivo c = cultivos.get(i);
-            out[i] = String.format("%d; %s; %s; %.1f; %d", c.getId(), c.getEspecie(), c.getVariedad(), c.getRendimiento(), c.getCuarteles().length);
-        }
-        return out;
+
+        return cultivos.stream()
+                .sorted(Comparator.comparing(Cultivo::getEspecie)
+                        .thenComparing(Cultivo::getVariedad)
+                )
+                .map(c -> {
+                    return String.format("%d;%s;%s;%.1f;%d",
+                            c.getId(),
+                            c.getEspecie(),
+                            c.getVariedad(),
+                            c.getRendimiento(),
+                            c.getCuarteles().length);
+                })
+                .toArray(String[]::new);
     }
 
     public String[] listHuertos() {
         if (huertos.isEmpty()) return new String[0];
-        String[] out = new String[huertos.size()];
-        for (int i = 0; i < huertos.size(); i++) {
-            Huerto h = huertos.get(i);
-            out[i] = String.format("%s; %.1f; %s; %s; %s; %d", h.getNombre(), h.getSuperficie(), h.getUbicacion(), h.getPropietario().getRut(), h.getPropietario().getNombre(), h.getCuarteles().length);
-        }
-        return out;
+
+        return huertos.stream()
+                .map(h -> {
+                    return String.format("%s;%,.1f;%s;%s;%s;%d",
+                            h.getNombre(),
+                            h.getSuperficie(),
+                            h.getUbicacion(),
+                            h.getPropietario().getRut().toString(),
+                            h.getPropietario().getNombre(),
+                            h.getCuarteles().length);
+                })
+                .toArray(String[]::new);
     }
 
     public String[] listPropietarios() {
-        List<String> lista = new ArrayList<>();
-        for (Persona p : personas) if (p instanceof Propietario pr) lista.add(String.format("%s; %s; %s; %s; %s; %d", pr.getRut(), pr.getNombre(), pr.getDireccion(), pr.getEmail(), pr.getDireccionComercial(), pr.getHuertos().length));
-        return lista.toArray(new String[0]);
+        if(personas.stream()
+                .noneMatch(Propietario.class::isInstance))
+            return new String[0];
+
+        return personas.stream()
+                .filter(Propietario.class::isInstance)
+                .map(Propietario.class::cast)
+                .sorted(Comparator.comparing(Propietario::getNombre))
+                .map(p ->
+                    String.format("%s;%s;%s;%s;%s;%d",
+                            p.getRut().toString(),
+                            p.getNombre(),
+                            p.getDireccion(),
+                            p.getEmail(),
+                            p.getDireccionComercial(),
+                            p.getHuertos().length
+                    )
+                )
+                .toArray(String[]::new);
     }
 
     public String[] listSupervisores() {
-        List<String> lista = new ArrayList<>();
-        for (Persona p : personas) if (p instanceof Supervisor s) lista.add(String.format("%s; %s; %s; %s; %s; %s", s.getRut(), s.getNombre(), s.getDireccion(), s.getEmail(), s.getProfesion(), (s.getCuadrilla() == null ? "S/A" : s.getCuadrilla().getNombre())));
-        return lista.toArray(new String[0]);
+        if(personas.stream()
+                .noneMatch(Supervisor.class::isInstance))
+            return new String[0];
+
+        return personas.stream()
+                .filter(Supervisor.class::isInstance)
+                .map(Supervisor.class::cast)
+
+                //crea los String con los datos.
+                .map(s ->{
+                    String nomCuad = "N/A";
+                    int psjImpago = 0;
+                    double kg = 0;
+
+                    if (s.getCuadrilla() != null) {
+                        Cuadrilla c = s.getCuadrilla();
+                        nomCuad = c.getNombre();
+                        kg = c.getKilosPesados();
+                        for (CosechadorAsignado cosAs : c.getAsignaciones()) {
+                            psjImpago += cosAs.getNroPesajesImpagos();
+                        }
+                    }
+
+                    return String.format("%s;%s;%s;%s;%s;%s;%.1f;%d",
+                            s.getRut().toString(),
+                            s.getNombre(),
+                            s.getDireccion(),
+                            s.getEmail(),
+                            s.getProfesion(),
+                            nomCuad,
+                            kg,
+                            psjImpago
+                    );
+                })
+
+                //Ordena según los kilos de manera descendente.
+                .sorted(Comparator.comparingDouble((String s) -> {
+                    String[] datos = s.split(";");
+                    return Double.parseDouble(datos[6]);
+                }).reversed()) //revierte el orden para que sea descendente.
+
+                .toArray(String[]::new); //transforma los datos en array.
     }
 
     public String[] listCosechadores() {
-        List<String> lista = new ArrayList<>();
-        for (Persona p : personas) if (p instanceof Cosechador c) lista.add(String.format("%s; %s; %s; %s; %s; %d", c.getRut(), c.getNombre(), c.getDireccion(), c.getEmail(), c.getFechaNacimiento(), c.getCuadrillas().length));
-        return lista.toArray(new String[0]);
-    }
+        if(personas.stream()
+                .noneMatch(Cosechador.class::isInstance))
+            return new String[0];
 
+        return personas.stream()
+                .filter(Cosechador.class::isInstance)
+                .map(Cosechador.class::cast)
+
+                .map(c -> {
+                    double montoImpago = 0;
+                    double montoPagado = 0;
+
+                    CosechadorAsignado[] asignaciones = c.getAsignaciones();
+                    for (CosechadorAsignado asignado : asignaciones) {
+                        montoImpago += asignado.getMontoPesajesImpagos();
+                        montoPagado += asignado.getMontoPesajesPagados();
+                    }
+
+                    return String.format("%s;%s;%s;%s;%s;%d;%,.1f;%,.1f",
+                            c.getRut(),
+                            c.getNombre(),
+                            c.getDireccion(),
+                            c.getEmail(),
+                            c.getFechaNacimiento().format(FORMATO_F),
+                            c.getCuadrillas().length,
+                            montoImpago,
+                            montoPagado
+                    );
+                })
+
+                .sorted(Comparator.comparing((String s) ->{
+                    String[] datos = s.split(";");
+                    return Double.parseDouble(datos[6]);
+                }))
+                .toArray(String[]::new);
+    }
+    //Pendiente
     public String[] listPlanesCosecha() {
         if (planes.isEmpty()) return new String[0];
         String[] out = new String[planes.size()];
@@ -230,224 +455,376 @@ public class ControladorProduccion {
             LocalDate finPlan = (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
             Cuartel c = p.getCuartel();
             Huerto h = c.getHuerto();
-            out[i] = String.format("%d; %s; %s; %s; %.1f; %.1f; %s; %d; %s; %d", p.getId(), p.getNombre(), p.getInicio(), finPlan, p.getMetaKilos(), p.getPrecioBaseKilo(), p.getEstado(), c.getId(), h.getNombre(), p.getCuadrillas().length);
+            out[i] = String.format(Locale.GERMANY, "%d; %s; %s; %s; %,.1f; %,.1f; %s; %d; %s; %d; %.1f",
+                    p.getId(),
+                    p.getNombre(),
+                    p.getInicio().format(FORMATO_F),
+                    finPlan.format(FORMATO_F),
+                    p.getMetaKilos(),
+                    p.getPrecioBaseKilo(),
+                    p.getEstado(),
+                    c.getId(),
+                    h.getNombre(),
+                    p.getCuadrillas().length,
+                    p.getCumplimientoMeta());
         }
-        return out;
+        return planes.stream()
+                .sorted(Comparator.comparing(PlanCosecha::))//no entendí cómo usar los criterios que pide :'v
     }
 
     public String[] listPesajes() {
-        if (pesajes.isEmpty()) return new String[0];
-        String[] out = new String[pesajes.size()];
-        for (int i = 0; i < pesajes.size(); i++) {
-            Pesaje p = pesajes.get(i);
-            Cuadrilla cuad = (p.getCosechadorAsignado() != null) ? p.getCosechadorAsignado().getCuadrilla() : null;
-            int idPlan = (cuad != null && cuad.getPlanCosecha() != null) ? cuad.getPlanCosecha().getId() : -1;
-            int idCuad = (cuad != null) ? cuad.getId() : -1;
-            String rut = (p.getCosechadorAsignado() != null) ? p.getCosechadorAsignado().getCosechador().getRut().toString() : "N/A";
-            out[i] = String.format("%d; %s; %.2f; %s; %d; %d; %s; %.2f", p.getId(), p.getFechaHora(), p.getCantidadKg(), p.getCalidad(), idPlan, idCuad, rut, p.getMonto());
-        }
-        return out;
+        if (pesajes.isEmpty())
+            return new String[0];
+
+        return pesajes.stream()
+                .map(p -> {
+                    String rut = p.getCosechadorAsignado()
+                            .getCosechador()
+                            .getRut()
+                            .toString();
+
+                    String pago = p.isPagado() ? p.getPagoPesaje()
+                            .getFecha()
+                            .format(FORMATO_F)
+                            : "Impago";
+
+                    return String.format("%d;%s;%s;%s;%,.1f;%,.1f;%,.1f;%s",
+                            p.getId(),
+                            p.getFechaHora().format(FORMATO_FH),
+                            rut,
+                            p.getCalidad(),
+                            p.getCantidadKg(),
+                            p.getPrecioKg(),
+                            p.getMonto(),
+                            pago);
+                })
+                .toArray(String[]::new);
     }
 
     public String[] listPesajesCosechador(Rut rut) throws GestionHuertosException {
-        Optional<Cosechador> cosechadorOpt = findCosechadorByRut(rut);
-        if (cosechadorOpt.isEmpty()) throw new GestionHuertosException("No existe un cosechador con el rut indicado");
-        Cosechador cose = cosechadorOpt.get();
-        boolean tiene = false;
-        for (PlanCosecha p : planes) {
-            for (Cuadrilla q : p.getCuadrillas()) {
-                for (Cosechador cc : q.getCosechadores()) if (cc.getRut().toString().equals(rut.toString())) { tiene = true; break; }
-                if (tiene) break;
-            }
-            if (tiene) break;
-        }
-        if (!tiene) throw new GestionHuertosException("El cosechador no ha sido asignado a una cuadrilla");
-        List<String> outList = new ArrayList<>();
-        for (Pesaje p : pesajes) {
-            if (p.getCosechadorAsignado() != null && p.getCosechadorAsignado().getCosechador().getRut().toString().equals(rut.toString())) {
-                Cuadrilla cuad = p.getCosechadorAsignado().getCuadrilla();
-                int idPlan = (cuad != null && cuad.getPlanCosecha() != null) ? cuad.getPlanCosecha().getId() : -1;
-                int idCuad = (cuad != null) ? cuad.getId() : -1;
-                outList.add(String.format("%d; %s; %.2f; %s; %d; %d; %s; %.2f", p.getId(), p.getFechaHora(), p.getCantidadKg(), p.getCalidad(), idPlan, idCuad, p.getCosechadorAsignado().getCosechador().getRut(), p.getMonto()));
-            }
-        }
-        return outList.toArray(new String[0]);
+        Cosechador cos = findCosechadorByRut(rut)
+                .orElseThrow(
+                        () -> new GestionHuertosException("No existe un cosechador con el rut indicado")
+                );
+
+
+        CosechadorAsignado[] asignaciones = cos.getAsignaciones();
+        if (asignaciones.length == 0)
+            throw new GestionHuertosException("El cosechador no está asignado a ninguna cuadrilla");
+
+        return Arrays.stream(asignaciones)
+                .map(CosechadorAsignado::getPesajes)
+                .flatMap(Arrays::stream)
+                .map(p -> {
+                    String pago = p.isPagado() ? p.getPagoPesaje().getFecha().format(FORMATO_F) : "Impago";
+                    return String.format( "%d;%s;%s;%,.1f;%,.1f;%,.1f;%s",
+                            p.getId(),
+                            p.getFechaHora().format(FORMATO_FH),
+                            p.getCalidad(),
+                            p.getCantidadKg(),
+                            p.getPrecioKg(),
+                            p.getMonto(),
+                            pago
+                    );
+                })
+                .toArray(String[]::new);
     }
 
     public String[] listPagosPesajes() {
-        if (pagos.isEmpty()) return new String[0];
-        String[] out = new String[pagos.size()];
-        for (int i = 0; i < pagos.size(); i++) {
-            PagoPesaje pago = pagos.get(i);
-            out[i] = String.format("%d; %s; %.2f; %d", pago.getId(), pago.getFecha(), pago.getMonto(), pago.getPesajes().length);
-        }
-        return out;
+        if (pagos.isEmpty())
+            return new String[0];
+
+        return pagos.stream()
+                .map(p -> {
+                    Pesaje[] pesajes = p.getPesajes();
+                    Rut rut = pesajes[0]
+                            .getCosechadorAsignado()
+                            .getCosechador()
+                            .getRut();
+
+                    return String.format("%d;%s;%,.2f;%d;%s",
+                            p.getId(),
+                            p.getFecha().format(FORMATO_F),
+                            p.getMonto(),
+                            pesajes.length,
+                            rut
+                            );
+                })
+                .toArray(String[]::new);
     }
 
-    public void readDataFromTextFile(String nombreArchivo) throws GestionHuertosException {
-        File archivo = new File(nombreArchivo);
+    public void readSystemData() throws GestionHuertosException {
+        //******** Personas *********
+        personas.clear();
+        Persona[] p = iO.readPersonas();
+        personas.addAll(Arrays.asList(p));
 
-        if (!archivo.exists()) {
-            throw new GestionHuertosException("Archivo no encontrado: " + nombreArchivo);
-        }
+        //-------- Huertos ----------
+        huertos.clear();
+        huertos.addAll(
+                personas.stream()
+                        .filter(Propietario.class::isInstance)
+                        .map(Propietario.class::cast)
+                        .flatMap(prop -> Arrays.stream(prop.getHuertos()))
+                        .toList()
+        );
 
-        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
 
-            String linea;
+        //******** Cultivos **********
+        cultivos.clear();
+        Cultivo[] c = iO.readCultivos();
+        cultivos.addAll(Arrays.asList(c));
 
-            while ((linea = br.readLine()) != null) {
-                if (linea.trim().isEmpty()) continue;
+        //******** Planes Cosecha **********
+        planes.clear();
+        PlanCosecha[] pC = iO.readPlanesCosecha();
+        planes.addAll(Arrays.asList(pC));
 
-                String[] p = linea.split(";", -1);
+        //------- Pesajes --------
+        pesajes.clear();
+        pesajes.addAll(
+                planes.stream()
+                        .map(PlanCosecha::getCuadrillas)
+                        .flatMap(Arrays::stream)
+                        .map(Cuadrilla::getAsignaciones)
+                        .flatMap(Arrays::stream)
+                        .map(CosechadorAsignado::getPesajes)
+                        .flatMap(Arrays::stream)
+                        .toList()
+        );
 
-                if (p.length == 0) continue;
+        //------- Pagos ---------
+        pagos.clear();
+        pagos.addAll(
+                pesajes.stream()
+                        .map(Pesaje::getPagoPesaje)
+                        .toList()
+        );
+    }
 
-                String tipo = p[0].trim().toUpperCase();
+    private void saveSystemData() throws GestionHuertosException {
+        //Personas
+        iO.savePersonas(personas.toArray(Persona[]::new));
 
-                try {
+        //Cultivos
+        Cultivo[] arrayCultivo = cultivos.stream()
+                .filter(c -> c.getCuarteles().length == 0)
+                .toArray(Cultivo[]::new);
 
-                    switch (tipo) {
+        iO.saveCultivos(arrayCultivo);
 
-                        case "PROPIETARIO" -> {
-                            if (p.length < 6)
-                                throw new GestionHuertosException("PROPIETARIO: columnas insuficientes.");
-                            createPropietario(
-                                    Rut.of(p[1].trim()),
-                                    p[2].trim(),
-                                    p[3].trim(),
-                                    p[4].trim(),
-                                    p[5].trim()
-                            );
-                        }
+        //Planes Cosecha
+        PlanCosecha[] arrayPlanes = planes.stream()
+                .filter(p -> p.getCuadrillas().length == 0)
+                .toArray(PlanCosecha[]::new);
 
-                        case "SUPERVISOR" -> {
-                            if (p.length < 6)
-                                throw new GestionHuertosException("SUPERVISOR: columnas insuficientes.");
-                            createSupervisor(
-                                    Rut.of(p[1].trim()),
-                                    p[2].trim(),
-                                    p[3].trim(),
-                                    p[4].trim(),
-                                    p[5].trim()
-                            );
-                        }
+        iO.savePlanesCosecha(arrayPlanes);
+    }
 
-                        case "COSECHADOR" -> {
-                            if (p.length < 6)
-                                throw new GestionHuertosException("COSECHADOR: columnas insuficientes.");
-                            createCosechador(
-                                    Rut.of(p[1].trim()),
-                                    p[2].trim(),
-                                    p[3].trim(),
-                                    p[4].trim(),
-                                    LocalDate.parse(p[5].trim())
-                            );
-                        }
+    public void readDataFromTextFile() throws GestionHuertosException {
+        try (Scanner sc = new Scanner(new File("src/DatosIniciales.txt"))) {
+            while (sc.hasNextLine()) {
+                String linea = sc.nextLine();
+                if (linea.startsWith("#") || linea.isBlank()) continue;
 
-                        case "CULTIVO" -> {
-                            if (p.length < 5)
-                                throw new GestionHuertosException("CULTIVO: columnas insuficientes.");
-                            createCultivo(
-                                    Integer.parseInt(p[1].trim()),
-                                    p[2].trim(),
-                                    p[3].trim(),
-                                    Float.parseFloat(p[4].trim())
-                            );
-                        }
+                String[] tokens = linea.split(";");
+                int num = Integer.parseInt(tokens[1]);
 
-                        case "HUERTO" -> {
-                            if (p.length < 5)
-                                throw new GestionHuertosException("HUERTO: columnas insuficientes.");
-                            createHuerto(
-                                    p[1].trim(),
-                                    Float.parseFloat(p[2].trim()),
-                                    p[3].trim(),
-                                    Rut.of(p[4].trim())
-                            );
-                        }
+                for (int i = 0; i < num; i++) {
+                    String datos = sc.nextLine();
+                    if (datos.isEmpty()) continue;
+                    String[] dato = datos.split(";");
 
-                        case "CUARTEL" -> {
-                            if (p.length < 5)
-                                throw new GestionHuertosException("CUARTEL: columnas insuficientes.");
-                            addCuartelToHuerto(
-                                    p[1].trim(),
-                                    Integer.parseInt(p[2].trim()),
-                                    Float.parseFloat(p[3].trim()),
-                                    Integer.parseInt(p[4].trim())
-                            );
-                        }
-
-                        case "PLAN" -> {
-                            if (p.length < 9)
-                                throw new GestionHuertosException("PLAN: columnas insuficientes.");
-                            createPlanCosecha(
-                                    Integer.parseInt(p[1].trim()),
-                                    p[2].trim(),
-                                    LocalDate.parse(p[3].trim()),
-                                    LocalDate.parse(p[4].trim()),
-                                    Double.parseDouble(p[5].trim()),
-                                    Float.parseFloat(p[6].trim()),
-                                    p[7].trim(),
-                                    Integer.parseInt(p[8].trim())
-                            );
-                        }
-
-                        default -> {
-                        }
+                    for (int j = 0; j < dato.length; j++) {
+                        dato[j] = dato[j].trim();
                     }
 
-                } catch (NumberFormatException | DateTimeParseException e) {
-                    throw new GestionHuertosException("Error en formato de datos en línea: " + linea + "\n" + e.getMessage());
+                    switch (tokens[0]) {
+                        case "createPropietario" -> {
+                            Rut rut = Rut.of(dato[0]);
+                            createPropietario(rut, dato[1], dato[2], dato[3], dato[4]);
+                        }
+                        case "createSupervisor" -> {
+                            Rut rut = Rut.of(dato[0]);
+                            createSupervisor(rut, dato[1], dato[2], dato[3], dato[4]);
+                        }
+                        case "createCosechador" -> {
+                            Rut rut = Rut.of(dato[0]);
+                            try {
+                                LocalDate fNac = LocalDate.parse(dato[4], FORMATO_F);
+                                createCosechador(rut, dato[1], dato[2], dato[3], fNac);
+                            } catch (DateTimeParseException e) {
+                                lanzaExcepcion(tokens[0], "Dato de fecha no válido");
+                            }
+                        }
+                        case "createCultivo" -> {
+                            try {
+                                int id = Integer.parseInt(dato[0]);
+                                float rendimiento = Float.parseFloat(dato[3]);
+                                createCultivo(id, dato[1], dato[2], rendimiento);
+                            } catch (NumberFormatException e) {
+                                lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
+                            }
+                        }
+                        case "createHuerto" -> {
+                            Rut rut = Rut.of(dato[3]);
+                            try {
+                                float superficie = Float.parseFloat(dato[1]);
+                                createHuerto(dato[0], superficie, dato[2], rut);
+                            } catch (NumberFormatException e) {
+                                lanzaExcepcion(tokens[0], "Dato numérico de superficie no es válido");
+                            }
+                        }
+                        case "addCuartelToHuerto" -> {
+                            try {
+                                int id = Integer.parseInt(dato[1]);
+                                float sup = Float.parseFloat(dato[2]);
+                                int idCul = Integer.parseInt(dato[3]);
+                                addCuartelToHuerto(dato[0], id, sup, idCul);
+                            } catch (NumberFormatException e) {
+                                lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
+                            }
+
+                        }
+                        case "createPlanCosecha" -> {
+                            try {
+                                int idPlan = Integer.parseInt(dato[0]);
+                                LocalDate fIni = LocalDate.parse(dato[2], FORMATO_F);
+                                LocalDate fFin = LocalDate.parse(dato[3], FORMATO_F);
+                                double meta = Double.parseDouble(dato[4]);
+                                double precio = Double.parseDouble(dato[5]);
+                                int idCuartel = Integer.parseInt(dato[7]);
+                                createPlanCosecha(idPlan, dato[1], fIni, fFin, meta, precio, dato[6], idCuartel);
+                            } catch (NumberFormatException e) {
+                                lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
+                            }
+                        }
+                        case "addCuadrillaToPlan" -> {
+                            try {
+                                int idPlan = Integer.parseInt(dato[0]);
+                                int idCuadrilla = Integer.parseInt(dato[1]);
+                                Rut rut = Rut.of(dato[3]);
+                                addCuadrillaToPlan(idPlan, idCuadrilla, dato[2], rut);
+                            } catch (NumberFormatException e) {
+                                lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
+                            }
+                        }
+                        case "addCosechadorToCuadrilla" -> {
+                            try {
+                                int idPlan = Integer.parseInt(dato[0]);
+                                int idCuadrilla = Integer.parseInt(dato[1]);
+                                LocalDate fIni = LocalDate.parse(dato[2], FORMATO_F);
+                                LocalDate fFin = LocalDate.parse(dato[3], FORMATO_F);
+                                double meta = Double.parseDouble(dato[4]);
+                                Rut rut = Rut.of(dato[5]);
+                                addCosechadorToCuadrilla(idPlan, idCuadrilla, fIni, fFin, meta, rut);
+                            } catch (NumberFormatException e) {
+                                lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
+                            } catch (DateTimeParseException e) {
+                                lanzaExcepcion(tokens[0], "Excepción en datos de fechas");
+                            }
+                        }
+                        case "changeEstadoPlan" -> {
+                            try {
+                                int idPlan = Integer.parseInt(dato[0]);
+                                EstadoPlan estPlan = EstadoPlan.valueOf(dato[1].toUpperCase());
+                                changeEstadoPlan(idPlan, estPlan);
+                            } catch (NumberFormatException e) {
+                                lanzaExcepcion(tokens[0], "Dato numérico en idPlan no válido");
+                            } catch (IllegalArgumentException e) {
+                                lanzaExcepcion(tokens[0], "Dato de estado del plan no es válido");
+                            }
+                        }
+                        case "changeEstadoCuartel" -> {
+                            try {
+                                int idCuartel = Integer.parseInt(dato[0]);
+                                EstadoFenologico estCuartel = EstadoFenologico.valueOf(dato[2].toUpperCase());
+                                changeEstadoCuartel(dato[1], idCuartel, estCuartel);
+                            } catch (NumberFormatException e) {
+                                lanzaExcepcion(tokens[0], "Dato numérico en idCuartel no válido");
+                            } catch (IllegalArgumentException e) {
+                                lanzaExcepcion(tokens[0], "Dato de estado fenológico no válido");
+                            }
+                        }
+                        case "addPesaje" -> {
+                            try {
+                                int id = Integer.parseInt(dato[0]);
+                                Rut rut = Rut.of(dato[1]);
+                                int idPlan = Integer.parseInt(dato[2]);
+                                int idCuadrilla = Integer.parseInt(dato[3]);
+                                float cantKg = Float.parseFloat(dato[4]);
+                                Calidad calidad = Calidad.valueOf(dato[5].toUpperCase());
+                                addPesaje(id, rut, idPlan, idCuadrilla, cantKg, calidad);
+                            } catch (NumberFormatException e) {
+                                lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
+                            } catch (IllegalArgumentException e) {
+                                lanzaExcepcion(tokens[0], "Dato de calidad no válido");
+                            }
+                        }
+                    }
                 }
             }
-
-        } catch (IOException e) {
-            throw new GestionHuertosException("Error al leer el archivo: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            throw new GestionHuertosException("Archivo de datos inexistente");
         }
     }
 
+    //rutina auxiliar sólo para el lector de datos desde archivo de texto por ahora.
+    private void lanzaExcepcion(String operacion, String msj) throws GestionHuertosException {
+        throw new GestionHuertosException("Error en " + operacion + ": " + msj);
+    }
 
     private Optional<Propietario> findPropietarioByRut(Rut rut) {
-        for (Persona p : personas) {
-            if (p instanceof Propietario pr && pr.getRut().toString().equals(rut.toString())) {
-                return Optional.of(pr);
-            }
-        }
-        return Optional.empty();
+        return personas.stream()
+                .filter(Propietario.class::isInstance)
+                .map(Propietario.class::cast)
+                .filter(p -> p.getRut().equals(rut))
+                .findFirst();
     }
 
     private Optional<Supervisor> findSupervisorByRut(Rut rut) {
-        for (Persona p : personas) if (p instanceof Supervisor s && s.getRut().toString().equals(rut.toString())) return Optional.of(s);
-        return Optional.empty();
+        return personas.stream()
+                .filter(Supervisor.class::isInstance)
+                .map(Supervisor.class::cast)
+                .filter(s -> s.getRut().equals(rut))
+                .findFirst();
     }
 
     private Optional<Cosechador> findCosechadorByRut(Rut rut) {
-        for (Persona p : personas) if (p instanceof Cosechador c && c.getRut().toString().equals(rut.toString())) return Optional.of(c);
-        return Optional.empty();
+        return personas.stream()
+                .filter(Cosechador.class::isInstance)
+                .map(Cosechador.class::cast)
+                .filter(c -> c.getRut().equals(rut))
+                .findFirst();
     }
 
     private Optional<Cultivo> findCultivoById(int id) {
-        for (Cultivo c : cultivos) if (c.getId() == id) return Optional.of(c);
-        return Optional.empty();
+        return cultivos.stream()
+                .filter(c -> c.getId() == id)
+                .findFirst();
     }
 
     private Optional<Huerto> findHuertoByNombre(String nombre) {
-        for (Huerto h : huertos) if (h.getNombre().equalsIgnoreCase(nombre)) return Optional.of(h);
-        return Optional.empty();
+        return huertos.stream()
+                .filter(h -> h.getNombre().equals(nombre))
+                .findFirst();
     }
 
     private Optional<PlanCosecha> findPlanById(int id) {
-        for (PlanCosecha p : planes) if (p.getId() == id) return Optional.of(p);
-        return Optional.empty();
+        return planes.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst();
     }
 
     private Optional<Pesaje> findPesajeById(int id) {
-        for (Pesaje p : pesajes) if (p.getId() == id) return Optional.of(p);
-        return Optional.empty();
+        return pesajes.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst();
     }
 
     private Optional<PagoPesaje> findPagoPesajeById(int id) {
-        for (PagoPesaje p : pagos) if (p.getId() == id) return Optional.of(p);
-        return Optional.empty();
+        return pagos.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst();
     }
 }

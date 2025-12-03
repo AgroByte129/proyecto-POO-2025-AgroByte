@@ -1,21 +1,24 @@
 package modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cultivo {
+public class Cultivo implements Serializable {
     private int id;
     private String especie;
     private String variedad;
     private float rendimiento;
 
-    private List<Cuartel> cuarteles = new ArrayList<>();
+    private List<Cuartel> cuarteles;
 
     public Cultivo(int id, String especie, String variedad, float rendimiento) {
         this.id = id;
         this.especie = especie;
         this.variedad = variedad;
         this.rendimiento = rendimiento;
+        this.cuarteles = new ArrayList<>();
+
     }
 
     public int getId() {return id;}

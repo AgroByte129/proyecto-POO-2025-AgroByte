@@ -2,10 +2,11 @@ package modelo;
 
 import utilidades.EstadoFenologico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cuartel {
+public class Cuartel implements Serializable {
     private int id;
     private float superficie;
     private EstadoFenologico estado;
@@ -30,7 +31,19 @@ public class Cuartel {
         return cultivo.getRendimiento();
     }
     public EstadoFenologico getEstado() {return estado;}
-    public void setEstado(EstadoFenologico estado){this.estado = estado;}
+    public boolean setEstado(EstadoFenologico estado) {
+        if (estado.compareTo(this.estado) > 0) {
+            this.estado = estado;
+            return true;
+        }
+        if (this.estado == EstadoFenologico.POSTCOSECHA &&
+                estado == EstadoFenologico.REPOSO_INVERNAL) {
+            this.estado = estado;
+            return true;
+        }
+        return false;
+    }
+
     public Cultivo getCultivo() {return cultivo;}
     public Huerto getHuerto() {return huerto;}
     public void addPlanCosecha(PlanCosecha planCosecha) {planes.add(planCosecha);} //No realiza verificación, solo agrega

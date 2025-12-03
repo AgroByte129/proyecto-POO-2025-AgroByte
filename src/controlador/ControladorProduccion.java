@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-//comentario de confirmacion para develop 3
+//comentario de confirmacion para icons
 public class ControladorProduccion {
     private static ControladorProduccion instance;
     private static final GestionHuertosIO iO = GestionHuertosIO.getInstance();

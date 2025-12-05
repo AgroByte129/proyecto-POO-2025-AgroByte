@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-//comentario de confirmacion para icons
+//comentario de confirmacion para vista.icons
 public class ControladorProduccion {
     private static ControladorProduccion instance;
     private static final GestionHuertosIO iO = GestionHuertosIO.getInstance();
@@ -446,27 +446,16 @@ public class ControladorProduccion {
                 }))
                 .toArray(String[]::new);
     }
-
+    //Pendiente. (Arturo Gómez viendo soluciones)
     public String[] listPlanesCosecha() {
-
-        List<PlanCosecha> ordenados = planes.stream()
-                .sorted(Comparator
-                        .comparing((PlanCosecha p) -> p.getCuartel().getHuerto().getNombre(), String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(p -> p.getCuartel().getId())
-                        .thenComparing(PlanCosecha::getId)
-                )
-                .toList();
-
-        String[] out = new String[ordenados.size()];
-
-        for (int i = 0; i < ordenados.size(); i++) {
-            PlanCosecha p = ordenados.get(i);
+        if (planes.isEmpty()) return new String[0];
+        String[] out = new String[planes.size()];
+        for (int i = 0; i < planes.size(); i++) {
+            PlanCosecha p = planes.get(i);
             LocalDate finPlan = (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
             Cuartel c = p.getCuartel();
             Huerto h = c.getHuerto();
-
-            out[i] = String.format(Locale.GERMANY,
-                    "%d; %s; %s; %s; %,.1f; %,.1f; %s; %d; %s; %d; %.1f",
+            out[i] = String.format(Locale.GERMANY, "%d; %s; %s; %s; %,.1f; %,.1f; %s; %d; %s; %d; %.1f",
                     p.getId(),
                     p.getNombre(),
                     p.getInicio().format(FORMATO_F),
@@ -479,7 +468,8 @@ public class ControladorProduccion {
                     p.getCuadrillas().length,
                     p.getCumplimientoMeta());
         }
-        return out;
+        return planes.stream()
+                .sorted(Comparator.comparing(PlanCosecha::))//no entendí cómo usar los criterios que pide :'v revisa discord, Nicolás
     }
 
     public String[] listPesajes() {

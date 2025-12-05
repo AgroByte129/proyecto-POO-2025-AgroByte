@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-//comentario de confirmacion para icons
+//comentario de confirmacion para vista.icons
 public class ControladorProduccion {
     private static ControladorProduccion instance;
     private static final GestionHuertosIO iO = GestionHuertosIO.getInstance();
@@ -446,7 +446,7 @@ public class ControladorProduccion {
                 }))
                 .toArray(String[]::new);
     }
-    //Pendiente
+    //Pendiente. (Arturo Gómez viendo soluciones)
     public String[] listPlanesCosecha() {
         if (planes.isEmpty()) return new String[0];
         String[] out = new String[planes.size()];
@@ -469,7 +469,7 @@ public class ControladorProduccion {
                     p.getCumplimientoMeta());
         }
         return planes.stream()
-                .sorted(Comparator.comparing(PlanCosecha::))//no entendí cómo usar los criterios que pide :'v
+                .sorted(Comparator.comparing(PlanCosecha::))//no entendí cómo usar los criterios que pide :'v revisa discord, Nicolás
     }
 
     public String[] listPesajes() {

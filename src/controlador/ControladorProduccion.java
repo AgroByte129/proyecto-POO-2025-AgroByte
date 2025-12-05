@@ -449,27 +449,44 @@ public class ControladorProduccion {
     //Pendiente. (Arturo Gómez viendo soluciones)
     public String[] listPlanesCosecha() {
         if (planes.isEmpty()) return new String[0];
-        String[] out = new String[planes.size()];
-        for (int i = 0; i < planes.size(); i++) {
-            PlanCosecha p = planes.get(i);
-            LocalDate finPlan = (p.getFinReal() != null) ? p.getFinReal() : p.getFinEstimado();
-            Cuartel c = p.getCuartel();
-            Huerto h = c.getHuerto();
-            out[i] = String.format(Locale.GERMANY, "%d; %s; %s; %s; %,.1f; %,.1f; %s; %d; %s; %d; %.1f",
-                    p.getId(),
-                    p.getNombre(),
-                    p.getInicio().format(FORMATO_F),
-                    finPlan.format(FORMATO_F),
-                    p.getMetaKilos(),
-                    p.getPrecioBaseKilo(),
-                    p.getEstado(),
-                    c.getId(),
-                    h.getNombre(),
-                    p.getCuadrillas().length,
-                    p.getCumplimientoMeta());
-        }
+
         return planes.stream()
-                .sorted(Comparator.comparing(PlanCosecha::))//no entendí cómo usar los criterios que pide :'v revisa discord, Nicolás
+                .sorted(
+                        Comparator
+                                .comparing((PlanCosecha p) ->
+                                                p.getCuartel().getCultivo().getEspecie(),
+                                        String.CASE_INSENSITIVE_ORDER
+                                )
+                                .thenComparing(p ->
+                                                p.getCuartel().getCultivo().getVariedad(),
+                                        String.CASE_INSENSITIVE_ORDER
+                                )
+                )
+                .map(p -> {
+
+                    Cuartel c = p.getCuartel();
+                    Huerto h = c.getHuerto();
+
+                    LocalDate finPlan =
+                            (p.getFinReal() != null)
+                                    ? p.getFinReal()
+                                    : p.getFinEstimado();
+
+                    return String.format(Locale.GERMANY,
+                            "%d; %s; %s; %s; %,.1f; %,.1f; %s; %d; %s; %d; %.1f",
+                            p.getId(),
+                            p.getNombre(),
+                            p.getInicio().format(FORMATO_F),
+                            finPlan.format(FORMATO_F),
+                            p.getMetaKilos(),
+                            p.getPrecioBaseKilo(),
+                            p.getEstado(),
+                            c.getId(),
+                            h.getNombre(),
+                            p.getCuadrillas().length,
+                            p.getCumplimientoMeta());
+                })
+                .toArray(String[]::new);
     }
 
     public String[] listPesajes() {

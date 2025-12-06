@@ -446,7 +446,7 @@ public class ControladorProduccion {
                 }))
                 .toArray(String[]::new);
     }
-    //Pendiente. (Arturo Gómez viendo soluciones)
+    //Pendiente. (Arturo Gómez propuesta de solución)
     public String[] listPlanesCosecha() {
         if (planes.isEmpty()) return new String[0];
 

@@ -299,7 +299,7 @@ public class ControladorProduccion {
 
         return Arrays.stream(cuadrillas)
                 .map(c -> String.format(
-                        "%s;%s;%s",
+                        "%s; %s; %s",
                         c.getId(),
                         c.getNombre(),
                         c.getPlanCosecha().getId()
@@ -316,7 +316,7 @@ public class ControladorProduccion {
                         .thenComparing(Cultivo::getVariedad)
                 )
                 .map(c -> {
-                    return String.format("%d;%s;%s;%.1f;%d",
+                    return String.format("%d; %s; %s; %.1f; %d",
                             c.getId(),
                             c.getEspecie(),
                             c.getVariedad(),
@@ -331,7 +331,7 @@ public class ControladorProduccion {
 
         return huertos.stream()
                 .map(h -> {
-                    return String.format("%s;%,.1f;%s;%s;%s;%d",
+                    return String.format("%s; %.1f; %s; %s; %s; %d",
                             h.getNombre(),
                             h.getSuperficie(),
                             h.getUbicacion(),
@@ -352,7 +352,7 @@ public class ControladorProduccion {
                 .map(Propietario.class::cast)
                 .sorted(Comparator.comparing(Propietario::getNombre))
                 .map(p ->
-                    String.format("%s;%s;%s;%s;%s;%d",
+                    String.format("%s; %s; %s; %s; %s; %d",
                             p.getRut().toString(),
                             p.getNombre(),
                             p.getDireccion(),
@@ -388,7 +388,7 @@ public class ControladorProduccion {
                         }
                     }
 
-                    return String.format("%s;%s;%s;%s;%s;%s;%.1f;%d",
+                    return String.format("%s; %s; %s; %s; %s; %s; %.1f; %d",
                             s.getRut().toString(),
                             s.getNombre(),
                             s.getDireccion(),
@@ -402,7 +402,7 @@ public class ControladorProduccion {
 
                 //Ordena según los kilos de manera descendente.
                 .sorted(Comparator.comparingDouble((String s) -> {
-                    String[] datos = s.split(";");
+                    String[] datos = s.split("; ");
                     return Double.parseDouble(datos[6]);
                 }).reversed()) //revierte el orden para que sea descendente.
 
@@ -428,7 +428,7 @@ public class ControladorProduccion {
                         montoPagado += asignado.getMontoPesajesPagados();
                     }
 
-                    return String.format("%s;%s;%s;%s;%s;%d;%,.1f;%,.1f",
+                    return String.format("%s; %s; %s; %s; %s; %d; %.1f; %.1f",
                             c.getRut(),
                             c.getNombre(),
                             c.getDireccion(),
@@ -441,9 +441,9 @@ public class ControladorProduccion {
                 })
 
                 .sorted(Comparator.comparing((String s) ->{
-                    String[] datos = s.split(";");
+                    String[] datos = s.split("; ");
                     return Double.parseDouble(datos[6]);
-                }))
+                }).reversed())
                 .toArray(String[]::new);
     }
     //Pendiente. (Arturo Gómez propuesta de solución)
@@ -472,8 +472,8 @@ public class ControladorProduccion {
                                     ? p.getFinReal()
                                     : p.getFinEstimado();
 
-                    return String.format(Locale.GERMANY,
-                            "%d; %s; %s; %s; %,.1f; %,.1f; %s; %d; %s; %d; %.1f",
+                    return String.format(Locale.US,
+                            "%d; %s; %s; %s; %.1f; %.1f; %s; %d; %s; %d; %.1f",
                             p.getId(),
                             p.getNombre(),
                             p.getInicio().format(FORMATO_F),
@@ -505,7 +505,7 @@ public class ControladorProduccion {
                             .format(FORMATO_F)
                             : "Impago";
 
-                    return String.format("%d;%s;%s;%s;%,.1f;%,.1f;%,.1f;%s",
+                    return String.format("%d; %s; %s; %s; %.1f; %.1f; %.1f; %s",
                             p.getId(),
                             p.getFechaHora().format(FORMATO_FH),
                             rut,
@@ -534,7 +534,7 @@ public class ControladorProduccion {
                 .flatMap(Arrays::stream)
                 .map(p -> {
                     String pago = p.isPagado() ? p.getPagoPesaje().getFecha().format(FORMATO_F) : "Impago";
-                    return String.format( "%d;%s;%s;%,.1f;%,.1f;%,.1f;%s",
+                    return String.format( "%d; %s; %s; %.1f; %.1f; %.1f; %s",
                             p.getId(),
                             p.getFechaHora().format(FORMATO_FH),
                             p.getCalidad(),
@@ -554,12 +554,18 @@ public class ControladorProduccion {
         return pagos.stream()
                 .map(p -> {
                     Pesaje[] pesajes = p.getPesajes();
+                    if (pesajes.length == 0)
+                        return String.format("%d; %s; %.2f; 0; -",
+                                p.getId(),
+                                p.getFecha().format(FORMATO_F),
+                                p.getMonto()
+                        );
                     Rut rut = pesajes[0]
                             .getCosechadorAsignado()
                             .getCosechador()
                             .getRut();
 
-                    return String.format("%d;%s;%,.2f;%d;%s",
+                    return String.format("%d; %s; %.2f; %d; %s",
                             p.getId(),
                             p.getFecha().format(FORMATO_F),
                             p.getMonto(),
@@ -615,6 +621,7 @@ public class ControladorProduccion {
         pagos.addAll(
                 pesajes.stream()
                         .map(Pesaje::getPagoPesaje)
+                        .filter(Objects::nonNull)
                         .toList()
         );
     }
@@ -628,14 +635,14 @@ public class ControladorProduccion {
                 .filter(c -> c.getCuarteles().length == 0)
                 .toArray(Cultivo[]::new);
 
-        iO.saveCultivos(arrayCultivo);
+        iO.saveCultivos(cultivos.toArray(Cultivo[]::new));
 
         //Planes Cosecha
         PlanCosecha[] arrayPlanes = planes.stream()
                 .filter(p -> p.getCuadrillas().length == 0)
                 .toArray(PlanCosecha[]::new);
 
-        iO.savePlanesCosecha(arrayPlanes);
+        iO.savePlanesCosecha(planes.toArray(PlanCosecha[]::new));
     }
 
     public void readDataFromTextFile() throws GestionHuertosException {
@@ -644,13 +651,13 @@ public class ControladorProduccion {
                 String linea = sc.nextLine();
                 if (linea.startsWith("#") || linea.isBlank()) continue;
 
-                String[] tokens = linea.split(";");
-                int num = Integer.parseInt(tokens[1]);
+                String[] tokens = linea.split("; ");
+                int num = Integer.parseInt(limpiarMiles(tokens[1]));
 
                 for (int i = 0; i < num; i++) {
                     String datos = sc.nextLine();
                     if (datos.isEmpty()) continue;
-                    String[] dato = datos.split(";");
+                    String[] dato = datos.split("; ");
 
                     for (int j = 0; j < dato.length; j++) {
                         dato[j] = dato[j].trim();
@@ -676,8 +683,8 @@ public class ControladorProduccion {
                         }
                         case "createCultivo" -> {
                             try {
-                                int id = Integer.parseInt(dato[0]);
-                                float rendimiento = Float.parseFloat(dato[3]);
+                                int id = Integer.parseInt(limpiarMiles(dato[0]));
+                                float rendimiento = Float.parseFloat(limpiarMiles(dato[3]));
                                 createCultivo(id, dato[1], dato[2], rendimiento);
                             } catch (NumberFormatException e) {
                                 lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
@@ -686,7 +693,7 @@ public class ControladorProduccion {
                         case "createHuerto" -> {
                             Rut rut = Rut.of(dato[3]);
                             try {
-                                float superficie = Float.parseFloat(dato[1]);
+                                float superficie = Float.parseFloat(limpiarMiles(dato[1]));
                                 createHuerto(dato[0], superficie, dato[2], rut);
                             } catch (NumberFormatException e) {
                                 lanzaExcepcion(tokens[0], "Dato numérico de superficie no es válido");
@@ -694,9 +701,9 @@ public class ControladorProduccion {
                         }
                         case "addCuartelToHuerto" -> {
                             try {
-                                int id = Integer.parseInt(dato[1]);
-                                float sup = Float.parseFloat(dato[2]);
-                                int idCul = Integer.parseInt(dato[3]);
+                                int id = Integer.parseInt(limpiarMiles(dato[1]));
+                                float sup = Float.parseFloat(limpiarMiles(dato[2]));
+                                int idCul = Integer.parseInt(limpiarMiles(dato[3]));
                                 addCuartelToHuerto(dato[0], id, sup, idCul);
                             } catch (NumberFormatException e) {
                                 lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
@@ -705,12 +712,12 @@ public class ControladorProduccion {
                         }
                         case "createPlanCosecha" -> {
                             try {
-                                int idPlan = Integer.parseInt(dato[0]);
+                                int idPlan = Integer.parseInt(limpiarMiles(dato[0]));
                                 LocalDate fIni = LocalDate.parse(dato[2], FORMATO_F);
                                 LocalDate fFin = LocalDate.parse(dato[3], FORMATO_F);
-                                double meta = Double.parseDouble(dato[4]);
-                                double precio = Double.parseDouble(dato[5]);
-                                int idCuartel = Integer.parseInt(dato[7]);
+                                double meta = Double.parseDouble(limpiarMiles(dato[4]));
+                                double precio = Double.parseDouble(limpiarMiles(dato[5]));
+                                int idCuartel = Integer.parseInt(limpiarMiles(dato[7]));
                                 createPlanCosecha(idPlan, dato[1], fIni, fFin, meta, precio, dato[6], idCuartel);
                             } catch (NumberFormatException e) {
                                 lanzaExcepcion(tokens[0], "Excepción en datos numéricos");
@@ -718,8 +725,8 @@ public class ControladorProduccion {
                         }
                         case "addCuadrillaToPlan" -> {
                             try {
-                                int idPlan = Integer.parseInt(dato[0]);
-                                int idCuadrilla = Integer.parseInt(dato[1]);
+                                int idPlan = Integer.parseInt(limpiarMiles(dato[0]));
+                                int idCuadrilla = Integer.parseInt(limpiarMiles(dato[1]));
                                 Rut rut = Rut.of(dato[3]);
                                 addCuadrillaToPlan(idPlan, idCuadrilla, dato[2], rut);
                             } catch (NumberFormatException e) {
@@ -728,11 +735,11 @@ public class ControladorProduccion {
                         }
                         case "addCosechadorToCuadrilla" -> {
                             try {
-                                int idPlan = Integer.parseInt(dato[0]);
-                                int idCuadrilla = Integer.parseInt(dato[1]);
+                                int idPlan = Integer.parseInt(limpiarMiles(dato[0]));
+                                int idCuadrilla = Integer.parseInt(limpiarMiles(dato[1]));
                                 LocalDate fIni = LocalDate.parse(dato[2], FORMATO_F);
                                 LocalDate fFin = LocalDate.parse(dato[3], FORMATO_F);
-                                double meta = Double.parseDouble(dato[4]);
+                                double meta = Double.parseDouble(limpiarMiles(dato[4]));
                                 Rut rut = Rut.of(dato[5]);
                                 addCosechadorToCuadrilla(idPlan, idCuadrilla, fIni, fFin, meta, rut);
                             } catch (NumberFormatException e) {
@@ -743,7 +750,7 @@ public class ControladorProduccion {
                         }
                         case "changeEstadoPlan" -> {
                             try {
-                                int idPlan = Integer.parseInt(dato[0]);
+                                int idPlan = Integer.parseInt(limpiarMiles(dato[0]));
                                 EstadoPlan estPlan = EstadoPlan.valueOf(dato[1].toUpperCase());
                                 changeEstadoPlan(idPlan, estPlan);
                             } catch (NumberFormatException e) {
@@ -754,7 +761,7 @@ public class ControladorProduccion {
                         }
                         case "changeEstadoCuartel" -> {
                             try {
-                                int idCuartel = Integer.parseInt(dato[0]);
+                                int idCuartel = Integer.parseInt(limpiarMiles(dato[0]));
                                 EstadoFenologico estCuartel = EstadoFenologico.valueOf(dato[2].toUpperCase());
                                 changeEstadoCuartel(dato[1], idCuartel, estCuartel);
                             } catch (NumberFormatException e) {
@@ -765,11 +772,11 @@ public class ControladorProduccion {
                         }
                         case "addPesaje" -> {
                             try {
-                                int id = Integer.parseInt(dato[0]);
+                                int id = Integer.parseInt(limpiarMiles(dato[0]));
                                 Rut rut = Rut.of(dato[1]);
-                                int idPlan = Integer.parseInt(dato[2]);
-                                int idCuadrilla = Integer.parseInt(dato[3]);
-                                float cantKg = Float.parseFloat(dato[4]);
+                                int idPlan = Integer.parseInt(limpiarMiles(dato[2]));
+                                int idCuadrilla = Integer.parseInt(limpiarMiles(dato[3]));
+                                float cantKg = Float.parseFloat(limpiarMiles(dato[4]));
                                 Calidad calidad = Calidad.valueOf(dato[5].toUpperCase());
                                 addPesaje(id, rut, idPlan, idCuadrilla, cantKg, calidad);
                             } catch (NumberFormatException e) {
@@ -844,4 +851,9 @@ public class ControladorProduccion {
                 .filter(p -> p.getId() == id)
                 .findFirst();
     }
+
+    private String limpiarMiles(String s) {
+        return s.replace(".", "").trim();
+    }
+
 }

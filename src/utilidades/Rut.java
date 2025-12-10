@@ -1,8 +1,6 @@
 package utilidades;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Rut implements Serializable {
     private long numero;
@@ -58,7 +56,8 @@ public class Rut implements Serializable {
         }
         char dvCal = calcularDV(numero);
 
-        if(dvChar != dvCal) throw new IllegalArgumentException("DV invalido. Debe ingresar el DV correspondiente al rut.");
+        if(dvChar != dvCal)
+            throw new IllegalArgumentException("DV invalido. Debe ingresar el DV correspondiente al rut.");
 
         return new Rut(numero, dvChar);
     }
@@ -78,7 +77,7 @@ public class Rut implements Serializable {
     @Override
     public String toString() {
         String s = String.valueOf(numero);
-        //El StringBuilder servirá para crear la parte numerica del rut
+        //El StringBuilder servirá para crear la parte numerica del rut (así no se crean Strings fantasmas).
         //con formato xx.xxx.xxx
         StringBuilder sb = new StringBuilder();
 

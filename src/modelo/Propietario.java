@@ -2,10 +2,11 @@ package modelo;
 
 import utilidades.Rut;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Propietario extends Persona{
+public class Propietario extends Persona implements Serializable {
     private String direccionCom;
     private List<Huerto> huertos = new ArrayList<>();
 

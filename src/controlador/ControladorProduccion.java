@@ -316,7 +316,8 @@ public class ControladorProduccion {
                         .thenComparing(Cultivo::getVariedad)
                 )
                 .map(c -> {
-                    return String.format("%d; %s; %s; %.1f; %d",
+                    return String.format(Locale.GERMANY,
+                            "%d; %s; %s; %.1f; %d",
                             c.getId(),
                             c.getEspecie(),
                             c.getVariedad(),
@@ -331,7 +332,8 @@ public class ControladorProduccion {
 
         return huertos.stream()
                 .map(h -> {
-                    return String.format("%s; %.1f; %s; %s; %s; %d",
+                    return String.format(Locale.GERMANY,
+                            "%s; %.1f; %s; %s; %s; %d",
                             h.getNombre(),
                             h.getSuperficie(),
                             h.getUbicacion(),
@@ -388,7 +390,8 @@ public class ControladorProduccion {
                         }
                     }
 
-                    return String.format("%s; %s; %s; %s; %s; %s; %.1f; %d",
+                    return String.format(Locale.GERMANY,
+                            "%s; %s; %s; %s; %s; %s; %.1f; %d",
                             s.getRut().toString(),
                             s.getNombre(),
                             s.getDireccion(),
@@ -428,7 +431,8 @@ public class ControladorProduccion {
                         montoPagado += asignado.getMontoPesajesPagados();
                     }
 
-                    return String.format("%s; %s; %s; %s; %s; %d; %.1f; %.1f",
+                    return String.format(Locale.GERMANY,
+                            "%s; %s; %s; %s; %s; %d; %.1f; %.1f",
                             c.getRut(),
                             c.getNombre(),
                             c.getDireccion(),
@@ -451,14 +455,17 @@ public class ControladorProduccion {
         if (planes.isEmpty()) return new String[0];
 
         return planes.stream()
-                .sorted(
-                        Comparator
-                                .comparing((PlanCosecha p) ->
-                                                p.getCuartel().getCultivo().getEspecie(),
+                .sorted(Comparator
+                        .comparing((PlanCosecha p) ->
+                                                p.getCuartel()
+                                                        .getCultivo()
+                                                        .getEspecie(),
                                         String.CASE_INSENSITIVE_ORDER
                                 )
-                                .thenComparing(p ->
-                                                p.getCuartel().getCultivo().getVariedad(),
+                        .thenComparing(p ->
+                                        p.getCuartel()
+                                                .getCultivo()
+                                                .getVariedad(),
                                         String.CASE_INSENSITIVE_ORDER
                                 )
                 )
@@ -472,7 +479,7 @@ public class ControladorProduccion {
                                     ? p.getFinReal()
                                     : p.getFinEstimado();
 
-                    return String.format(Locale.US,
+                    return String.format(Locale.GERMANY,
                             "%d; %s; %s; %s; %.1f; %.1f; %s; %d; %s; %d; %.1f",
                             p.getId(),
                             p.getNombre(),
@@ -505,7 +512,8 @@ public class ControladorProduccion {
                             .format(FORMATO_F)
                             : "Impago";
 
-                    return String.format("%d; %s; %s; %s; %.1f; %.1f; %.1f; %s",
+                    return String.format(Locale.GERMANY,
+                            "%d; %s; %s; %s; %.1f; %.1f; %.1f; %s",
                             p.getId(),
                             p.getFechaHora().format(FORMATO_FH),
                             rut,
@@ -534,7 +542,8 @@ public class ControladorProduccion {
                 .flatMap(Arrays::stream)
                 .map(p -> {
                     String pago = p.isPagado() ? p.getPagoPesaje().getFecha().format(FORMATO_F) : "Impago";
-                    return String.format( "%d; %s; %s; %.1f; %.1f; %.1f; %s",
+                    return String.format(Locale.GERMANY,
+                            "%d; %s; %s; %.1f; %.1f; %.1f; %s",
                             p.getId(),
                             p.getFechaHora().format(FORMATO_FH),
                             p.getCalidad(),
@@ -555,7 +564,8 @@ public class ControladorProduccion {
                 .map(p -> {
                     Pesaje[] pesajes = p.getPesajes();
                     if (pesajes.length == 0)
-                        return String.format("%d; %s; %.2f; 0; -",
+                        return String.format(Locale.GERMANY,
+                                "%d; %s; %.2f",
                                 p.getId(),
                                 p.getFecha().format(FORMATO_F),
                                 p.getMonto()
@@ -565,7 +575,8 @@ public class ControladorProduccion {
                             .getCosechador()
                             .getRut();
 
-                    return String.format("%d; %s; %.2f; %d; %s",
+                    return String.format(Locale.GERMANY,
+                            "%d; %s; %.2f; %d; %s",
                             p.getId(),
                             p.getFecha().format(FORMATO_F),
                             p.getMonto(),

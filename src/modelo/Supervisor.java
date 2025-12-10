@@ -2,7 +2,9 @@ package modelo;
 
 import utilidades.Rut;
 
-public class Supervisor extends Persona{
+import java.io.Serializable;
+
+public class Supervisor extends Persona implements Serializable {
   private String profesion;
   private Cuadrilla cuad;
 

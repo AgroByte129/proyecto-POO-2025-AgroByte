@@ -626,7 +626,7 @@ public class ControladorProduccion {
         );
     }
 
-    private void saveSystemData() throws GestionHuertosException {
+    public void saveSystemData() throws GestionHuertosException {
         //Personas
         iO.savePersonas(personas.toArray(Persona[]::new));
 

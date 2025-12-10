@@ -53,7 +53,7 @@ public class Rut implements Serializable {
 
         char dvChar = dvPart.charAt(0);
 
-        if (!(Character.isDigit(dvChar) && dvChar != 'K')) { //puse &&, porque con || tambien aceptaba otras letras que no fueran K
+        if (!(Character.isDigit(dvChar) || dvChar != 'K')) {
             throw new IllegalArgumentException("DV invalido. Debe ser 0-9 o K.");
         }
         char dvCal = calcularDV(numero);

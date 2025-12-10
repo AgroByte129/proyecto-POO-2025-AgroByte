@@ -48,6 +48,6 @@ public class Huerto implements Serializable {
     }
 
     public Cuartel[] getCuarteles() {
-        return cuarteles.toArray(new Cuartel[0]);
+        return cuarteles.toArray(Cuartel[]::new);
     }
 }

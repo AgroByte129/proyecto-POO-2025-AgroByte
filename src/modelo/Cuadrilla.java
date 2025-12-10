@@ -3,6 +3,7 @@ package modelo;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 import utilidades.GestionHuertosException;
@@ -44,38 +45,32 @@ public class Cuadrilla implements Serializable {
         CosechadorAsignado nueva = new CosechadorAsignado(fIni, fFin, meta, this, cos);
         asignaciones.add(nueva);
     }
+
     public Cosechador[] getCosechadores() {
-        Cosechador[] arr = new Cosechador[asignaciones.size()];
-        for (int i = 0; i < asignaciones.size(); i++) {
-            arr[i] = asignaciones.get(i).getCosechador();
-        }
-        return arr;
+        return asignaciones.stream()
+                .map(CosechadorAsignado::getCosechador)
+                .toArray(Cosechador[]::new);
     }
+
     public double getKilosPesados() {
-        double total = 0;
-
-        for(CosechadorAsignado cosAs: asignaciones){
-            for(Pesaje p: cosAs.getPesajes()){
-                total += p.getCantidadKg();
-            }
-        }
-
-        return total;
+        return asignaciones.stream()
+                .flatMap(a -> Arrays.stream(a.getPesajes()))
+                .mapToDouble(Pesaje::getCantidadKg)
+                .sum();
     }
     public CosechadorAsignado[] getAsignaciones() {
-        return asignaciones.toArray(new CosechadorAsignado[0]);
+        return asignaciones.toArray(CosechadorAsignado[]::new);
     }
 
     public static int getMaximoCosechadores() { return maximoCosechadores; }
     public static void setMaximoCosechadores(int max) { maximoCosechadores = max; }
 
     private Optional<CosechadorAsignado> findCosechadorByRut(Cosechador cos) {
-        for (CosechadorAsignado ca : asignaciones) {
-            if (ca.getCosechador().getRut().equals(cos.getRut())) {
-                return Optional.of(ca);
-            }
-        }
-        return Optional.empty();
+        return asignaciones.stream()
+                .filter(ca -> ca.getCosechador()
+                        .getRut()
+                        .equals(cos.getRut()))
+                .findFirst();
     }
 
 }

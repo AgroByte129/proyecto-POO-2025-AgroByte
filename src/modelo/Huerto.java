@@ -3,6 +3,7 @@ package modelo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Huerto implements Serializable {
     private String nombre;
@@ -29,7 +30,7 @@ public class Huerto implements Serializable {
     public void setPropietario(Propietario propietario) {this.propietario = propietario;}
 
     public boolean addCuartel(int id, float sup, Cultivo cult) {
-        if(getCuartel(id) != null){return false;}//busca si ya hay cuartel duplicado
+        if(getCuartel(id).isPresent()){return false;}//busca si ya hay cuartel duplicado
 
         Cuartel cuartel = new Cuartel(id, sup, cult, this);
 
@@ -40,11 +41,10 @@ public class Huerto implements Serializable {
         return cuarteles.add(cuartel);
     }
 
-    public Cuartel getCuartel(int id) {
-        for(Cuartel c : cuarteles){
-            if(c.getId() == id){return c;}
-        }
-        return null;
+    public Optional<Cuartel> getCuartel(int id) {
+        return cuarteles.stream()
+                .filter(c -> c.getId() == id)
+                .findFirst();
     }
 
     public Cuartel[] getCuarteles() {

@@ -105,9 +105,8 @@ public class ControladorProduccion {
         if (h.isEmpty())
             throw new GestionHuertosException("No existe un huerto con el nombre indicado");
 
-        Cuartel c = h.get().getCuartel(idCuartel);
-        if (c == null)
-            throw new GestionHuertosException("No existe el cuartel con el id indicado");
+        Cuartel c = h.get().getCuartel(idCuartel).orElseThrow(() ->
+                new GestionHuertosException("No existe el cuartel con el id indicado"));
 
         if (!c.setEstado(estado))
             throw new GestionHuertosException("El nuevo estado del cuartel no es compatible con el estado actual");
@@ -124,9 +123,8 @@ public class ControladorProduccion {
         if (h.isEmpty())
             throw new GestionHuertosException("No existe un huerto con el nombre indicado");
 
-        Cuartel c = h.get().getCuartel(idCuartel);
-        if (c == null)
-            throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado");
+        Cuartel c = h.get().getCuartel(idCuartel).orElseThrow(() ->
+                new GestionHuertosException("No existe el cuartel con el id indicado"));
 
         if (!finEstim.isAfter(inicio))
             throw new GestionHuertosException("La fecha de término debe ser posterior a la de inicio");

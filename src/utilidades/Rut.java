@@ -100,6 +100,13 @@ public class Rut implements Serializable {
         return sb + "-" + dv;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Rut other = (Rut) obj;
+        return this.numero == other.numero && this.dv == other.dv;
+    }
 
 }
 

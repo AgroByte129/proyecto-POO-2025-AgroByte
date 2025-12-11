@@ -63,7 +63,7 @@ public class CambioDeEstadoPlanDialog extends JDialog {
 
 
             for (String linea : listado) {
-                String[] datos = linea.split("; ");
+                String[] datos = linea.split(";\\s*");
                 int idActual = Integer.parseInt(datos[0].trim());
 
                 if (idActual == idBuscado) {

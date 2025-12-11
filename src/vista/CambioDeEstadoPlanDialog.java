@@ -11,7 +11,7 @@ public class CambioDeEstadoPlanDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-
+//comentario para commit
     private JLabel cambioDeEstadoPlanLabel;
     private JLabel nombreLabel;
     private JLabel cumplimientoDeMetaLabel;

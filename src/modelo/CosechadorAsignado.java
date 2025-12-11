@@ -34,44 +34,36 @@ public class CosechadorAsignado implements Serializable {
     public Cosechador getCosechador() {return cosechador;}
 
     public double getCumplimientoMeta() {
-        double totalKilos = 0;
-        for (Pesaje p : pesajes) {
-            totalKilos += p.getCantidadKg();
-        }
-        if (metaKilos <= 0) return 0;
-        return (totalKilos / metaKilos) * 100.0;
+        return metaKilos <= 0 ? 0 :
+                (pesajes.stream()
+                        .mapToDouble(Pesaje::getCantidadKg)
+                        .sum() / metaKilos) * 100.0;
     }
 
     public int getNroPesajesImpagos() {
-        int count = 0;
-        for (Pesaje p : pesajes) {
-            if (!p.isPagado()) count++;
-        }
-        return count;
+        return Math.toIntExact(pesajes.stream()
+                .filter(p -> !p.isPagado())
+                .count());
     }
 
     public double getMontoPesajesImpagos() {
-        double total = 0;
-        for (Pesaje p : pesajes) {
-            if (!p.isPagado()) total += p.getMonto();
-        }
-        return total;
+        return pesajes.stream()
+                .filter(p -> !p.isPagado())
+                .mapToDouble(Pesaje::getMonto)
+                .sum();
     }
 
     public int getNroPesajesPagados() {
-        int count = 0;
-        for (Pesaje p : pesajes) {
-            if (p.isPagado()) count++;
-        }
-        return count;
+        return Math.toIntExact(pesajes.stream()
+                .filter(Pesaje::isPagado)
+                .count());
     }
 
     public double getMontoPesajesPagados() {
-        double total = 0;
-        for (Pesaje p : pesajes) {
-            if (p.isPagado()) total += p.getMonto();
-        }
-        return total;
+        return pesajes.stream()
+                .filter(Pesaje::isPagado)
+                .mapToDouble(Pesaje::getMonto)
+                .sum();
     }
 
     public void addPesaje(Pesaje p) {
@@ -81,7 +73,7 @@ public class CosechadorAsignado implements Serializable {
     }
 
     public Pesaje[] getPesajes() {
-        return pesajes.toArray(new Pesaje[0]);
+        return pesajes.toArray(Pesaje[]::new);
     }
 
 

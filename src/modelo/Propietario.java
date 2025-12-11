@@ -22,19 +22,17 @@ public class Propietario extends Persona implements Serializable {
     public boolean addHuerto(Huerto huerto){
 
         for (Huerto existente : huertos) {
-
             if (existente.getNombre().equalsIgnoreCase(huerto.getNombre())) {
                 return false;
             }
         }
 
         huertos.add(huerto);
-
         return true;
     }
 
     public Huerto[] getHuertos(){
-        return huertos.toArray(new Huerto[0]);
+        return huertos.toArray(Huerto[]::new);
     }
 }
 

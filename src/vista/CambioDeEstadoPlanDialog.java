@@ -7,7 +7,7 @@ import utilidades.GestionHuertosException;
 import javax.swing.*;
 import java.awt.event.*;
 
-//Arturo Gómez Senn
+//Arturo Felipe Gómez Senn
 
 public class CambioDeEstadoPlanDialog extends JDialog {
     private JPanel contentPane;

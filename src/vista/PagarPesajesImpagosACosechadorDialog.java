@@ -8,7 +8,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 
-//Arturo Gómez Senn
+//Arturo Felipe Gómez Senn
 
 public class PagarPesajesImpagosACosechadorDialog extends JDialog {
     private JPanel contentPane;

@@ -11,7 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-//comentario de confirmacion para vista.icons
+//Nicolás Gonzáles Canales y Arturo Gómez Senn
+
 public class ControladorProduccion {
     private static ControladorProduccion instance;
     private static final GestionHuertosIO iO = GestionHuertosIO.getInstance();
@@ -116,7 +117,7 @@ public class ControladorProduccion {
                                   LocalDate finEstim, double meta, double precioBase,
                                   String nomHuerto, int idCuartel) throws GestionHuertosException {
 
-        if (findPlanById(idPlan).isPresent())
+        if (findPlanCosechaById(idPlan).isPresent())
             throw new GestionHuertosException("Ya existe un plan con el id indicado");
 
         Optional<Huerto> h = findHuertoByNombre(nomHuerto);
@@ -134,7 +135,7 @@ public class ControladorProduccion {
     }
 
     public void changeEstadoPlan(int idPlan, EstadoPlan estado) throws GestionHuertosException {
-        Optional<PlanCosecha> pOp = findPlanById(idPlan);
+        Optional<PlanCosecha> pOp = findPlanCosechaById(idPlan);
         if (pOp.isEmpty())
             throw new GestionHuertosException("No existe un plan con el id indicado");
 
@@ -146,7 +147,7 @@ public class ControladorProduccion {
     public void addCuadrillaToPlan(int idPlan, int idCuad, String nomCuad,
                                    Rut rutSupervisor) throws GestionHuertosException {
 
-        Optional<PlanCosecha> p = findPlanById(idPlan);
+        Optional<PlanCosecha> p = findPlanCosechaById(idPlan);
         if (p.isEmpty())
             throw new GestionHuertosException("No existe un plan con el id indicado");
 
@@ -164,7 +165,7 @@ public class ControladorProduccion {
                                          LocalDate fInicio, LocalDate fFin,
                                          double meta, Rut rutCosechador) throws GestionHuertosException {
 
-        Optional<PlanCosecha> p = findPlanById(idPlan);
+        Optional<PlanCosecha> p = findPlanCosechaById(idPlan);
         if (p.isEmpty())
             throw new GestionHuertosException("No existe un plan con el id indicado");
 
@@ -194,7 +195,7 @@ public class ControladorProduccion {
         if (cosechadorOpt.isEmpty())
             throw new GestionHuertosException("No existe un cosechador con el rut indicado");
 
-        Optional<PlanCosecha> planOpt = findPlanById(idPlan);
+        Optional<PlanCosecha> planOpt = findPlanCosechaById(idPlan);
         if (planOpt.isEmpty())
             throw new GestionHuertosException("No existe un plan con el id indicado");
         PlanCosecha plan = planOpt.get();
@@ -403,7 +404,7 @@ public class ControladorProduccion {
 
                 //Ordena según los kilos de manera descendente.
                 .sorted(Comparator.comparingDouble((String s) -> {
-                    String[] datos = s.split("; ");
+                    String[] datos = s.split("\\s*;\\s*");
                     return Double.parseDouble(datos[6]);
                 }).reversed()) //revierte el orden para que sea descendente.
 
@@ -443,7 +444,7 @@ public class ControladorProduccion {
                 })
 
                 .sorted(Comparator.comparing((String s) ->{
-                    String[] datos = s.split("; ");
+                    String[] datos = s.split("\\s*;\\s*");
                     return Double.parseDouble(datos[6]);
                 }).reversed())
                 .toArray(String[]::new);
@@ -660,7 +661,7 @@ public class ControladorProduccion {
                 String linea = sc.nextLine();
                 if (linea.startsWith("#") || linea.isBlank()) continue;
 
-                String[] tokens = linea.split("; ");
+                String[] tokens = linea.split("\\s*;\\s*");
                 int num = Integer.parseInt(limpiarMiles(tokens[1]));
 
                 for (int i = 0; i < num; i++) {
@@ -843,7 +844,7 @@ public class ControladorProduccion {
                 .findFirst();
     }
 
-    private Optional<PlanCosecha> findPlanById(int id) {
+    private Optional<PlanCosecha> findPlanCosechaById(int id) {
         return planes.stream()
                 .filter(p -> p.getId() == id)
                 .findFirst();

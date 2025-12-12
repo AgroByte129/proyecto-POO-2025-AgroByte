@@ -7,6 +7,8 @@ import utilidades.GestionHuertosException;
 import javax.swing.*;
 import java.awt.event.*;
 
+//Arturo Gómez Senn
+
 public class CambioDeEstadoPlanDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
@@ -34,7 +36,7 @@ public class CambioDeEstadoPlanDialog extends JDialog {
 
         comboBoxNEstado.setModel(new DefaultComboBoxModel<>(EstadoPlan.values()));
 
-        buttonOK.setEnabled(false);
+        buttonOK.setEnabled(false);// Deshabilitado hasta encontrar un plan
         comboBoxNEstado.setEnabled(false);
 
         buttonOK.addActionListener(e -> onOK());
@@ -63,7 +65,8 @@ public class CambioDeEstadoPlanDialog extends JDialog {
 
 
             for (String linea : listado) {
-                String[] datos = linea.split(";\\s*");
+                // Intentemos usar regex para tolerar los datos que vengan con o sin espacios
+                String[] datos = linea.split("\\s*;\\s*");
                 int idActual = Integer.parseInt(datos[0].trim());
 
                 if (idActual == idBuscado) {
@@ -122,6 +125,7 @@ public class CambioDeEstadoPlanDialog extends JDialog {
         dispose();
     }
 
+    // Main sólo para pruebas individuales
     public static void main(String[] args) {
 
         // CÓDIGO AGREGADO PARA PRUEBAS
@@ -132,7 +136,7 @@ public class CambioDeEstadoPlanDialog extends JDialog {
             System.err.println("Error cargando datos de prueba: " + e.getMessage());
             e.printStackTrace();
         }
-        // --------
+        // CÓDIGO AGREGADO PARA PRUEBAS
 
         CambioDeEstadoPlanDialog dialog = new CambioDeEstadoPlanDialog();
         dialog.setVisible(true);

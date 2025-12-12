@@ -9,6 +9,8 @@ import java.time.format.DateTimeParseException;
 import java.util.Locale;
 import java.util.Scanner;
 
+//Nicolás Gonzáles Canales y Arturo Gómez Senn
+
 public class GestionHuertosUI {
     private static GestionHuertosUI instance;
     private Scanner tcld = new Scanner(System.in).useDelimiter("[\\t\\n]+");
@@ -343,15 +345,7 @@ public class GestionHuertosUI {
         }
     }
     private void pagaPesajesPendientesACosechador(){
-        System.out.println("\n-> Pagando pesajes pendientes de un cosechador\n");
-        int idPesaje = validaNumero("Ingrese un ID para el pago: ", "p", "int").intValue();
-        Rut rutCos = ingresaRut("Rut cosechador: ");
-
-        try{//Se cambia el formato a alemán poque ahí se separa con "." los miles y "," los decimales
-            System.out.printf(Locale.GERMANY,"%n%s %,.1f%n", "Monto ha pagar al cosechador: ", cP.addPagoPesaje(idPesaje, rutCos));
-        }catch(GestionHuertosException e){
-            System.out.println(e.getMessage());
-        }
+        new PagarPesajesImpagosACosechadorDialog().setVisible(true);
     }
 
     private void listaPropietarios() {

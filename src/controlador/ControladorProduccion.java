@@ -299,7 +299,7 @@ public class ControladorProduccion {
 
         return Arrays.stream(cuadrillas)
                 .map(c -> String.format(
-                        "%s; %s; %s",
+                        "%s;%s;%s",
                         c.getId(),
                         c.getNombre(),
                         c.getPlanCosecha().getId()

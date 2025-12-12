@@ -40,17 +40,21 @@ public class GestionHuertosUI {
                     2. Menú Huertos
                     3. Menú Planes de Cosecha
                     4. Menú Listados
-                    5. Salir""");
-            respuesta = validaNumero("\tOpción: ", "r[1,5]", "byte").byteValue();
+                    5. Leer Datos Sistema
+                    6. Guardar Datos Sistema
+                    7. Salir""");
+            respuesta = validaNumero("\tOpción: ", "r[1,7]", "byte").byteValue();
 
             switch(respuesta){
                 case 1 -> creaPersona();
                 case 2 -> menuHuertos();
                 case 3 -> menuPlanesCosecha();
                 case 4 -> menuListados();
-                case 5 -> System.out.println("Saliendo...");
+                case 5 -> leerDatosSistema();
+                case 6 -> guardarDatosSistema();
+                case 7 -> System.out.println("Saliendo...");
             }
-        }while(respuesta != 5);
+        }while(respuesta != 7);
     }
     //*** MENÚ HUERTO ***
     private void menuHuertos(){
@@ -274,17 +278,7 @@ public class GestionHuertosUI {
         }
     }
     private void cambiaEstadoPlan(){
-        System.out.println("\n-> Cambiando el estado de un plan de cosecha\n");
-        int idPlan = validaNumero("Id plan: ", "p", "int").intValue();
-        String msj = "Nuevo estado plan [Planificado, Ejecutando, Cerrado, Cancelado]: ";
-        EstadoPlan estado = (EstadoPlan) validaEnum("EstadoPlan", msj);
-
-        try{
-            cP.changeEstadoPlan(idPlan, estado);
-            System.out.println("\n-> Estado cambiado éxitosamente");
-        }catch(GestionHuertosException e){
-            System.out.println(e.getMessage());
-        }
+        new CambioDeEstadoPlanDialog().setVisible(true);
     }
     private void agregaCuadrillasAPlan(){
         System.out.println("\n-> Agregando cuadrillas a un plan de cosecha\n");
@@ -711,4 +705,23 @@ public class GestionHuertosUI {
         }
         return rut;
     }
+
+    private void leerDatosSistema() {
+        try {
+            cP.readSystemData();
+            System.out.println("\n-> Datos del sistema leídos exitosamente desde archivos .obj");
+        } catch (GestionHuertosException e) {
+            System.out.println("Error al leer datos: " + e.getMessage());
+        }
+    }
+
+    private void guardarDatosSistema() {
+        try {
+            cP.saveSystemData();
+            System.out.println("\n-> Datos del sistema guardados exitosamente en archivos .obj");
+        } catch (GestionHuertosException e) {
+            System.out.println("Error al guardar datos: " + e.getMessage());
+        }
+    }
+
 }

@@ -666,7 +666,7 @@ public class ControladorProduccion {
                 for (int i = 0; i < num; i++) {
                     String datos = sc.nextLine();
                     if (datos.isEmpty()) continue;
-                    String[] dato = datos.split("; ");
+                    String[] dato = datos.split("\\s*;\\s*");
 
                     for (int j = 0; j < dato.length; j++) {
                         dato[j] = dato[j].trim();

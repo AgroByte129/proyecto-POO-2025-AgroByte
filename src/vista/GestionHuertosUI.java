@@ -278,19 +278,7 @@ public class GestionHuertosUI {
         }
     }
     private void cambiaEstadoPlan(){
-        System.out.println("\n-> Cambiando el estado de un plan de cosecha\n");
-        int idPlan = validaNumero("Id plan: ", "p", "int").intValue();
-        String msj = "Nuevo estado plan [Planificado, Ejecutando, Cerrado, Cancelado]: ";
-        EstadoPlan estado = (EstadoPlan) validaEnum("EstadoPlan", msj);
-
-        try{
-            cP.changeEstadoPlan(idPlan, estado);
-            System.out.println("\n-> Estado cambiado éxitosamente");
-        }catch(GestionHuertosException e){
-            System.out.println(e.getMessage());
-        }
-
-        //new CambioDeEstadoPlanDialog().setVisible(true);
+        new CambioDeEstadoPlanDialog().setVisible(true);
     }
     private void agregaCuadrillasAPlan(){
         System.out.println("\n-> Agregando cuadrillas a un plan de cosecha\n");

@@ -3,8 +3,10 @@ package modelo;
 import utilidades.EstadoPlan;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 import utilidades.GestionHuertosException;
@@ -100,17 +102,14 @@ public class PlanCosecha implements Serializable {
     }
 
     public double getCumplimientoMeta() {
-        double kilos = 0.0;
+        double kilos = cuadrillas.stream()
+                .map(Cuadrilla::getAsignaciones)
+                .flatMap(Arrays::stream)
+                .map(CosechadorAsignado::getPesajes)
+                .flatMap(Arrays::stream)
+                .mapToDouble(Pesaje::getCantidadKg)
+                .sum();
 
-        for (Cuadrilla cuad : cuadrillas) {
-            for (CosechadorAsignado asign : cuad.getAsignaciones()) {
-                for (Pesaje p : asign.getPesajes()) {
-                    kilos += p.getCantidadKg();
-                }
-            }
-        }
-
-        if (metaKilos <= 0) return 0;
         return Math.min((kilos / metaKilos) * 100.0, 100.0);
     }
 
@@ -133,14 +132,13 @@ public class PlanCosecha implements Serializable {
     }
 
     public Cuadrilla[] getCuadrillas() {
-        return cuadrillas.toArray(new Cuadrilla[0]);
+        return cuadrillas.toArray(Cuadrilla[]::new);
     }
 
     private Optional<Cuadrilla> findCuadrillaById(int idCuad) {
-        for (Cuadrilla c : cuadrillas) {
-            if (c.getId() == idCuad) return Optional.of(c);
-        }
-        return Optional.empty();
+        return cuadrillas.stream()
+                .filter(c -> c.getId() == idCuad)
+                .findFirst();
     }
 
 }

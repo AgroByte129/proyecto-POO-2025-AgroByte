@@ -36,5 +36,5 @@ public class Cultivo implements Serializable {
         }
         return cuarteles.add(cuartel);
     }
-    public Cuartel[] getCuarteles() {return cuarteles.toArray(new Cuartel[0]);}
+    public Cuartel[] getCuarteles() {return cuarteles.toArray(Cuartel[]::new);}
 }

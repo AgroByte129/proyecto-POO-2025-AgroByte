@@ -22,5 +22,5 @@ public class PagoPesaje implements Serializable {
         for (Pesaje p : pesaje) total += p.getMonto();
         return total;
     }
-    public Pesaje[] getPesajes(){return pesaje.toArray(new Pesaje[0]);}
+    public Pesaje[] getPesajes(){return pesaje.toArray(Pesaje[]::new);}
 }

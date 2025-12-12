@@ -23,25 +23,22 @@ public class Cosechador extends Persona implements Serializable {
         cosAsignados.add(cosAs);
     }
     public Cuadrilla[] getCuadrillas(){
-        Cuadrilla[] cuadrillas = new Cuadrilla[cosAsignados.size()];
-        for (int i = 0; i < cosAsignados.size(); i++){
-            cuadrillas[i] = cosAsignados.get(i).getCuadrilla();
-        }
-        return cuadrillas;
+        return cosAsignados.stream()
+                .map(CosechadorAsignado::getCuadrilla)
+                .toArray(Cuadrilla[]::new);
     }
 
     public Optional<CosechadorAsignado> getAsignacion(int idCuad, int idPlan) {
-        Optional<CosechadorAsignado>  cosechadorAsignado = Optional.empty();
-        for (CosechadorAsignado ca : cosAsignados) {
-            Cuadrilla cuad = ca.getCuadrilla();
-            if (cuad.getId() == idCuad && cuad.getPlanCosecha().getId() == idPlan) {
-                cosechadorAsignado = Optional.of(ca);
-                break;
-            }
-        }
-        return cosechadorAsignado;
+        return cosAsignados.stream()
+                .filter(cosAs -> {
+                    Cuadrilla c = cosAs.getCuadrilla();
+                    return c.getId() == idCuad &&
+                            c.getPlanCosecha().getId() == idPlan;
+                })
+                .findFirst();
     }
+
     public CosechadorAsignado[] getAsignaciones() {
-        return cosAsignados.toArray(new CosechadorAsignado[0]);
+        return cosAsignados.toArray(CosechadorAsignado[]::new);
     }
 }

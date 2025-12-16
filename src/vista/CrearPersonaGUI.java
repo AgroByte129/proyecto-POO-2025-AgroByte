@@ -1,5 +1,8 @@
 package vista;
 //Rafael Ignacio Figueroa Espinoza no terminado
+
+
+// te sale arturo?
 import javax.swing.*;
 import java.awt.event.*;
 

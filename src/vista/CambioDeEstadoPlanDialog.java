@@ -53,6 +53,10 @@ public class CambioDeEstadoPlanDialog extends JDialog {
 
         textFieldID.addActionListener(e -> buscarPlan());
 
+        showNombreLabel.setText("-");
+        showCumplimientoMetaLabel.setText("-");
+        showEstadoActualLabel.setText("-");
+
         pack();
         setLocationRelativeTo(null);
         setAlwaysOnTop(true);

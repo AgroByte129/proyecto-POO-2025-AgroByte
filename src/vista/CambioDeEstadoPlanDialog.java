@@ -55,6 +55,7 @@ public class CambioDeEstadoPlanDialog extends JDialog {
 
         pack();
         setLocationRelativeTo(null);
+        setAlwaysOnTop(true);
     }
 
     private void buscarPlan() {

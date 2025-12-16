@@ -62,6 +62,7 @@ public class PagarPesajesImpagosACosechadorDialog extends JDialog {
 
         pack();
         setLocationRelativeTo(null);
+        setAlwaysOnTop(true);
     }
 
     private void buscarDeuda() {

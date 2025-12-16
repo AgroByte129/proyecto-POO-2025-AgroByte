@@ -189,18 +189,7 @@ public class GestionHuertosUI {
         }
     }
     private void creaCultivo(){
-        System.out.println("\n-> Creando un cultivo\n");
-        int id = validaNumero("Identificación (No negativo): ", "p", "int").intValue();
-        String especie = validaEntradaString("Especie: ");
-        String variedad = validaEntradaString("Variedad: ");
-        float rendimiento = validaNumero("Rendmiento: ", "p","float").floatValue();
-
-        try{
-            cP.createCultivo(id, especie, variedad, rendimiento);
-            System.out.println("\n-> Cultivo creado éxitosamente\n");
-        }catch(GestionHuertosException e){
-            System.out.println(e.getMessage());
-        }
+        new CreacionDeCultivoDialog().setVisible(true);
     }
     private void creaHuerto(){
         System.out.println("\n-> Creando un huerto\n");

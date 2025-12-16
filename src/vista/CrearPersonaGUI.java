@@ -1,7 +1,5 @@
 package vista;
-//Rafael Ignacio Figueroa Espinoza no terminado
-
-
+//Rafael Ignacio Figueroa Espinoza
 // te sale arturo? sí
 import controlador.ControladorProduccion;
 
@@ -96,10 +94,107 @@ public class CrearPersonaGUI extends JDialog {
         pack();//para ajustar el tamaño
     }
 
+
     private void onOK() {
-        // logica despues
-        dispose();
+        //Cambie  el onOK debido a la creacion de las clases auxiliares, y ya que al crear a una persona no reconocia los erroes de fechas, ruts etc
+        try {
+            String rut = txtRut.getText().trim();
+            String nombre = txtNombre.getText().trim();
+            String email = txtEmail.getText().trim();
+            String direccion = txtDireccion.getText().trim();
+
+            if (rut.isEmpty() || nombre.isEmpty() || email.isEmpty() || direccion.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Existen datos obligatorios vacios",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+
+            if (rbPropietario.isSelected()) {
+
+                String dirComercial = txtExtra.getText().trim();
+                if (dirComercial.isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Debe ingresar la direccion comercial",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                cp.createPropietario(
+                        utilidades.Rut.of(rut),
+                        nombre,
+                        email,
+                        direccion,
+                        dirComercial
+                );
+
+            } else if (rbSupervisor.isSelected()) {
+
+                String profesion = txtExtra.getText().trim();
+                if (profesion.isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Debe ingresar la profesion",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                cp.createSupervisor(
+                        utilidades.Rut.of(rut),
+                        nombre,
+                        email,
+                        direccion,
+                        profesion
+                );
+
+            } else if (rbCosechador.isSelected()) {
+
+                String fechaTexto = txtFechaNac.getText().trim();
+                if (fechaTexto.isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Debe ingresar la fecha de nacimiento",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                java.time.LocalDate fecha = java.time.LocalDate.parse(
+                        fechaTexto,
+                        java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                );
+
+                cp.createCosechador(
+                        utilidades.Rut.of(rut),
+                        nombre,
+                        email,
+                        direccion,
+                        fecha
+                );
+            }
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Persona creada correctamente",
+                    "Exito",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            dispose();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
+
 
     private void onCancel() {
         dispose();

@@ -1,5 +1,5 @@
 package vista;
-//Rafael Ignacio Figueroa ESpinoza no terminado
+//Rafael Ignacio Figueroa Espinoza no terminado
 import javax.swing.*;
 import java.awt.event.*;
 

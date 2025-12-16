@@ -55,7 +55,7 @@ public class CambioDeEstadoPlanDialog extends JDialog {
 
         showNombreLabel.setText("-");
         showCumplimientoMetaLabel.setText("-");
-        showEstadoActualLabel.setText("-"); //
+        showEstadoActualLabel.setText("-"); //comentario para commit
 
         pack();
         setLocationRelativeTo(null);

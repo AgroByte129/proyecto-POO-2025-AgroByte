@@ -1,8 +1,8 @@
 package vista;
 
 import javax.swing.*;
-
-public class GUIMsg {
+//Clase de utilidad.
+public final class GUIMsg {
 
     private GUIMsg() {
         // no instanciable

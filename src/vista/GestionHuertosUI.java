@@ -415,8 +415,7 @@ public class GestionHuertosUI {
 
 
     private void listaPesajesCosechador() {
-        System.out.print("Rut del cosechador: ");
-        Rut rut = Rut.of(tcld.next());
+        Rut rut = ingresaRut("Rut cosechador: ");
 
         System.out.printf("""
             LISTADO DE PESAJES DEL COSECHADOR

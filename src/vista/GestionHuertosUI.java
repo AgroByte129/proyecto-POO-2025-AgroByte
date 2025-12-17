@@ -150,46 +150,12 @@ public class GestionHuertosUI {
     }
 
     private void creaPersona(){
-        System.out.println("\n-> Creando a una persona\n");
-        String msj = "Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ";
-        byte rol = validaNumero(msj,"r[1,3]", "byte").byteValue();
-        Rut rut = ingresaRut("Rut: ");
-        String nom = validaEntradaString("Nombre: ");
-        String email = validaEntradaString("Email: ");
-        String dir = validaEntradaString("Dirección: ");
-        LocalDate fechaNac = validaEntradaFecha("Fecha de nacimiento (dd/mm/aaaa): ");
-
-        switch(rol){
-            case 1 -> {
-                String dirComercial = validaEntradaString("Dirección comercial: ");
-                try{
-                    cP.createPropietario(rut, nom, email, dir, dirComercial);
-                    System.out.println("\n-> Propietario creado éxitosamente");
-                }catch(GestionHuertosException e){
-                    System.out.println(e.getMessage());
-                }
-            }
-            case 2 -> {
-                String profesion = validaEntradaString("Profesión: ");
-                try{
-                    cP.createSupervisor(rut, nom, email, dir, profesion);
-                    System.out.println("\n-> Supervisor creado éxitosamente");
-                }catch (GestionHuertosException e){
-                    System.out.println(e.getMessage());
-                }
-            }
-            case 3 -> {
-                try{
-                    cP.createCosechador(rut, nom, email, dir, fechaNac);
-                    System.out.println("\n-> Cosechador creado éxitosamente");
-                }catch(GestionHuertosException e){
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
+        CrearPersonaGUI crearPersonaGUI = new CrearPersonaGUI();
+        crearPersonaGUI.setVisible(true);
     }
     private void creaCultivo(){
-        new CreacionDeCultivoDialog().setVisible(true);
+        CreacionDeCultivoDialog cultivo = new CreacionDeCultivoDialog();
+        cultivo.setVisible(true);
     }
     private void creaHuerto(){
         System.out.println("\n-> Creando un huerto\n");
@@ -334,8 +300,9 @@ public class GestionHuertosUI {
             System.out.println(e.getMessage());
         }
     }
-    private void pagaPesajesPendientesACosechador(){
-        new PagarPesajesImpagosACosechadorDialog().setVisible(true);
+    private void pagaPesajesPendientesACosechador() {
+        PagarPesajesImpagosACosechadorDialog pagarPes = new PagarPesajesImpagosACosechadorDialog();
+        pagarPes.setVisible(true);
     }
 
     private void listaPropietarios() {

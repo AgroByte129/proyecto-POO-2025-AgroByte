@@ -129,16 +129,5 @@ public class PagarPesajesImpagosACosechadorDialog extends JDialog {
     }
 
     // Main sólo para pruebas individuales
-    public static void main(String[] args) {
-        try {
-            ControladorProduccion.getInstance().readDataFromTextFile();
-            System.out.println("Datos cargados para prueba.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        PagarPesajesImpagosACosechadorDialog dialog = new PagarPesajesImpagosACosechadorDialog();
-        dialog.setVisible(true);
-        System.exit(0);
-    }
 }

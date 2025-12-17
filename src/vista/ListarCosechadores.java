@@ -1,5 +1,8 @@
 package vista;
 
+import controlador.ControladorProduccion;
+
+import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -7,7 +10,6 @@ import java.awt.event.*;
 
 public class ListarCosechadores extends JDialog {
     private JPanel contentPane;
-    private JButton buttonOK;
     private JButton buttonBack;
     private JTable lista;
     private JLabel labelCosechadores;
@@ -15,13 +17,6 @@ public class ListarCosechadores extends JDialog {
     public ListarCosechadores(String[] datos) {
         setContentPane(contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
-
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
 
         buttonBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -52,12 +47,17 @@ public class ListarCosechadores extends JDialog {
         //Lista
         String[] columnas = {"Rut", "Nombre", "Dirección", "email", "Fecha Nac.",
                 "Nro. Cuadrillas", "Monto impago $", "Monto pagado $"};
+        String [] arregloCosechadores = ControladorProduccion.getInstance().listCosechadores();
+
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0){
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // ninguna celda editable
             }
         };
+        for (int i=0; i<arregloCosechadores.length; i++){
+            modelo.addRow(arregloCosechadores);
+        }
         lista.setModel(modelo);
 
         lista.setPreferredScrollableViewportSize(
@@ -65,17 +65,6 @@ public class ListarCosechadores extends JDialog {
                         lista.getRowHeight() * 5)
         );
 
-        /*
-        Aquí debes leer los datos, separarlos y crear una fila con cada datu ;)
-        for(){
-            modelo.addRow();
-        }
-        */
-    }
-
-    private void onOK() {
-        // add your code here
-        dispose();
     }
 
     private void onCancel() {
@@ -83,7 +72,7 @@ public class ListarCosechadores extends JDialog {
         dispose();
     }
 
-    public static void display(String[] datos) {
+    public static void main(String[] datos) {
         ListarCosechadores dialog = new ListarCosechadores(datos);
         dialog.pack();
         dialog.setVisible(true);

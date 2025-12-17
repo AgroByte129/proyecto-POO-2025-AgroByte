@@ -269,7 +269,8 @@ public class GestionHuertosUI {
         }
     }
     private void cambiaEstadoPlan(){
-        new CambioDeEstadoPlanDialog().setVisible(true);
+        CambioDeEstadoPlanDialog dialog = new CambioDeEstadoPlanDialog();
+        dialog.setVisible(true);
     }
     private void agregaCuadrillasAPlan(){
         System.out.println("\n-> Agregando cuadrillas a un plan de cosecha\n");

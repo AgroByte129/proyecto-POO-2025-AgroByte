@@ -105,16 +105,4 @@ public class CrearPersonaGUI extends JDialog {
         dispose();
     }
 
-    public static void main(String[] args) {
-
-        try {
-            ControladorProduccion.getInstance().readDataFromTextFile();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        CrearPersonaGUI dialog = new CrearPersonaGUI();
-        dialog.setVisible(true);
-        System.exit(0);
-    }
 }

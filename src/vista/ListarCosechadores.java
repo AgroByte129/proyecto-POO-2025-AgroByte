@@ -65,6 +65,9 @@ public class ListarCosechadores extends JDialog {
                         lista.getRowHeight() * 5)
         );
 
+        pack();
+        setLocationRelativeTo(null);
+
     }
 
     private void onCancel() {
@@ -74,7 +77,6 @@ public class ListarCosechadores extends JDialog {
 
     public static void main(String[] datos) {
         ListarCosechadores dialog = new ListarCosechadores(datos);
-        dialog.pack();
         dialog.setVisible(true);
     }
 }

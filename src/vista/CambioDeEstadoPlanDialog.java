@@ -131,20 +131,5 @@ public class CambioDeEstadoPlanDialog extends JDialog {
     }
 
     // Main sólo para pruebas individuales
-    public static void main(String[] args) {
 
-        // CÓDIGO AGREGADO PARA PRUEBAS
-        try {
-            ControladorProduccion.getInstance().readDataFromTextFile();
-            System.out.println("Datos cargados correctamente para la prueba.");
-        } catch (Exception e) {
-            System.err.println("Error cargando datos de prueba: " + e.getMessage());
-            e.printStackTrace();
-        }
-        // CÓDIGO AGREGADO PARA PRUEBAS
-
-        CambioDeEstadoPlanDialog dialog = new CambioDeEstadoPlanDialog();
-        dialog.setVisible(true);
-        System.exit(0);
-    }
 }

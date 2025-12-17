@@ -102,15 +102,8 @@ public class CreacionDeCultivoDialog extends JDialog {
         dispose();
     }
 
-    public static void main(String[] args) {
-        try {
-            ControladorProduccion.getInstance().readDataFromTextFile();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    public static void display() {
         CreacionDeCultivoDialog dialog = new CreacionDeCultivoDialog();
         dialog.setVisible(true);
-        System.exit(0);
     }
 }

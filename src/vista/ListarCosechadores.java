@@ -65,6 +65,8 @@ public class ListarCosechadores extends JDialog {
                         lista.getRowHeight() * 5)
         );
 
+        pack();
+        setLocationRelativeTo(null);
     }
 
     private void onCancel() {
@@ -74,7 +76,16 @@ public class ListarCosechadores extends JDialog {
 
     public static void main(String[] datos) {
         ListarCosechadores dialog = new ListarCosechadores(datos);
-        dialog.pack();
+        dialog.setVisible(true);
+    }
+
+    public static void display(String[] datos) {
+        if (datos == null || datos.length == 0) {
+            javax.swing.JOptionPane.showMessageDialog(null, "No hay registros para mostrar.");
+            return;
+        }
+
+        ListarCosechadores dialog = new ListarCosechadores(datos);
         dialog.setVisible(true);
     }
 }

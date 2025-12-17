@@ -150,46 +150,10 @@ public class GestionHuertosUI {
     }
 
     private void creaPersona(){
-        System.out.println("\n-> Creando a una persona\n");
-        String msj = "Rol persona (1 = propietario, 2 = supervisor, 3 = cosechador): ";
-        byte rol = validaNumero(msj,"r[1,3]", "byte").byteValue();
-        Rut rut = ingresaRut("Rut: ");
-        String nom = validaEntradaString("Nombre: ");
-        String email = validaEntradaString("Email: ");
-        String dir = validaEntradaString("Dirección: ");
-        LocalDate fechaNac = validaEntradaFecha("Fecha de nacimiento (dd/mm/aaaa): ");
-
-        switch(rol){
-            case 1 -> {
-                String dirComercial = validaEntradaString("Dirección comercial: ");
-                try{
-                    cP.createPropietario(rut, nom, email, dir, dirComercial);
-                    System.out.println("\n-> Propietario creado éxitosamente");
-                }catch(GestionHuertosException e){
-                    System.out.println(e.getMessage());
-                }
-            }
-            case 2 -> {
-                String profesion = validaEntradaString("Profesión: ");
-                try{
-                    cP.createSupervisor(rut, nom, email, dir, profesion);
-                    System.out.println("\n-> Supervisor creado éxitosamente");
-                }catch (GestionHuertosException e){
-                    System.out.println(e.getMessage());
-                }
-            }
-            case 3 -> {
-                try{
-                    cP.createCosechador(rut, nom, email, dir, fechaNac);
-                    System.out.println("\n-> Cosechador creado éxitosamente");
-                }catch(GestionHuertosException e){
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
+        CrearPersonaGUI.display();
     }
     private void creaCultivo(){
-        new CreacionDeCultivoDialog().setVisible(true);
+        CreacionDeCultivoDialog.display();
     }
     private void creaHuerto(){
         System.out.println("\n-> Creando un huerto\n");
@@ -269,7 +233,7 @@ public class GestionHuertosUI {
         }
     }
     private void cambiaEstadoPlan(){
-        new CambioDeEstadoPlanDialog().setVisible(true);
+        CambioDeEstadoPlanDialog.display();
     }
     private void agregaCuadrillasAPlan(){
         System.out.println("\n-> Agregando cuadrillas a un plan de cosecha\n");
@@ -312,29 +276,11 @@ public class GestionHuertosUI {
         }
     }
     private void agregaPesajeACosechador(){
-        System.out.println("\n-> Agregando pesaje a un cosechador\n");
-        int idPesaje = validaNumero("Id pesaje: ", "p", "int").intValue();
-        Rut rutCos = ingresaRut("Rut cosechador: ");
-        int idPlan = validaNumero("Id plan: ", "p", "int").intValue();
-        int idCuadrilla = validaNumero("Id cuadrilla: ", "p", "int").intValue();
-        float cantKilos = validaNumero("Cantidad de kilos: ", "p", "float").floatValue();
-        byte opcion = validaNumero("Calidad: [1 = Excelente, 2 = Suficiente, 3 = Deficiente]: ", "r[1,3]", "byte").byteValue();
-        Calidad calidad = null;
-        switch(opcion){
-            case 1 -> calidad = Calidad.EXCELENTE;
-            case 2 -> calidad = Calidad.SUFICIENTE;
-            case 3 -> calidad = Calidad.DEFICIENTE;
-        }
-
-        try{
-            cP.addPesaje(idPesaje, rutCos, idPlan, idCuadrilla, cantKilos, calidad);
-            System.out.println("\n-> Pesaje agregado exitosamente al cosechador");
-        }catch(GestionHuertosException e){
-            System.out.println(e.getMessage());
-        }
+        AgregarPesajeCosechador.display();
     }
-    private void pagaPesajesPendientesACosechador(){
-        new PagarPesajesImpagosACosechadorDialog().setVisible(true);
+
+    private void pagaPesajesPendientesACosechador() {
+        PagarPesajesImpagosACosechadorDialog.display();
     }
 
     private void listaPropietarios() {
@@ -379,24 +325,8 @@ public class GestionHuertosUI {
     }
 
     private void listaCosechadores() {
-        String[] listCosechadores = cP.listCosechadores();
-        System.out.printf("""
-        LISTADO DE COSECHADORES
-        -----------------------
-        %-14s  %-22s  %-25s  %-30s  %-17s  %-15s %-10s %s%n
-        """,
-                "Rut", "Nombre", "Dirección", "Email", "Fecha nacimiento",
-                "Nro. Cuadrillas", "Monto impago $", "Monto pagado $");
-
-        if (listCosechadores.length == 0) {
-            System.out.println("No hay cosechadores registrados...");
-        } else {
-            for (String lC : listCosechadores) {
-                String[] dato = lC.split(";");
-                System.out.printf("%-14s %-22s  %-25s  %-30s  %-17s  %-15s %-13s %s%n",
-                        dato[0], dato[1], dato[2], dato[3], dato[4], dato[5], dato[6], dato[7]);
-            }
-        }
+        String[] datos = cP.listCosechadores();
+        vista.ListarCosechadores.display(datos);
     }
 
 

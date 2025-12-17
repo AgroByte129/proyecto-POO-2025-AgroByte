@@ -8,6 +8,8 @@ import utilidades.Rut;
 import javax.swing.*;
 import java.awt.event.*;
 
+//Diego Jara Betancourt y Arturo Gómez Senn
+
 public class AgregarPesajeCosechador extends JDialog {
     private JPanel contentPane;
     private JButton aceptarButton;

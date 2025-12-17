@@ -128,6 +128,9 @@ public class PagarPesajesImpagosACosechadorDialog extends JDialog {
         dispose();
     }
 
-    // Main sólo para pruebas individuales
+    public static void display() {
+        PagarPesajesImpagosACosechadorDialog dialog = new PagarPesajesImpagosACosechadorDialog();
+        dialog.setVisible(true);
+    }
 
 }

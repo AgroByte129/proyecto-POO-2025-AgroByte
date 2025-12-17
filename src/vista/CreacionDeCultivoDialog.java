@@ -102,4 +102,8 @@ public class CreacionDeCultivoDialog extends JDialog {
         dispose();
     }
 
+    public static void display() {
+        CreacionDeCultivoDialog dialog = new CreacionDeCultivoDialog();
+        dialog.setVisible(true);
+    }
 }

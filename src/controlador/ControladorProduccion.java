@@ -405,7 +405,7 @@ public class ControladorProduccion {
                 //Ordena según los kilos de manera descendente.
                 .sorted(Comparator.comparingDouble((String s) -> {
                     String[] datos = s.split("\\s*;\\s*");
-                    return Double.parseDouble(datos[6]);
+                    return Double.parseDouble(datos[6].trim().replace(",", "."));
                 }).reversed()) //revierte el orden para que sea descendente.
 
                 .toArray(String[]::new); //transforma los datos en array.
@@ -445,7 +445,7 @@ public class ControladorProduccion {
 
                 .sorted(Comparator.comparing((String s) ->{
                     String[] datos = s.split("\\s*;\\s*");
-                    return Double.parseDouble(datos[6]);
+                    return Double.parseDouble(datos[6].trim().replace(",", "."));
                 }).reversed())
                 .toArray(String[]::new);
     }

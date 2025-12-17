@@ -131,5 +131,9 @@ public class CambioDeEstadoPlanDialog extends JDialog {
     }
 
     // Main sólo para pruebas individuales
+    public static void display() {
+        AgregarPesajeCosechador dialog = new AgregarPesajeCosechador();
+        dialog.setVisible(true);
+    }
 
 }

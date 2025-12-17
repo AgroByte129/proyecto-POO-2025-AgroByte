@@ -105,4 +105,9 @@ public class CrearPersonaGUI extends JDialog {
         dispose();
     }
 
+    public static void display() {
+        CrearPersonaGUI dialog = new CrearPersonaGUI();
+        dialog.setVisible(true);
+    }
+
 }

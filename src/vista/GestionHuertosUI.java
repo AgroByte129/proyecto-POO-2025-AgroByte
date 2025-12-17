@@ -325,8 +325,7 @@ public class GestionHuertosUI {
     }
 
     private void listaCosechadores() {
-        String[] datos = cP.listCosechadores();
-        vista.ListarCosechadores.display(datos);
+        vista.ListarCosechadores.display();
     }
 
 

@@ -97,6 +97,7 @@ public class CrearPersonaGUI extends JDialog {
 
     private void onOK() {
         //Cambie  el onOK debido a la creacion de las clases auxiliares, y ya que al crear a una persona no reconocia los erroes de fechas, ruts etc
+        //te sale?
         try {
             String rut = txtRut.getText().trim();
             String nombre = txtNombre.getText().trim();

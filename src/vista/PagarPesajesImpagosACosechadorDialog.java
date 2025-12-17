@@ -67,7 +67,7 @@ public class PagarPesajesImpagosACosechadorDialog extends JDialog {
 
     private void buscarDeuda() {
         try {
-            Rut rut = Rut.of(textFieldRUTCosechador.getText());
+            Rut rut = GUIHelper.obtenerRut(textFieldRUTCosechador.getText());
 
             String[] listado = cp.listPesajesCosechador(rut);
 
@@ -97,30 +97,31 @@ public class PagarPesajesImpagosACosechadorDialog extends JDialog {
             if (hayDeuda) {
                 buttonAceptar.setEnabled(true);
             } else {
-                JOptionPane.showMessageDialog(this, "El cosechador no tiene pesajes pendientes.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                GUIMsg.info("El cosechador no tiene pesajes pendientes.");
                 buttonAceptar.setEnabled(false);
             }
 
-        } catch (GestionHuertosException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, "RUT inválido: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            GUIMsg.error(e.getMessage());
         }
     }
 
     private void onOK() {
         try {
+
+            GUIHelper.validarNoVacio(textFieldIDPago.getText(), "ID Pago");
+
             int idPago = Integer.parseInt(textFieldIDPago.getText());
-            Rut rut = Rut.of(textFieldRUTCosechador.getText());
+            Rut rut = GUIHelper.obtenerRut(textFieldRUTCosechador.getText());
 
             double montoPagado = cp.addPagoPesaje(idPago, rut);
 
-            JOptionPane.showMessageDialog(this, "Pago registrado exitosamente.\nMonto total: $" + montoPagado);
+            GUIMsg.info("Pago registrado exitosamente.\nMonto total: $" + montoPagado);
             dispose();
-        } catch (GestionHuertosException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "El ID de pago debe ser un número entero.", "Error", JOptionPane.ERROR_MESSAGE);
+            GUIMsg.error("El ID de pago debe ser un número entero.");
+        } catch (Exception e) {
+            GUIMsg.error(e.getMessage());
         }
     }
 

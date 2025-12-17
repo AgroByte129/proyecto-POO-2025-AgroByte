@@ -64,13 +64,10 @@ public class CreacionDeCultivoDialog extends JDialog {
 
         try {
 
-            if (textFieldEspecie.getText().isBlank() || textFieldVariedad.getText().isBlank()) {
-                JOptionPane.showMessageDialog(this,
-                        "Debe completar Especie y Variedad.",
-                        "Datos incompletos",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+            GUIHelper.validarNoVacio(textFieldID.getText(), "ID");
+            GUIHelper.validarNoVacio(textFieldEspecie.getText(), "Especie");
+            GUIHelper.validarNoVacio(textFieldVariedad.getText(), "Variedad");
+            GUIHelper.validarNoVacio(textFieldRendimiento.getText(), "Rendimiento");
 
             int id = Integer.parseInt(textFieldID.getText().trim());
 
@@ -81,20 +78,13 @@ public class CreacionDeCultivoDialog extends JDialog {
 
             cp.createCultivo(id, especie, variedad, rendimiento);
 
-            JOptionPane.showMessageDialog(this, "Cultivo creado exitosamente.");
+            GUIMsg.info("Cultivo creado exitosamente.");
             dispose();
 
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this,
-                    "El ID debe ser un entero y el Rendimiento un número decimal válido.",
-                    "Error de Formato",
-                    JOptionPane.ERROR_MESSAGE);
+            GUIMsg.error("El ID debe ser entero y el Rendimiento un número decimal válido.");
         } catch (GestionHuertosException e) {
-
-            JOptionPane.showMessageDialog(this,
-                    e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            GUIMsg.error(e.getMessage());
         }
     }
 

@@ -64,7 +64,11 @@ public class CambioDeEstadoPlanDialog extends JDialog {
 
     private void buscarPlan() {
         try {
+
+            GUIHelper.validarNoVacio(textFieldID.getText(), "ID Plan");
+
             int idBuscado = Integer.parseInt(textFieldID.getText().trim());
+
             String[] listado = cp.listPlanesCosecha();
             boolean encontrado = false;
 
@@ -93,13 +97,16 @@ public class CambioDeEstadoPlanDialog extends JDialog {
             }
 
             if (!encontrado) {
-                JOptionPane.showMessageDialog(this, "Plan no encontrado con ID: " + idBuscado, "Error", JOptionPane.ERROR_MESSAGE);
+                GUIMsg.error("Plan no encontrado con ID: " + idBuscado);
                 limpiar();
             }
 
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "El ID debe ser numérico", "Error", JOptionPane.ERROR_MESSAGE);
+            GUIMsg.error("El ID debe ser numérico");
+        }catch (Exception ex) {
+            GUIMsg.error(ex.getMessage());
         }
+
     }
 
     private void limpiar() {
@@ -117,12 +124,10 @@ public class CambioDeEstadoPlanDialog extends JDialog {
 
             cp.changeEstadoPlan(id, nuevoEstado);
 
-            JOptionPane.showMessageDialog(this, "Estado actualizado correctamente.");
+            GUIMsg.info("Estado actualizado correctamente.");
             dispose();
-        } catch (GestionHuertosException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Error en el formato del ID", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            GUIMsg.error(e.getMessage());
         }
     }
 
@@ -130,9 +135,8 @@ public class CambioDeEstadoPlanDialog extends JDialog {
         dispose();
     }
 
-    // Main sólo para pruebas individuales
     public static void display() {
-        AgregarPesajeCosechador dialog = new AgregarPesajeCosechador();
+        CambioDeEstadoPlanDialog dialog = new CambioDeEstadoPlanDialog();
         dialog.setVisible(true);
     }
 

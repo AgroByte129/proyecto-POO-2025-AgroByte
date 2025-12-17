@@ -1,10 +1,13 @@
 package vista;
+
 //Rafael Ignacio Figueroa Espinoza
-// te sale arturo? sí
+
 import controlador.ControladorProduccion;
+import utilidades.Rut;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.time.LocalDate;
 
 public class CrearPersonaGUI extends JDialog {
 
@@ -96,37 +99,26 @@ public class CrearPersonaGUI extends JDialog {
 
 
     private void onOK() {
-        //Cambie  el onOK debido a la creacion de las clases auxiliares, y ya que al crear a una persona no reconocia los erroes de fechas, ruts etc
-        //Sale???
         try {
-            String rut = txtRut.getText().trim();
+            GUIHelper.validarNoVacio(txtRut.getText(), "Rut");
+            GUIHelper.validarNoVacio(txtNombre.getText(), "Nombre");
+            GUIHelper.validarNoVacio(txtEmail.getText(), "Email");
+            GUIHelper.validarNoVacio(txtDireccion.getText(), "Dirección");
+
+            Rut rut = GUIHelper.obtenerRut(txtRut.getText());
+
             String nombre = txtNombre.getText().trim();
             String email = txtEmail.getText().trim();
             String direccion = txtDireccion.getText().trim();
 
-            if (rut.isEmpty() || nombre.isEmpty() || email.isEmpty() || direccion.isEmpty()) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Existen datos obligatorios vacios",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE
-                );
-                return;
-            }
-
             if (rbPropietario.isSelected()) {
 
                 String dirComercial = txtExtra.getText().trim();
-                if (dirComercial.isEmpty()) {
-                    JOptionPane.showMessageDialog(this,
-                            "Debe ingresar la direccion comercial",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+
+                GUIHelper.validarNoVacio(dirComercial, "Dirección Comercial");
 
                 cp.createPropietario(
-                        utilidades.Rut.of(rut),
+                        rut,
                         nombre,
                         email,
                         direccion,
@@ -136,16 +128,11 @@ public class CrearPersonaGUI extends JDialog {
             } else if (rbSupervisor.isSelected()) {
 
                 String profesion = txtExtra.getText().trim();
-                if (profesion.isEmpty()) {
-                    JOptionPane.showMessageDialog(this,
-                            "Debe ingresar la profesion",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+
+                GUIHelper.validarNoVacio(profesion, "Profesión");
 
                 cp.createSupervisor(
-                        utilidades.Rut.of(rut),
+                        rut,
                         nombre,
                         email,
                         direccion,
@@ -155,21 +142,12 @@ public class CrearPersonaGUI extends JDialog {
             } else if (rbCosechador.isSelected()) {
 
                 String fechaTexto = txtFechaNac.getText().trim();
-                if (fechaTexto.isEmpty()) {
-                    JOptionPane.showMessageDialog(this,
-                            "Debe ingresar la fecha de nacimiento",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+                GUIHelper.validarNoVacio(fechaTexto, "Fecha de Nacimiento");
 
-                java.time.LocalDate fecha = java.time.LocalDate.parse(
-                        fechaTexto,
-                        java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                );
+                LocalDate fecha = GUIHelper.obtenerFecha(fechaTexto);
 
                 cp.createCosechador(
-                        utilidades.Rut.of(rut),
+                        rut,
                         nombre,
                         email,
                         direccion,
@@ -177,22 +155,12 @@ public class CrearPersonaGUI extends JDialog {
                 );
             }
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Persona creada correctamente",
-                    "Exito",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+            GUIMsg.info("Persona creada correctamente");
 
             dispose();
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    ex.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            GUIMsg.error(ex.getMessage());
         }
     }
 

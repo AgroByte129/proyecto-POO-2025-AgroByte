@@ -95,18 +95,14 @@ public class AgregarPesajeCosechador extends JDialog {
         try {
 
             String[] partes = seleccion.split(";");
-            Rut rut = Rut.of(partes[0].trim());
+            Rut rut = GUIHelper.obtenerRut(partes[0]);
 
             String[] cuadrillas = cp.getCuadrillasDeCosechadorDePlan(rut);
 
             for (String cuad : cuadrillas) {
                 comboBoxCuadrilla.addItem(cuad);
             }
-        } catch (GestionHuertosException e) {
-            // Si el cosechador no tiene cuadrillas activas, el combo queda vacío
-            // No es necesario mostrar error intrusivo aquí, solo dejarlo vacío
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -114,13 +110,11 @@ public class AgregarPesajeCosechador extends JDialog {
         // add your code here
         try {
 
-            if (textFieldIDPesaje.getText().isBlank() || textFieldCantidadKilos.getText().isBlank()) {
-                JOptionPane.showMessageDialog(this, "Complete ID y Kilos.", "Faltan datos", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+            GUIHelper.validarNoVacio(textFieldIDPesaje.getText(), "ID Pesaje");
+            GUIHelper.validarNoVacio(textFieldCantidadKilos.getText(), "Kilos");
+
             if (comboBoxCosechador.getSelectedItem() == null || comboBoxCuadrilla.getSelectedItem() == null) {
-                JOptionPane.showMessageDialog(this, "Debe seleccionar Cosechador y Cuadrilla válida.", "Faltan datos", JOptionPane.WARNING_MESSAGE);
-                return;
+                throw new IllegalArgumentException("Debe seleccionar Cosechador y Cuadrilla válida.");
             }
 
             int idPesaje = Integer.parseInt(textFieldIDPesaje.getText().trim());
@@ -128,7 +122,7 @@ public class AgregarPesajeCosechador extends JDialog {
             Calidad calidad = (Calidad) comboBoxCalidad.getSelectedItem();
 
             String seleccionCosechador = (String) comboBoxCosechador.getSelectedItem();
-            Rut rutCosechador = Rut.of(seleccionCosechador.split(";")[0].trim());
+            Rut rutCosechador = GUIHelper.obtenerRut(seleccionCosechador.split(";")[0]);
 
             String seleccionCuadrilla = (String) comboBoxCuadrilla.getSelectedItem();
             String[] datosCuadrilla = seleccionCuadrilla.split(";");
@@ -138,15 +132,13 @@ public class AgregarPesajeCosechador extends JDialog {
 
             cp.addPesaje(idPesaje, rutCosechador, idPlan, idCuadrilla, kilos, calidad);
 
-            JOptionPane.showMessageDialog(this, "Pesaje agregado exitosamente.");
+            GUIMsg.info("Pesaje agregado exitosamente.");
             dispose();
 
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "ID debe ser entero y Kilos número decimal.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
-        } catch (GestionHuertosException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            GUIMsg.error("ID debe ser entero y Kilos número decimal.");
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error inesperado al procesar los datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            GUIMsg.error(e.getMessage());
         }
     }
 

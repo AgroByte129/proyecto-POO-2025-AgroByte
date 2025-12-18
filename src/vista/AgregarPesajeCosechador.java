@@ -145,7 +145,7 @@ public class AgregarPesajeCosechador extends JDialog {
         dispose();
     }
 
-
+//
     public static void display() {
         AgregarPesajeCosechador dialog = new AgregarPesajeCosechador();
         dialog.setVisible(true);

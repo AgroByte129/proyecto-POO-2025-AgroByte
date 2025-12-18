@@ -87,5 +87,7 @@ public class ListarCosechadores extends JDialog {
 
         ListarCosechadores dialog = new ListarCosechadores(datos);
         dialog.setVisible(true);
+        dialog.toFront();
+        dialog.requestFocus();
     }
 }

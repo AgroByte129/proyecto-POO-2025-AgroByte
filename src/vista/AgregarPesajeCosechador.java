@@ -71,7 +71,6 @@ public class AgregarPesajeCosechador extends JDialog {
 
         pack();
         setLocationRelativeTo(null);
-        setAlwaysOnTop(true);
     }
 
     private void cargarCalidades() {
@@ -107,7 +106,6 @@ public class AgregarPesajeCosechador extends JDialog {
     }
 
     private void onOK() {
-        // add your code here
         try {
 
             GUIHelper.validarNoVacio(textFieldIDPesaje.getText(), "ID Pesaje");
@@ -147,18 +145,11 @@ public class AgregarPesajeCosechador extends JDialog {
         dispose();
     }
 
-    public static void main(String[] args) {
-        try {
-            ControladorProduccion.getInstance().readDataFromTextFile();
-        } catch (Exception e) {}
-
-        AgregarPesajeCosechador dialog = new AgregarPesajeCosechador();
-        dialog.setVisible(true);
-        System.exit(0);
-    }
 
     public static void display() {
         AgregarPesajeCosechador dialog = new AgregarPesajeCosechador();
         dialog.setVisible(true);
+        dialog.toFront();
+        dialog.requestFocus();
     }
 }

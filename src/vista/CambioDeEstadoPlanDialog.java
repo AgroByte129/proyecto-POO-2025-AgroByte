@@ -55,11 +55,10 @@ public class CambioDeEstadoPlanDialog extends JDialog {
 
         showNombreLabel.setText("-");
         showCumplimientoMetaLabel.setText("-");
-        showEstadoActualLabel.setText("-"); //comentario para commit confirmacion
+        showEstadoActualLabel.setText("-");
 
         pack();
         setLocationRelativeTo(null);
-        setAlwaysOnTop(true);
     }
 
     private void buscarPlan() {
@@ -138,6 +137,8 @@ public class CambioDeEstadoPlanDialog extends JDialog {
     public static void display() {
         CambioDeEstadoPlanDialog dialog = new CambioDeEstadoPlanDialog();
         dialog.setVisible(true);
+        dialog.toFront();
+        dialog.requestFocus();
     }
 
 }

@@ -57,7 +57,6 @@ public class CreacionDeCultivoDialog extends JDialog {
 
         pack();
         setLocationRelativeTo(null);
-        setAlwaysOnTop(true);
     }
 
     private void onOK() {
@@ -95,5 +94,7 @@ public class CreacionDeCultivoDialog extends JDialog {
     public static void display() {
         CreacionDeCultivoDialog dialog = new CreacionDeCultivoDialog();
         dialog.setVisible(true);
+        dialog.toFront();
+        dialog.requestFocus();
     }
 }

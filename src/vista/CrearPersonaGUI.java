@@ -47,7 +47,7 @@ public class CrearPersonaGUI extends JDialog {
         grupoRoles.add(rbSupervisor);
         grupoRoles.add(rbCosechador);
 
-        ActionListener listenerCambioRol = e -> actualizarCampos(); //creo un actionlistener para cada uno, con un metod que me deja cambiar la visibilidad de los campos de texto
+        ActionListener listenerCambioRol = e -> actualizarCampos(); //creo un actionlistener para cada uno, con un metodo que me deja cambiar la visibilidad de los campos de texto
         rbPropietario.addActionListener(listenerCambioRol);
         rbSupervisor.addActionListener(listenerCambioRol);
         rbCosechador.addActionListener(listenerCambioRol);
@@ -67,7 +67,6 @@ public class CrearPersonaGUI extends JDialog {
 
         pack(); //pongo estas cosas aca para que funcionen cuando se ponga en el menu y no solo con el main de la misma clase
         setLocationRelativeTo(null);
-        setAlwaysOnTop(true);
     }
 
     private void actualizarCampos() { //este es el metod
@@ -172,6 +171,8 @@ public class CrearPersonaGUI extends JDialog {
     public static void display() {
         CrearPersonaGUI dialog = new CrearPersonaGUI();
         dialog.setVisible(true);
+        dialog.toFront();
+        dialog.requestFocus();
     }
 
 }

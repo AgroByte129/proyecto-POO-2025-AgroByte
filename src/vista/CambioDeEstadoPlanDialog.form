@@ -155,6 +155,7 @@
           <component id="81112" class="javax.swing.JLabel" binding="cambioDeEstadoPlanLabel">
             <constraints border-constraint="Center"/>
             <properties>
+              <font name="JetBrains Mono" size="16" style="1"/>
               <icon value="vista/icons/128x128/caja-de-devolucion.png"/>
               <text value="Cambio de Estado Plan"/>
             </properties>

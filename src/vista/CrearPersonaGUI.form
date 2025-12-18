@@ -202,9 +202,9 @@
         </constraints>
         <properties>
           <enabled value="true"/>
-          <font name="Arial Rounded MT Bold" size="16" style="1"/>
+          <font name="JetBrains Mono" size="16" style="1"/>
           <icon value="vista/icons/128x128/user.png"/>
-          <text value="Creacion De Personas"/>
+          <text value="Creación De Personas"/>
         </properties>
       </component>
     </children>

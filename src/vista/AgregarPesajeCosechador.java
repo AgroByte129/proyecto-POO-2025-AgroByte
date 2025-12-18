@@ -30,6 +30,12 @@ public class AgregarPesajeCosechador extends JDialog {
     private ControladorProduccion cp = ControladorProduccion.getInstance();
 
     public AgregarPesajeCosechador() {
+        setTitle("Ingreso de Pesaje");
+        setIconImage(Toolkit.getDefaultToolkit()
+                .getImage(getClass()
+                        .getResource("/vista/icons/32x32/agregar-archivo.png")
+                )
+        );
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(aceptarButton);

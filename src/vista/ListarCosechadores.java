@@ -4,6 +4,7 @@ import controlador.ControladorProduccion;
 
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -14,9 +15,15 @@ public class ListarCosechadores extends JDialog {
     private JTable lista;
     private JLabel labelCosechadores;
 
-    public ListarCosechadores(String[] datos) {
+    public ListarCosechadores() {
         setContentPane(contentPane);
         setModal(true);
+        setTitle("Listar Cosechadores");
+        setIconImage(Toolkit.getDefaultToolkit()
+                .getImage(getClass()
+                        .getResource("/vista/icons/32x32/listaCliente.png")
+                )
+        );
 
         buttonBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -45,28 +52,58 @@ public class ListarCosechadores extends JDialog {
                 "</html>");
 
         //Lista
-        String[] columnas = {"Rut", "Nombre", "Dirección", "email", "Fecha Nac.",
-                "Nro. Cuadrillas", "Monto impago $", "Monto pagado $"};
-        String [] arregloCosechadores = ControladorProduccion.getInstance().listCosechadores();
+        desplegarLista();
 
-        DefaultTableModel modelo = new DefaultTableModel(columnas, 0){
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // ninguna celda editable
+        pack();
+        setLocationRelativeTo(null);
+    }
+
+    private void desplegarLista(){
+
+        String [] datosCos = ControladorProduccion.getInstance().listCosechadores();
+        //datos: ["dato1; dato2; dato3 ...; daton", "dato....]
+        DefaultTableModel modelo;
+
+
+        if(datosCos.length == 0){
+            String[] columnaMensaje = {"Estado"};
+            modelo = new DefaultTableModel(columnaMensaje, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            modelo.addRow(new String[]{"No hay cosechadores para listar"});
+
+            //Centrar texto
+            DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+            centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+            lista.setDefaultRenderer(Object.class, centerRenderer);
+        } else {
+            String[] columnas = {"Rut", "Nombre", "Dirección", "email", "Fecha Nac.",
+                    "Nro. Cuadrillas", "Monto impago $", "Monto pagado $"};
+
+            modelo = new DefaultTableModel(columnas, 0){
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false; // ninguna celda editable
+                }
+            };
+
+            for (String s: datosCos ){
+                modelo.addRow(s.split("; "));
             }
-        };
-        for (int i=0; i<arregloCosechadores.length; i++){
-            modelo.addRow(arregloCosechadores);
+
+            lista.setDefaultRenderer(Object.class, new DefaultTableCellRenderer());
         }
+
         lista.setModel(modelo);
 
         lista.setPreferredScrollableViewportSize(
                 new Dimension(lista.getPreferredSize().width,
                         lista.getRowHeight() * 5)
         );
-
-        pack();
-        setLocationRelativeTo(null);
     }
 
     private void onCancel() {
@@ -74,18 +111,15 @@ public class ListarCosechadores extends JDialog {
         dispose();
     }
 
+    /*
+    //Esto es para pruebas.
     public static void main(String[] datos) {
-        ListarCosechadores dialog = new ListarCosechadores(datos);
+        ListarCosechadores dialog = new ListarCosechadores();
         dialog.setVisible(true);
     }
-
-    public static void display(String[] datos) {
-        if (datos == null || datos.length == 0) {
-            javax.swing.JOptionPane.showMessageDialog(null, "No hay registros para mostrar.");
-            return;
-        }
-
-        ListarCosechadores dialog = new ListarCosechadores(datos);
+    */
+    public static void display() {
+        ListarCosechadores dialog = new ListarCosechadores();
         dialog.setVisible(true);
         dialog.toFront();
         dialog.requestFocus();

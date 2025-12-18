@@ -6,6 +6,7 @@ import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 //Diego Jara Betancourt y Arturo Gómez Senn
@@ -32,6 +33,12 @@ public class AgregarPesajeCosechador extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(aceptarButton);
+        setTitle("Agregar Pesaje");
+        setIconImage(Toolkit.getDefaultToolkit()
+                .getImage(getClass()
+                        .getResource("/vista/icons/32x32/registroNuevo.png")
+                )
+        );
 
         cargarCosechadores();
         cargarCalidades();

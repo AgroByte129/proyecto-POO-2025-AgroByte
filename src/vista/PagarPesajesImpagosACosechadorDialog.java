@@ -6,6 +6,7 @@ import utilidades.Rut;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.*;
 
 //Arturo Felipe Gómez Senn
@@ -27,8 +28,12 @@ public class PagarPesajesImpagosACosechadorDialog extends JDialog {
     private ControladorProduccion cp = ControladorProduccion.getInstance();
 
     public PagarPesajesImpagosACosechadorDialog() {
-
-        setTitle("Pago de Pesajes Pendientes");
+        setTitle("Pagar Pesajes Pendientes");
+        setIconImage(Toolkit.getDefaultToolkit()
+                .getImage(getClass()
+                        .getResource("/vista/icons/32x32/pago.png")
+                )
+        );
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonAceptar);

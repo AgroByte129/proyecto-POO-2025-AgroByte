@@ -6,6 +6,7 @@ import controlador.ControladorProduccion;
 import utilidades.Rut;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDate;
 
@@ -38,6 +39,12 @@ public class CrearPersonaGUI extends JDialog {
     private ControladorProduccion cp = ControladorProduccion.getInstance();
 
     public CrearPersonaGUI() {
+        setTitle("Registrar Persona");
+        setIconImage(Toolkit.getDefaultToolkit()
+                .getImage(getClass()
+                        .getResource("/vista/icons/32x32/nuevoCliente.png")
+                )
+        );
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);

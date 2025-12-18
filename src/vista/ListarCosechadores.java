@@ -16,14 +16,15 @@ public class ListarCosechadores extends JDialog {
     private JLabel labelCosechadores;
 
     public ListarCosechadores() {
-        setContentPane(contentPane);
-        setModal(true);
-        setTitle("Listar Cosechadores");
+        setTitle("Listado de Cosechadores");
         setIconImage(Toolkit.getDefaultToolkit()
                 .getImage(getClass()
                         .getResource("/vista/icons/32x32/listaCliente.png")
                 )
         );
+        setContentPane(contentPane);
+        setModal(true);
+
 
         buttonBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

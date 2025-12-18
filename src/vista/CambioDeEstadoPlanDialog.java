@@ -5,6 +5,7 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 //Arturo Felipe Gómez Senn
@@ -29,7 +30,12 @@ public class CambioDeEstadoPlanDialog extends JDialog {
     private ControladorProduccion cp = ControladorProduccion.getInstance();
 
     public CambioDeEstadoPlanDialog() {
-
+        setTitle("Gestionar Estado del Plan");
+        setIconImage(Toolkit.getDefaultToolkit()
+                .getImage(getClass()
+                        .getResource("/vista/icons/32x32/caja-de-devolucion.png")
+                )
+        );
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);

@@ -4,6 +4,7 @@ import controlador.ControladorProduccion;
 import utilidades.GestionHuertosException;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 //Arturo Gómez Senn
@@ -25,6 +26,12 @@ public class CreacionDeCultivoDialog extends JDialog {
     private ControladorProduccion cp = ControladorProduccion.getInstance();
 
     public CreacionDeCultivoDialog() {
+        setTitle("Crear Cultivo");
+        setIconImage(Toolkit.getDefaultToolkit()
+                .getImage(getClass()
+                        .getResource("/vista/icons/32x32/agregar-archivo.png")
+                )
+        );
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(aceptarButton);

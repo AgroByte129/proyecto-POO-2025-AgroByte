@@ -31,20 +31,17 @@ public class AgregarPesajeCosechador extends JDialog {
 
     public AgregarPesajeCosechador() {
         setTitle("Ingreso de Pesaje");
-        setIconImage(Toolkit.getDefaultToolkit()
-                .getImage(getClass()
-                        .getResource("/vista/icons/32x32/agregar-archivo.png")
-                )
-        );
+        try {
+            setIconImage(Toolkit.getDefaultToolkit()
+                    .getImage(getClass()
+                            .getResource("/vista/icons/32x32/agregar-archivo.png")
+                    )
+            );
+        }catch (Exception e){}
+
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(aceptarButton);
-        setTitle("Agregar Pesaje");
-        setIconImage(Toolkit.getDefaultToolkit()
-                .getImage(getClass()
-                        .getResource("/vista/icons/32x32/registroNuevo.png")
-                )
-        );
 
         cargarCosechadores();
         cargarCalidades();
@@ -93,8 +90,13 @@ public class AgregarPesajeCosechador extends JDialog {
     private void cargarCosechadores() {
         comboBoxCosechador.removeAllItems();
         String[] lista = cp.listCosechadores();
-        for (String c : lista) {
-            comboBoxCosechador.addItem(c);
+
+        for (String linea : lista) {
+            String[] datos = linea.split(";");
+            if (datos.length >= 2) {
+                String item = datos[1].trim() + " (" + datos[0].trim() + ")";
+                comboBoxCosechador.addItem(item);
+            }
         }
     }
 
@@ -106,13 +108,18 @@ public class AgregarPesajeCosechador extends JDialog {
 
         try {
 
-            String[] partes = seleccion.split(";");
-            Rut rut = GUIHelper.obtenerRut(partes[0]);
+            int inicio = seleccion.lastIndexOf("(") + 1;
+            int fin = seleccion.lastIndexOf(")");
+            String rutString = seleccion.substring(inicio, fin);
+
+            Rut rut = GUIHelper.obtenerRut(rutString);
 
             String[] cuadrillas = cp.getCuadrillasDeCosechadorDePlan(rut);
 
             for (String cuad : cuadrillas) {
-                comboBoxCuadrilla.addItem(cuad);
+                String[] datos = cuad.split(";");
+                String item = "ID: " + datos[0].trim() + " - " + datos[1].trim() + " - Plan: " + datos[2].trim();
+                comboBoxCuadrilla.addItem(item);
             }
         } catch (Exception e) {
         }
@@ -133,13 +140,17 @@ public class AgregarPesajeCosechador extends JDialog {
             Calidad calidad = (Calidad) comboBoxCalidad.getSelectedItem();
 
             String seleccionCosechador = (String) comboBoxCosechador.getSelectedItem();
-            Rut rutCosechador = GUIHelper.obtenerRut(seleccionCosechador.split(";")[0]);
+            int inicioRut = seleccionCosechador.lastIndexOf("(") + 1;
+            int finRut = seleccionCosechador.lastIndexOf(")");
+            String rutString = seleccionCosechador.substring(inicioRut, finRut);
+            Rut rutCosechador = GUIHelper.obtenerRut(rutString);
 
             String seleccionCuadrilla = (String) comboBoxCuadrilla.getSelectedItem();
-            String[] datosCuadrilla = seleccionCuadrilla.split(";");
+            String[] partesCuadrilla = seleccionCuadrilla.split(" - ");
 
-            int idCuadrilla = Integer.parseInt(datosCuadrilla[0].trim());
-            int idPlan = Integer.parseInt(datosCuadrilla[2].trim());
+            int idCuadrilla = Integer.parseInt(partesCuadrilla[0].replace("ID:", "").trim());
+
+            int idPlan = Integer.parseInt(partesCuadrilla[2].replace("Plan:", "").trim());
 
             cp.addPesaje(idPesaje, rutCosechador, idPlan, idCuadrilla, kilos, calidad);
 

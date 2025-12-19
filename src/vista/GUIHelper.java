@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-//Clase de utilidad.
+//Clase de utilidad. Por Rafael
 public final class GUIHelper {
 
     private static final DateTimeFormatter FORMATO_FECHA =

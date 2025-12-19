@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 
+//Nicolás, Diego y Arturo
+
 public class ListarCosechadores extends JDialog {
     private JPanel contentPane;
     private JButton buttonBack;

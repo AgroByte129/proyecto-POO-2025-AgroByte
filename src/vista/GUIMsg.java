@@ -1,7 +1,7 @@
 package vista;
 
 import javax.swing.*;
-//Clase de utilidad.
+//Clase de utilidad. Por Rafael
 public final class GUIMsg {
 
     private GUIMsg() {
